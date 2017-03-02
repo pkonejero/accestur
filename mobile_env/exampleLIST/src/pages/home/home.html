@@ -1,0 +1,42 @@
+<ion-header>  
+    <ion-navbar>
+        <ion-title>
+            X-Team Project
+        </ion-title>
+        <ion-buttons end>
+            <button (click)="add()">
+                <ion-icon name="add"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>  
+    <ion-card *ngIf="showingWelcome == true">
+        <ion-card-header>
+            Information
+        </ion-card-header>
+        <ion-card-content>
+            <p>
+                This is an example of what your application could look
+                like with Ionic 2.  If you choose to
+                <strong>dismiss</strong> this notification, it will
+                not be shown again for this session.  No data
+                is persisted in this application.
+            </p>
+            <ion-buttons end>
+                <button primary (click)="dismissWelcome()">
+                    Dismiss
+                </button>
+            </ion-buttons>
+        </ion-card-content>
+    </ion-card>
+    <ion-list>
+        <ion-item *ngFor="let product of productList">
+            {{product.name}}
+            <ion-note item-right>
+                {{product.price}}
+            </ion-note>
+        </ion-item>
+    </ion-list>
+</ion-content>
