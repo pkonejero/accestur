@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Ionic Blank
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  The world is your oyster.
+  <ion-list>
+
+  <ion-item>
+    <ion-label fixed>Number</ion-label>
+    <ion-input type="text" [(ngModel)]="smsNumber"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label stacked>Message</ion-label>
+    <ion-input type="text" [(ngModel)]="smsText"></ion-input>
+  </ion-item>
+</ion-list>
+<button full (click)="sendSMS()">Send SMS</button>
+</ion-content>
