@@ -1,0 +1,9 @@
+---------------------------------------------------------------------
+ACCESTUR Framework : A Secure Access Framework for Touristic Services  
+---------------------------------------------------------------------
+
+[Extensions]
+
+ - accestur_init  -> Start point
+ - accestur_core  -> Back-end files 
+ - accestur_front -> Fron-end files

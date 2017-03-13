@@ -1,0 +1,15 @@
+group 'secom.accestur.front'
+version '1.0'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':accestur_core')
+    compile 'org.springframework.boot:spring-boot-starter-web:1.2.7.RELEASE'
+}

@@ -1,0 +1,8 @@
+rootProject.name = 'framework.accestur'
+include 'accestur_front'
+include 'accestur_core'
+
+project(":accestur_front").projectDir = "accestur_front" as File
+project(":accestur_core").projectDir = "accestur_core" as File
+
+
