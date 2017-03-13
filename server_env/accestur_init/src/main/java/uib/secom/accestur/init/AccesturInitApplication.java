@@ -1,12 +1,12 @@
-package uib.secom.accestur;
+package uib.secom.accestur.init;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AccesturCoreApplication {
+public class AccesturInitApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AccesturCoreApplication.class, args);
+		SpringApplication.run(AccesturInitApplication.class, args);
 	}
 }
