@@ -1,10 +1,10 @@
-package uib.secom.accestur.shared.model;
+package uib.secom.accestur.core.model.src;
 
-public class DomainObject {
+public class DomainObjectModel {
 
 	private Long id;
 
-	public DomainObject(){		
+	public DomainObjectModel(){		
 	}
 
 	public Long getId(){
@@ -15,7 +15,6 @@ public class DomainObject {
 		this.id = id;
 	}
 
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -23,7 +22,6 @@ public class DomainObject {
 		return result;
 	}
 
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -31,7 +29,7 @@ public class DomainObject {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DomainObject other = (DomainObject) obj;
+		DomainObjectModel other = (DomainObjectModel) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -40,7 +38,6 @@ public class DomainObject {
 		return true;
 	}
 
-	@Override
 	public String toString() {
 		return this.getClass().getSimpleName() + " [id=" + id + "]";
 	}
