@@ -9,10 +9,19 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Elgamal{
+import org.springframework.stereotype.Component;
 
+import secom.accestur.core.utils.Constants;
+
+
+@Component("elGamal")
+public class Elgamal{
 	private int nbits;
 	private Elgamal_KeySet kset;
+
+	public Elgamal(){
+		this.kset=new Elgamal_KeySet(Constants.ELGAMAL_DEFAULT_BITS);
+	}
 
 	public Elgamal(int nb_bits){
 		this.nbits=nb_bits;
