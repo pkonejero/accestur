@@ -1,9 +1,20 @@
-package secom.accestur.core.model.impl;
+package secom.accestur.core.model;
 
-import secom.accestur.core.model.UserModelInterface;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-public class UserModel extends DomainObjectModel implements UserModelInterface{
+@Entity
+@Table(name="userEntity")
+public class User extends DomainObjectModel{
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private Long id;
 
+	public User(){}
+	
 	private String pseudonym;
 
 	public String getPseudonym(){
@@ -22,7 +33,7 @@ public class UserModel extends DomainObjectModel implements UserModelInterface{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UserModel other = (UserModel) obj;
+		User other = (User) obj;
 		if ( pseudonym != other.pseudonym)
 			return false;
 		return true;
@@ -30,6 +41,6 @@ public class UserModel extends DomainObjectModel implements UserModelInterface{
 
 	@Override
 	public String toString(){
-		return "User [id=" + getId() + ", pseudonym=" + pseudonym + "]";
+		return "User [pseudonym=" + pseudonym + "]";
 	}
 }

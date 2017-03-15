@@ -1,5 +1,17 @@
-package secom.accestur.core.model.impl;
+package secom.accestur.core.model;
 
-import secom.accestur.core.model.ProviderModelInterface;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-public class ProviderModel extends DomainObjectModel implements ProviderModelInterface{}
+@Entity
+@Table(name="providerEntity")
+public class Provider extends DomainObjectModel{
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private Long id;
+	
+	Provider(){}
+}

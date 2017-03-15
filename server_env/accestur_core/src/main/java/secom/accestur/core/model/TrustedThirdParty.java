@@ -1,5 +1,17 @@
-package secom.accestur.core.model.impl;
+package secom.accestur.core.model;
 
-import secom.accestur.core.model.TrustedThirdPartyModelInterface;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-public class TrustedThirdPartyModel extends DomainObjectModel implements TrustedThirdPartyModelInterface{}
+@Entity
+@Table(name="ttpEntity")
+public class TrustedThirdParty extends DomainObjectModel{
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private Long id;
+
+	public TrustedThirdParty(){}
+}
