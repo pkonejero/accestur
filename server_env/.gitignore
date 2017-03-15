@@ -1,7 +1,3 @@
-### MAVEN ###
-target/
-!.mvn/wrapper/maven-wrapper.jar
-
 ### STS ###
 .apt_generated
 .classpath
@@ -30,3 +26,6 @@ local.properties
 .externalToolBuilders/
 *.launch
 .gradle/
+
+### BUILD ###
+build/**
