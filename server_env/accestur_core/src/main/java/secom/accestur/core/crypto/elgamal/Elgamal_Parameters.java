@@ -25,5 +25,7 @@ public class Elgamal_Parameters{
 	public Random getPrg(){
 		return prg;
 	}     
+	
+	
 }
 

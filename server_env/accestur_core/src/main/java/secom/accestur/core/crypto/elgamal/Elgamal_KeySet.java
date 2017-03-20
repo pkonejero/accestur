@@ -20,6 +20,14 @@ public class Elgamal_KeySet{
 		//System.out.print(nbb);
 		Elgamal_KeySet(new Elgamal_Parameters(nbb,new SecureRandom())); 
 	}
+	
+	 public Elgamal_KeySet(String s){
+	        this.pk = Elgamal_PublicKey.fromJson(s);
+	    }
+	    
+	    public void setParams(Elgamal_Parameters params) {
+	        this.params = params;
+	    }
 
 	public void Elgamal_KeySet(Elgamal_Parameters par){
 		this.params=par;
@@ -65,6 +73,31 @@ public class Elgamal_KeySet{
 	public int getNb_bits(){
 		return nb_bits;
 	} 
+	
+	
+    public String[] getParameters() {
+        String parameters[] = new String[4];
+        parameters[0] = pk.toJson();
+        parameters[1] = sk.toJson();
+        parameters[2] = "params";
+        parameters[3] = "" + nb_bits;
+
+        return parameters;
+    }
+
+    public static Elgamal_KeySet newKset(String[] params) {
+        Elgamal_KeySet kset = new Elgamal_KeySet(Elgamal_PublicKey.fromJson(params[0]), Elgamal_SecretKey.fromJson(params[1]), Integer.parseInt(params[3]));
+        //kset.setParams(Elgamal_Parameters.fromJson(params[2]));
+        
+        return kset;
+    }
+    
+    public static Elgamal_KeySet newPublicKset (String[] params) {
+        Elgamal_KeySet kset = new Elgamal_KeySet(Elgamal_PublicKey.fromJson(params[0]), new Elgamal_SecretKey() , Integer.parseInt(params[3]));
+        //kset.setParams(Elgamal_Parameters.fromJson(params[2]));
+        
+        return kset;
+    }
 }
 
 

@@ -1,6 +1,14 @@
 package secom.accestur.core.crypto.elgamal;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -33,6 +41,13 @@ public class Elgamal{
 		this.kset=_keys;
 		this.nbits=nbb;
 	}
+	 public Elgamal(String[] params) {
+	    this.kset = Elgamal_KeySet.newKset(params);
+	    }
+	    
+	 public Elgamal(String s) {
+	     this.kset = new Elgamal_KeySet(s);
+	 }
 
 	public static BigInteger getPrime(int nb_bits, Random rng){
 		BigInteger fois=new BigInteger("2");
@@ -173,4 +188,79 @@ public class Elgamal{
 		}
 		return list;
 	}
+	
+	
+	public void createPublicCertificate() {
+        try {
+            //Whatever the file path is.
+            File statText = new File("publicCertificate.txt");
+            FileOutputStream is = new FileOutputStream(statText);
+            OutputStreamWriter osw = new OutputStreamWriter(is);
+            Writer w = new BufferedWriter(osw);
+            w.write(kset.getPk().toJson());
+            w.close();
+        } catch (IOException e) {
+            System.err.println("Problem writing to the file statsTest.txt");
+        }
+
+    }
+
+    public void createPrivateCertificate() {
+        try {
+            //Whatever the file path is.
+            File statText = new File("privateCertificate.txt");
+            FileOutputStream is = new FileOutputStream(statText);
+            OutputStreamWriter osw = new OutputStreamWriter(is);
+            Writer w = new BufferedWriter(osw);
+            w.write(kset.getPk().toJson()+"\n");
+            w.write(kset.getSk().toJson()+"\n");
+            w.write("params"+"\n");
+            w.write("" + kset.getNb_bits()+"\n");
+            w.close();
+        } catch (IOException e) {
+            System.err.println("Problem writing to the file statsTest.txt");
+        }
+    }
+    
+    
+    public void modifyPublicKey(String s) {
+    	kset = new Elgamal_KeySet(s);
+    }
+    
+    public void modifyKset(String[] params){
+    	kset = Elgamal_KeySet.newKset(params);
+    }
+
+    public static String readPublicCertificate()  {
+        String params = "";
+        try (BufferedReader br = new BufferedReader(new FileReader("publicCertificate.txt"))) {
+            params = br.readLine();
+    
+        } catch (Exception ex) {
+            Logger.getLogger(Elgamal.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            
+        }
+        return params;
+    }
+    
+      public static String[] readPrivateCertificate()  {
+        String params[] = new String[4];
+        try (BufferedReader br = new BufferedReader(new FileReader("privateCertificate.txt"))) {
+            String line = br.readLine();
+            int i = 0;
+            while (line != null && i <= 3) {
+                params[i] = line;
+                line = br.readLine();
+                System.out.println(params[i]);
+                i++;
+            }
+            
+        } catch (Exception ex) {
+            Logger.getLogger(Elgamal.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            
+        }
+        return params;
+    }
 }

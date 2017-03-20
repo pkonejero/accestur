@@ -22,8 +22,14 @@ public class HomePageController{
 
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model){
-		model.put("elgamal",elgamal.Elgamal_PtToString(elgamal.decrypt(elgamal.encrypt("ACCESTUR Framework"))));
-		model.put("rsa",rsa.RSA_PtToString(rsa.decrypt(rsa.encrypt("ACCESTUR Framework"))));
+		elgamal.createPrivateCertificate();
+		elgamal.createPublicCertificate();
+		
+		elgamal.modifyPublicKey(Elgamal.readPublicCertificate());
+		elgamal.modifyKset(Elgamal.readPrivateCertificate());
+		
+		model.put("elgamal",elgamal.Elgamal_PtToString(elgamal.));
+		
 		return "welcome";
 	}
 }
