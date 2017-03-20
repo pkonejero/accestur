@@ -27,5 +27,7 @@ public class Activation extends DomainObjectModel {
 	private Date actDate;
 	private Long Sn;
 	private String state;
+	
+	public Activation(){}
 
 }

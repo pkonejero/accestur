@@ -31,5 +31,7 @@ public class RightOfUse extends DomainObjectModel {
 
 	// Encryption of the rights of use
 	private List<String> deltas;
+	
+	public RightOfUse(){}
 
 }
