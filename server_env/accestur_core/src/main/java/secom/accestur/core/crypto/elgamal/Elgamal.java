@@ -330,10 +330,10 @@ public class Elgamal{
 	}
 	
 	
-	public void createPublicCertificate() {
+	public void createPublicCertificate(String fileName) {
         try {
             //Whatever the file path is.
-            File statText = new File("publicCertificate.txt");
+            File statText = new File(fileName+".txt");
             FileOutputStream is = new FileOutputStream(statText);
             OutputStreamWriter osw = new OutputStreamWriter(is);
             Writer w = new BufferedWriter(osw);
@@ -345,10 +345,10 @@ public class Elgamal{
 
     }
 
-    public void createPrivateCertificate() {
+    public void createPrivateCertificate(String fileName) {
         try {
             //Whatever the file path is.
-            File statText = new File("privateCertificate.txt");
+            File statText = new File(fileName+".txt");
             FileOutputStream is = new FileOutputStream(statText);
             OutputStreamWriter osw = new OutputStreamWriter(is);
             Writer w = new BufferedWriter(osw);
@@ -371,9 +371,9 @@ public class Elgamal{
     	kset = Elgamal_KeySet.newKset(params);
     }
 
-    public static String readPublicCertificate()  {
+    public static String readPublicCertificate(String fileName)  {
         String params = "";
-        try (BufferedReader br = new BufferedReader(new FileReader("publicCertificate.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName+".txt"))) {
             params = br.readLine();
     
         } catch (Exception ex) {
@@ -384,9 +384,9 @@ public class Elgamal{
         return params;
     }
     
-      public static String[] readPrivateCertificate()  {
+      public static String[] readPrivateCertificate(String fileName)  {
         String params[] = new String[4];
-        try (BufferedReader br = new BufferedReader(new FileReader("privateCertificate.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName+".txt"))) {
             String line = br.readLine();
             int i = 0;
             while (line != null && i <= 3) {
