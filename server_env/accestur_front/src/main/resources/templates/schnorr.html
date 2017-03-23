@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Spring Boot Thymeleaf Hello World Example</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" th:href="@{/css/main.css}" href="../../css/main.css" />
+</head>
+
+<body>
+	<div class="container">
+		<div class="starter-template">
+			<h1><span th:text="${message}"></span></h1>
+			<h2>RSA_Generator     			  : <span th:text="${rsa_gen}"></span></h2>
+			<h2>RSA_Secret_Key     			  : <span th:text="${rsa_secret_key}"></span></h2>
+			<h2>RSA_Public_Key     			  : <span th:text="${rsa_public_key}"></span></h2>
+			<h2>RSA_Send_A_to_B_request       : <span th:text="${rsa_a_to_b}"></span></h2>
+			<h2>RSA_Send_B_to_A_challenge     : <span th:text="${rsa_b_to_a}"></span></h2>
+			<h2>RSA_Resolve     		      : <span th:text="${rsa_resolve}"></span></h2>
+			<h2>RSA_Verify     				  : <span th:text="${rsa_verify}"></span></h2>		
+		</div>
+	</div>
+</body>
+
+</html>
