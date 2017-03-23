@@ -14,17 +14,30 @@ public class SchonorrController {
 	@Autowired
 	@Qualifier("schnorr")
 	Schnorr schnorr;
+	
+	@Autowired
+	@Qualifier("schnorr")
+	Schnorr schnorr2;
 
 	@RequestMapping("/schnorr")
 	public String welcome(Map<String, Object> model){
+		System.out.println("Init");
 		schnorr.Init();
-		model.put("rsa_gen",schnorr.Generator());
+		schnorr2.setPublicValues(schnorr.getPublicValues());
+		schnorr2.SecureParam(schnorr.SecureParam());
+		
+		
+		System.out.println("Secret Key");
 		model.put("rsa_secret_key",schnorr.SecretKey());
+		System.out.println("Public Key");
 		model.put("rsa_public_key",schnorr.PublicKey());
-		model.put("rsa_a_to_b",schnorr.send_a_to_b_request());
-		model.put("rsa_b_to_a",schnorr.send_b_to_a_challenge());
-		model.put("rsa_resolve",schnorr.send_a_to_b_resolve());
-		model.put("rsa_verify",schnorr.verify());
+
+		schnorr2.setY(schnorr.getY());
+		schnorr2.get_a_to_b_request(schnorr.send_a_to_b_request());
+		schnorr.get_b_to_a_challenge(schnorr.send_b_to_a_challenge());
+		schnorr2.get_a_to_b_resolve(schnorr.send_a_to_b_resolve());
+		System.out.println("Verify");
+		model.put("rsa_verify",schnorr2.verify());
 		return "schnorr";
 	}
 }

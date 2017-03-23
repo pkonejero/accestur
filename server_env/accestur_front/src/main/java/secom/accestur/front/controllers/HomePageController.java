@@ -1,4 +1,4 @@
-package secom.accestur.front.controllers;
+ package secom.accestur.front.controllers;
 
 import java.util.Map;
 
