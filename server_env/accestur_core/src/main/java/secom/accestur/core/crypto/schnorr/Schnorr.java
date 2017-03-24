@@ -1,13 +1,17 @@
 package secom.accestur.core.crypto.schnorr;
 
+import org.springframework.stereotype.Component;
+
 import java.math.BigInteger;
 import java.util.Random;
 
-import org.springframework.stereotype.Component;
+import secom.accestur.core.utils.Constants;
 
 @Component("schnorr")
 public class Schnorr{
 	// https://es.wikipedia.org/wiki/Algoritmo_de_identificaci%C3%B3n_de_Schnorr
+	// Schnorr Group - https://en.wikipedia.org/wiki/Schnorr_group
+	// TO DO -- DSAParameterGenerator Library
 	private BigInteger p;
 	private BigInteger q;
 
@@ -26,146 +30,109 @@ public class Schnorr{
 	private BigInteger z;
 
 	public Schnorr(){}
-	
 
-	public Schnorr(BigInteger p, BigInteger q, BigInteger g, int t, BigInteger x, BigInteger y){
+	public Schnorr(BigInteger p, BigInteger q, BigInteger g){
 		this.p = p;
 		this.q = q;
 		this.g = g;
-		this.t = t;
-		this.x = x;
-		this.y = y;
-	}
-	
-	
-	
-
-	public BigInteger getY() {
-		return y;
 	}
 
-
-	public void setY(BigInteger y) {
-		this.y = y;
-	}
-
-
-	// TODO -- https://en.wikipedia.org/wiki/Schnorr_group
 	public void Init(){
-		// q >= 2^t 
-		q = BigInteger.probablePrime(256, new Random());
-		// p = qr + 1 & p-1 disivible order q
-		p = BigInteger.probablePrime(1024, new Random());
-		r = (p.subtract(BigInteger.ONE)).divide(q);
 		boolean valid = false;
-		while (valid == false) {
-			h = BigInteger.probablePrime(256, new Random());
-			g = h.modPow(r, p);
-			System.out.println("h: " + h + " g: " + g );
-			System.out.println(g.compareTo(BigInteger.ONE));
-			System.out.println(h.compareTo(BigInteger.ONE));
-			if(g.compareTo(BigInteger.ONE) == 1 && h.compareTo(BigInteger.ONE) == 1){
+		while(valid!=true){
+			q = BigInteger.probablePrime(Constants.SCHNORR_PRIME_Q_BITS, new Random());
+			p = BigInteger.probablePrime(Constants.SCHNORR_PRIME_P_BITS, new Random());
+			r = (p.subtract(BigInteger.ONE)).divide(q);
+			if(p.equals((q.multiply(r)).add(BigInteger.ONE)))
 				valid = true;
-			}
 		}
-		t = 128;
-	}
-	
-	public void setPublicValues(BigInteger[] values){
-		p = values[0];
-		q = values[1];
-		g = values[2];
-	}
-	
-	public BigInteger[] getPublicValues(){
-		BigInteger[] values = new BigInteger[3];
-		values[0] = p;
-		values[1] = q;
-		values[2] = g;
-		
-		return values;
+
+		valid = false;
+
+		while (valid!=true){
+			h = BigInteger.probablePrime(Constants.SCHNORR_VALUE_H_BITS, new Random());
+			if(h.modPow(r, p).compareTo(BigInteger.ONE) == 1)
+				valid = true;
+		}
+
+		g = h.modPow(r, p);
+
+		System.out.println("Public Parameters: p: " + p + " q: " + q + " g: " + g);
+		System.out.println("Public_aux Parameters: h: " + h + " r: " + r);
 	}
 
-	public BigInteger Generator(){
-		h = g.modPow((p.subtract(BigInteger.ONE)).divide(q),p);
-		return h;
-	}
-	
-	public void setGenerator(BigInteger h) {
-		this.h = h;
-	}
-
-	// TODO
 	public BigInteger SecretKey(){		
-		// x | Zq = 0 >= a >= q-1  
-		x = new BigInteger(256, new Random());
-		while (x.compareTo(BigInteger.ZERO) == 1 &&  x.compareTo(q.subtract(BigInteger.ONE)) == -1 && x.modPow(q, p).equals(BigInteger.ONE)){
-			x = new BigInteger(256, new Random());
+		boolean valid = false;
+		while (valid!=true){
+			x = new BigInteger(Constants.SCHNORR_PRIME_Q_BITS, new Random());
+			x = x.subtract(BigInteger.ONE);
+			if(x.compareTo(BigInteger.ZERO) != 0)
+				//if(x.modPow(q, p).compareTo(BigInteger.ONE) == 1)
+				valid = true;
 		}
+		System.out.println("Secret Key member of the group : " + x);
 		return x;
 	}
 
 	public BigInteger PublicKey(){
-		y = h.modPow(q.subtract(x), p);
+		y = g.modPow(q.subtract(x), p);
+		System.out.println("Public Key : " + y);
 		return y;
 	}
 
-	public void SecureParam(int t){
-		this.t = t;
-	}
-	
-	public int SecureParam(){
-		return t;
-	}
-
-	
 	public BigInteger send_a_to_b_request(){
-		// c | Zq = 0 >= a >= q-1
-		boolean valid = false;
-		while(!valid){
-			c = new BigInteger(128, new Random());
-			if(c.compareTo(BigInteger.ZERO) == 1 &&  c.compareTo(q.subtract(BigInteger.ONE)) == -1){
-				valid = true;
-			}
-		}
-	
-		w = h.modPow(c, p);
+		c = new BigInteger(Constants.SCHNORR_PRIME_Q_BITS, new Random());
+		c = c.subtract(BigInteger.ONE);
+		w = g.modPow(c, p);
+		System.out.println("send_a_to_b_request : " + w);
 		return w;
-	}
-	
-	public void get_a_to_b_request(BigInteger w){
-		this.w = w;
-		
 	}
 
 	public BigInteger send_b_to_a_challenge(){
-		int TWOpT = 2^t; 
-		do {
-			e = new BigInteger(128, new Random());
-		}  while(e.compareTo(BigInteger.ZERO) == 1 &&  e.compareTo(new BigInteger(""+TWOpT))==-1);
-		return e;
-	}
-	
-	public void get_b_to_a_challenge(BigInteger e){
-		this.e = e;
+		boolean valid = false;
+		while (valid!=true){
+			e = new BigInteger(Constants.SCHNORR_PRIME_P_BITS, new Random());
+			e = e.subtract(BigInteger.ONE);
+			if(e.modPow(q, p).compareTo(BigInteger.ONE) == 1)
+				valid = true;
+		}
+		h = c.add((x.multiply(e)).mod(q));
+		System.out.println("challenge : " + h);
+		return h;
 	}
 
 	public BigInteger send_a_to_b_resolve(){
 		j = (c.add(e.multiply(x)).mod(q));
 		return j;
 	}
-	
-	public void get_a_to_b_resolve(BigInteger j){
-		this.j = j;
-	}
 
 	public boolean verify(){
-		BigInteger gs = h.modPow(j, p);
+		BigInteger gs = g.modPow(j, p);
 		BigInteger yh = y.modPow(e, p);
 		z = (gs.multiply(yh)).mod(p);
 		if(z.equals(w))
+		{
+			System.out.println("true");
 			return true;
+		}	
 		else
+		{
+			System.out.println("false");
 			return false;
+		}
+	}
+
+	public void setPublicValues(BigInteger[] values){
+		p = values[0];
+		q = values[1];
+		g = values[2];
+	}
+
+	public BigInteger[] getPublicValues(){
+		BigInteger[] values = new BigInteger[3];
+		values[0] = p;
+		values[1] = q;
+		values[2] = g;
+		return values;
 	}
 }

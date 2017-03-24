@@ -1,5 +1,6 @@
 package secom.accestur.front.controllers;
 
+import java.math.BigInteger;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,31 +14,37 @@ import secom.accestur.core.crypto.schnorr.Schnorr;
 public class SchonorrController {
 	@Autowired
 	@Qualifier("schnorr")
-	Schnorr schnorr;
-	
+	Schnorr schnorr_a;
+
 	@Autowired
 	@Qualifier("schnorr")
-	Schnorr schnorr2;
+	Schnorr schnorr_b;
 
 	@RequestMapping("/schnorr")
 	public String welcome(Map<String, Object> model){
-		System.out.println("Init");
-		schnorr.Init();
-		schnorr2.setPublicValues(schnorr.getPublicValues());
-		schnorr2.SecureParam(schnorr.SecureParam());
 		
+		BigInteger[] values;
 		
-		System.out.println("Secret Key");
-		model.put("rsa_secret_key",schnorr.SecretKey());
-		System.out.println("Public Key");
-		model.put("rsa_public_key",schnorr.PublicKey());
+		// Schnorr Agent A
+		schnorr_a.Init();
+		schnorr_a.SecretKey();
+		schnorr_a.PublicKey();
 
-		schnorr2.setY(schnorr.getY());
-		schnorr2.get_a_to_b_request(schnorr.send_a_to_b_request());
-		schnorr.get_b_to_a_challenge(schnorr.send_b_to_a_challenge());
-		schnorr2.get_a_to_b_resolve(schnorr.send_a_to_b_resolve());
-		System.out.println("Verify");
-		model.put("rsa_verify",schnorr2.verify());
+		// Schnorr Agent B
+		schnorr_b.setPublicValues(schnorr_a.getPublicValues());
+		
+		
+		
+		
+		schnorr_a.send_a_to_b_request();
+		
+		
+		// Schnorr Agent B
+		schnorr_b.send_b_to_a_challenge();
+		
+		// Schnorr Agent A
+		schnorr_a.send_a_to_b_resolve();
+		schnorr_a.verify();
 		return "schnorr";
 	}
 }
