@@ -13,18 +13,22 @@ import secom.accestur.core.crypto.schnorr.Schnorr;
 public class SchonorrController {
 	@Autowired
 	@Qualifier("schnorr")
-	Schnorr schnorr;
+	Schnorr schnorr_a;
+
+	@Autowired
+	@Qualifier("schnorr")
+	Schnorr schnorr_b;
 
 	@RequestMapping("/schnorr")
 	public String welcome(Map<String, Object> model){
-		schnorr.Init();
-		model.put("rsa_gen",schnorr.Generator());
-		model.put("rsa_secret_key",schnorr.SecretKey());
-		model.put("rsa_public_key",schnorr.PublicKey());
-		model.put("rsa_a_to_b",schnorr.send_a_to_b_request());
-		model.put("rsa_b_to_a",schnorr.send_b_to_a_challenge());
-		model.put("rsa_resolve",schnorr.send_a_to_b_resolve());
-		model.put("rsa_verify",schnorr.verify());
+		schnorr_a.Init();
+		schnorr_a.SecretKey();
+		schnorr_a.PublicKey();
+		schnorr_b.setPublicValues(schnorr_a.getPublicValues());
+		schnorr_b.setW(schnorr_a.send_a_to_b_request());
+		schnorr_a.setH(schnorr_b.send_b_to_a_challenge());;
+		schnorr_b.setJ(schnorr_a.send_a_to_b_resolve());
+		schnorr_b.verify();
 		return "schnorr";
 	}
 }
