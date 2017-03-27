@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import secom.accestur.core.crypto.elgamal.Elgamal;
+
 @Entity
 @Table(name="providerEntity")
 public class Provider extends DomainObjectModel{
@@ -13,5 +15,14 @@ public class Provider extends DomainObjectModel{
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
+	private String providerName;
+	
+//private Elgamal elgamal;
+	//private 
+	
 	Provider(){}
+	
+	
+	
+	
 }

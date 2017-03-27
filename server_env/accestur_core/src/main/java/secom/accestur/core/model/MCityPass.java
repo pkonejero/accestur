@@ -17,9 +17,10 @@ public class MCityPass extends DomainObjectModel{
 	private Long id;
 	
 //	//Type
-//	private Long lifeTime;
-//	private String category;
-//	private String termsAndContions;
+	
+	private Long lifeTime;
+	private String category;
+	private String termsAndContions;
 //	
 //	//User
 //	private String PSEUu;
@@ -42,6 +43,36 @@ public class MCityPass extends DomainObjectModel{
  	
 
 	public MCityPass(){}
+
+
+	public Long getLifeTime() {
+		return lifeTime;
+	}
+
+
+	public void setLifeTime(Long lifeTime) {
+		this.lifeTime = lifeTime;
+	}
+
+
+	public String getCategory() {
+		return category;
+	}
+
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+
+	public String getTermsAndContions() {
+		return termsAndContions;
+	}
+
+
+	public void setTermsAndContions(String termsAndContions) {
+		this.termsAndContions = termsAndContions;
+	}
 	
 	
 	
