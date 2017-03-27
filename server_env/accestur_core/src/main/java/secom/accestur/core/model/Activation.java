@@ -19,14 +19,14 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "activationEntity")
 public class Activation extends DomainObjectModel {
-
+	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	// Activation
-	private Date actDate;
-	private Long Sn;
-	private String state;
+//	// Activation
+//	private Date actDate;
+//	private Long Sn;
+//	private String state;
 	
 	public Activation(){}
 
