@@ -28,7 +28,7 @@ public class SchonorrController {
 		schnorr_b.setW(schnorr_a.send_a_to_b_request());
 		schnorr_a.setH(schnorr_b.send_b_to_a_challenge());;
 		schnorr_b.setJ(schnorr_a.send_a_to_b_resolve());
-		schnorr_b.verify();
+		System.out.println(schnorr_b.verify());
 		return "schnorr";
 	}
 }
