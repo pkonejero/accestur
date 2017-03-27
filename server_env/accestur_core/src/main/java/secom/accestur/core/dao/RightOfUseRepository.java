@@ -12,4 +12,4 @@ import secom.accestur.core.model.RightOfUse;
  * @author Sebastià
  *
  */
-public class RightOfUseRepository extends PagingAndSortingRepository<RightOfUse, Long>{}
+public interface RightOfUseRepository extends PagingAndSortingRepository<RightOfUse, Long>{}
