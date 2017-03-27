@@ -1,12 +1,3 @@
-/**
- * 
- */
 package secom.accestur.core.service;
 
-/**
- * @author Sebastià
- *
- */
-public interface RightOfUseInterface {
-
-}
+public interface RightOfUseInterface {}
