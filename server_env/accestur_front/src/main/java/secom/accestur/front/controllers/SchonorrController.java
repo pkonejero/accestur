@@ -1,6 +1,5 @@
 package secom.accestur.front.controllers;
 
-import java.math.BigInteger;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,29 +21,14 @@ public class SchonorrController {
 
 	@RequestMapping("/schnorr")
 	public String welcome(Map<String, Object> model){
-		
-		BigInteger[] values;
-		
-		// Schnorr Agent A
 		schnorr_a.Init();
 		schnorr_a.SecretKey();
 		schnorr_a.PublicKey();
-
-		// Schnorr Agent B
 		schnorr_b.setPublicValues(schnorr_a.getPublicValues());
-		
-		
-		
-		
-		schnorr_a.send_a_to_b_request();
-		
-		
-		// Schnorr Agent B
-		schnorr_b.send_b_to_a_challenge();
-		
-		// Schnorr Agent A
-		schnorr_a.send_a_to_b_resolve();
-		schnorr_a.verify();
+		schnorr_b.setW(schnorr_a.send_a_to_b_request());
+		schnorr_a.setH(schnorr_b.send_b_to_a_challenge());;
+		schnorr_b.setJ(schnorr_a.send_a_to_b_resolve());
+		schnorr_b.verify();
 		return "schnorr";
 	}
 }

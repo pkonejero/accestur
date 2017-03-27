@@ -1,9 +1,10 @@
 package secom.accestur.core.crypto.schnorr;
 
-import org.springframework.stereotype.Component;
-
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Random;
+
+import org.springframework.stereotype.Component;
 
 import secom.accestur.core.utils.Constants;
 
@@ -28,6 +29,8 @@ public class Schnorr{
 	private BigInteger e;
 	private BigInteger j;
 	private BigInteger z;
+	private BigInteger a;
+	private BigInteger qp;
 
 	public Schnorr(){}
 
@@ -38,39 +41,33 @@ public class Schnorr{
 	}
 
 	public void Init(){
-		boolean valid = false;
-		while(valid!=true){
-			q = BigInteger.probablePrime(Constants.SCHNORR_PRIME_Q_BITS, new Random());
-			p = BigInteger.probablePrime(Constants.SCHNORR_PRIME_P_BITS, new Random());
-			r = (p.subtract(BigInteger.ONE)).divide(q);
-			if(p.equals((q.multiply(r)).add(BigInteger.ONE)))
-				valid = true;
+		BigInteger one = new BigInteger("1");
+		BigInteger two = new BigInteger("2");
+		int certainty = 100;
+		SecureRandom sr = new SecureRandom();
+		q = new BigInteger(Constants.Q_PRIME_BITS, certainty, sr);
+		qp = BigInteger.ONE;
+
+		do{
+			p = q.multiply(qp).multiply(two).add(one);
+			if (p.isProbablePrime(certainty)) break;
+			qp = qp.add(BigInteger.ONE);
+		}while (true);
+
+		while(true){
+			a = (two.add(new BigInteger(Constants.Q_PRIME_BITS, 100, sr))).mod(p);
+			BigInteger ga = (p.subtract(BigInteger.ONE)).divide(q);
+			h = a.modPow(ga, p);
+			if (h.compareTo(BigInteger.ONE) != 0)
+				break;
 		}
 
-		valid = false;
-
-		while (valid!=true){
-			h = BigInteger.probablePrime(Constants.SCHNORR_VALUE_H_BITS, new Random());
-			if(h.modPow(r, p).compareTo(BigInteger.ONE) == 1)
-				valid = true;
-		}
-
-		g = h.modPow(r, p);
-
-		System.out.println("Public Parameters: p: " + p + " q: " + q + " g: " + g);
-		System.out.println("Public_aux Parameters: h: " + h + " r: " + r);
+		w = new BigInteger(Constants.Q_PRIME_BITS, sr);
+		g = h.modPow(w, p);
 	}
 
 	public BigInteger SecretKey(){		
-		boolean valid = false;
-		while (valid!=true){
-			x = new BigInteger(Constants.SCHNORR_PRIME_Q_BITS, new Random());
-			x = x.subtract(BigInteger.ONE);
-			if(x.compareTo(BigInteger.ZERO) != 0)
-				//if(x.modPow(q, p).compareTo(BigInteger.ONE) == 1)
-				valid = true;
-		}
-		System.out.println("Secret Key member of the group : " + x);
+		x = new BigInteger(Constants.Q_PRIME_BITS, new Random());
 		return x;
 	}
 
@@ -81,21 +78,14 @@ public class Schnorr{
 	}
 
 	public BigInteger send_a_to_b_request(){
-		c = new BigInteger(Constants.SCHNORR_PRIME_Q_BITS, new Random());
-		c = c.subtract(BigInteger.ONE);
+		c = new BigInteger(Constants.Q_PRIME_BITS, new Random());
 		w = g.modPow(c, p);
 		System.out.println("send_a_to_b_request : " + w);
 		return w;
 	}
 
 	public BigInteger send_b_to_a_challenge(){
-		boolean valid = false;
-		while (valid!=true){
-			e = new BigInteger(Constants.SCHNORR_PRIME_P_BITS, new Random());
-			e = e.subtract(BigInteger.ONE);
-			if(e.modPow(q, p).compareTo(BigInteger.ONE) == 1)
-				valid = true;
-		}
+		e = new BigInteger(Constants.Q_PRIME_BITS, new Random());
 		h = c.add((x.multiply(e)).mod(q));
 		System.out.println("challenge : " + h);
 		return h;
@@ -135,4 +125,110 @@ public class Schnorr{
 		values[2] = g;
 		return values;
 	}
+
+	public BigInteger getP() {
+		return p;
+	}
+
+	public void setP(BigInteger p) {
+		this.p = p;
+	}
+
+	public BigInteger getQ() {
+		return q;
+	}
+
+	public void setQ(BigInteger q) {
+		this.q = q;
+	}
+
+	public BigInteger getG() {
+		return g;
+	}
+
+	public void setG(BigInteger g) {
+		this.g = g;
+	}
+
+	public BigInteger getH() {
+		return h;
+	}
+
+	public void setH(BigInteger h) {
+		this.h = h;
+	}
+
+	public BigInteger getR() {
+		return r;
+	}
+
+	public void setR(BigInteger r) {
+		this.r = r;
+	}
+
+	public int getT() {
+		return t;
+	}
+
+	public void setT(int t) {
+		this.t = t;
+	}
+
+	public BigInteger getX() {
+		return x;
+	}
+
+	public void setX(BigInteger x) {
+		this.x = x;
+	}
+
+	public BigInteger getY() {
+		return y;
+	}
+
+	public void setY(BigInteger y) {
+		this.y = y;
+	}
+
+	public BigInteger getW() {
+		return w;
+	}
+
+	public void setW(BigInteger w) {
+		this.w = w;
+	}
+
+	public BigInteger getC() {
+		return c;
+	}
+
+	public void setC(BigInteger c) {
+		this.c = c;
+	}
+
+	public BigInteger getE() {
+		return e;
+	}
+
+	public void setE(BigInteger e) {
+		this.e = e;
+	}
+
+	public BigInteger getJ() {
+		return j;
+	}
+
+	public void setJ(BigInteger j) {
+		this.j = j;
+	}
+
+	public BigInteger getZ() {
+		return z;
+	}
+
+	public void setZ(BigInteger z) {
+		this.z = z;
+	}
+
+
 }
