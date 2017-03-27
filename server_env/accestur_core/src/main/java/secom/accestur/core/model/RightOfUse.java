@@ -23,14 +23,14 @@ public class RightOfUse extends DomainObjectModel {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	// Shared Session Key
-	private String k;
-
-	// Set of Random Values;
-	private List<String> RI;
-
-	// Encryption of the rights of use
-	private List<String> deltas;
+//	// Shared Session Key
+//	private String k;
+//
+//	// Set of Random Values;
+//	private List<String> RI;
+//
+//	// Encryption of the rights of use
+//	private List<String> deltas;
 	
 	public RightOfUse(){}
 

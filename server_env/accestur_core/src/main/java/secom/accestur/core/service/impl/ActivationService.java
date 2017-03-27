@@ -10,7 +10,7 @@ import secom.accestur.core.service.ActivationServiceInterface;
  *
  */
 
-@Service("activation")
+@Service("activationService")
 public class ActivationService implements ActivationServiceInterface{
 
 }

@@ -11,7 +11,7 @@ import secom.accestur.core.facade.ActivationFacadeInterface;
  * @author Sebastià
  *
  */
-@Component("activation")
+@Component("activationFacade")
 public class ActivationFacade implements ActivationFacadeInterface {
 
 }
