@@ -2,11 +2,7 @@ package secom.accestur.core.model;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "activationEntity")
@@ -17,7 +13,13 @@ public class Activation extends DomainObjectModel {
 
 	// Activation
 	private Date actDate;
-	private Long Sn;
+	
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="MCITYPASS_ID")
+	private MCityPass mCityPass;
+	
+	
 	private String state;
 
 	public Activation(){}
