@@ -1,7 +1,6 @@
 package secom.accestur.core.model;
 
 import java.util.List;
-
 import javax.persistence.*;
 
 @Entity
@@ -11,14 +10,14 @@ public class User extends DomainObjectModel{
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 
-	public User(){}
-	
-	@Column(name = "PSEUDONYM")
-	private String pseudonym;
-	
-	
+	// MCityPass
 	@OneToMany(mappedBy="user")
 	private List<MCityPass> mCityPass;
+
+	// Pseudonym
+	private String pseudonym;
+
+	public User(){}
 
 	public String getPseudonym(){
 		return pseudonym;
