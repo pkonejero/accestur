@@ -1,7 +1,6 @@
 package secom.accestur.core.model;
 
 import java.util.List;
-
 import javax.persistence.*;
 
 @Entity

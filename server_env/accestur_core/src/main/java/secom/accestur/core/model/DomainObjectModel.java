@@ -11,7 +11,7 @@ public class DomainObjectModel{
 		return true;
 	}
 
-	public String toString() {
+	public String toString(){
 		return this.getClass().getSimpleName();
 	}
 }
