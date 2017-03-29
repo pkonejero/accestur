@@ -1,17 +1,8 @@
-/**
- * 
- */
 package secom.accestur.core.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import secom.accestur.core.service.ServiceServiceInterface;
+import secom.accestur.core.service.ServiceInterface;
 
-/**
- * @author Sebastià
- *
- */
 @Service("serviceService")
-public class ServiceService implements ServiceServiceInterface{
-
-}
+public class ServiceService implements ServiceInterface{}
