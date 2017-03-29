@@ -12,5 +12,11 @@ public class ProviderFacade implements ProviderFacadeInterface{
 	@Autowired
 	@Qualifier("providerService")
 	private ProviderService providerService;
+
+	public ProviderService getProviderService() {
+		return providerService;
+	}
+	
+	
 	
 }
