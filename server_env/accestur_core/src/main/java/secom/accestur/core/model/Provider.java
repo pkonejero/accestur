@@ -22,7 +22,7 @@ public class Provider extends DomainObjectModel{
 	// Name
 	private String name;
 
-	Provider(){}
+	public Provider(){}
 
 	public String getName() {
 		return name;
