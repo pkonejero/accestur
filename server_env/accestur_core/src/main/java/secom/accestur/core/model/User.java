@@ -1,10 +1,8 @@
 package secom.accestur.core.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import java.util.List;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name="userEntity")
@@ -15,7 +13,12 @@ public class User extends DomainObjectModel{
 
 	public User(){}
 	
+	@Column(name = "PSEUDONYM")
 	private String pseudonym;
+	
+	
+	@OneToMany(mappedBy="user")
+	private List<MCityPass> mCityPass;
 
 	public String getPseudonym(){
 		return pseudonym;
