@@ -2,8 +2,11 @@ package secom.accestur.core.model;
 
 import javax.persistence.*;
 
+import org.springframework.stereotype.Component;
+
 @Entity
-@Table(name="COUNTER")
+@Table(name="counterEntity")
+@Component("counterModel")
 public class Counter extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

@@ -3,8 +3,11 @@ package secom.accestur.core.model;
 import java.util.List;
 import javax.persistence.*;
 
+import org.springframework.stereotype.Component;
+
 @Entity
 @Table(name="issuerEntity")
+@Component("issuerModel")
 public class Issuer extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

@@ -4,8 +4,11 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 
+import org.springframework.stereotype.Component;
+
 @Entity
 @Table(name="mcitypassEntity")
+@Component("mcitypassModel")
 public class MCityPass extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

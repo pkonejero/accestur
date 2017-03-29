@@ -1,4 +1,4 @@
- package secom.accestur.front.controllers;
+package secom.accestur.front.controllers;
 
 import java.util.Map;
 
@@ -20,10 +20,10 @@ public class HomePageController{
 	@Qualifier("rsa")
 	RSA rsa;
 
-	@RequestMapping("/")
+	@RequestMapping("/home")
 	public String welcome(Map<String, Object> model){
-		model.put("elgamal",elgamal.Elgamal_PtToString(elgamal.decrypt(elgamal.encrypt("ACCESTUR Framework"))));
-		model.put("rsa",rsa.RSA_PtToString(rsa.decrypt(rsa.encrypt("ACCESTUR Framework"))));
+//		model.put("elgamal",elgamal.Elgamal_PtToString(elgamal.decrypt(elgamal.encrypt("ACCESTUR Framework"))));
+//		model.put("rsa",rsa.RSA_PtToString(rsa.decrypt(rsa.encrypt("ACCESTUR Framework"))));
 		return "welcome";
 	}
 }
