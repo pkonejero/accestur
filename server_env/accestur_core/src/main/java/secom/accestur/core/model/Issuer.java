@@ -19,29 +19,25 @@ public class Issuer extends DomainObjectModel{
 
 	public Issuer(){}
 
-	public Issuer(String name, List<Provider> providers) {
+	public Issuer(String name, List<Provider> providers){
 		super();
 		this.name = name;
 		this.providers = providers;
 	}
 
-
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public List<Provider> getProviders() {
+	public List<Provider> getProviders(){
 		return providers;
 	}
 
-	public void setProviders(List<Provider> providers) {
+	public void setProviders(List<Provider> providers){
 		this.providers = providers;
 	}
-	
-	
+
+	public String getName(){
+		return name;
+	}
+
+	public void setName(String name){
+		this.name = name;
+	}
 }

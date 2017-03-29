@@ -5,13 +5,10 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "rightOfUseEntity")
-public class RightOfUse extends DomainObjectModel {
+public class RightOfUse extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-
-	// Shared Session Key
-	private String k;
 
 	// Set of Random Values;
 	@ElementCollection
@@ -21,38 +18,39 @@ public class RightOfUse extends DomainObjectModel {
 	@ElementCollection
 	private List<String> deltas;
 
+	// Shared Session Key
+	private String k;
+
 	public RightOfUse(){}
-	
-	public RightOfUse(String k, List<String> rI, List<String> deltas) {
+
+	public RightOfUse(String k, List<String> rI, List<String> deltas){
 		super();
 		this.k = k;
 		RI = rI;
 		this.deltas = deltas;
 	}
 
-	public String getK() {
-		return k;
-	}
-
-	public void setK(String k) {
-		this.k = k;
-	}
-
-	public List<String> getRI() {
+	public List<String> getRI(){
 		return RI;
 	}
 
-	public void setRI(List<String> rI) {
+	public void setRI(List<String> rI){
 		RI = rI;
 	}
 
-	public List<String> getDeltas() {
+	public List<String> getDeltas(){
 		return deltas;
 	}
 
-	public void setDeltas(List<String> deltas) {
+	public void setDeltas(List<String> deltas){
 		this.deltas = deltas;
 	}
-	
-	
+
+	public String getK(){
+		return k;
+	}
+
+	public void setK(String k){
+		this.k = k;
+	}
 }
