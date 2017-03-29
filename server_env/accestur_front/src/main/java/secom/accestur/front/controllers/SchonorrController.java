@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import secom.accestur.core.crypto.schnorr.Schnorr;
+import secom.accestur.core.model.Issuer;
 
 @Controller
 public class SchonorrController {
@@ -18,9 +19,15 @@ public class SchonorrController {
 	@Autowired
 	@Qualifier("schnorr")
 	Schnorr schnorr_b;
+	
+	@Autowired
+	@Qualifier("issuerModel")
+	Issuer issuer;
 
 	@RequestMapping("/schnorr")
 	public String welcome(Map<String, Object> model){
+		issuer.setName("KARAPNA");
+		System.out.println(issuer.getName());
 		schnorr_a.Init();
 		schnorr_a.SecretKey();
 		schnorr_a.PublicKey();

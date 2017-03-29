@@ -1,3 +1,7 @@
 package secom.accestur.core.facade;
 
-public interface UserFacadeInterface extends FacadeInterface{}
+import secom.accestur.core.service.impl.UserService;
+
+public interface UserFacadeInterface extends FacadeInterface{	
+	public UserService getUserService();
+}

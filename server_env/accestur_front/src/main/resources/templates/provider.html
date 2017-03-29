@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Spring Boot Thymeleaf Hello World Example</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" th:href="@{/css/main.css}" href="../../css/main.css" />
+</head>
+
+<body>
+	<div class="container">
+		<div class="starter-template">
+			<h1>Issuer:</h1>
+			<ul>
+				<li>Id: <span th:text="${issuer_id}"></span></li>
+				<li>Name: <span th:text="${issuer_name}"></span></li>
+			</ul>
+		
+			<h1>Provider:</h1>
+			<ul>
+				 <li>Id: <span th:text="${provider_id}"></span></li>
+				<li>Name: <span th:text="${provider_name}"></span> </li>
+				<li>Issuer: <span th:text="${provider_issuer}"></span></li>
+			</ul>
+		</div>
+	</div>
+</body>
+
+</html>

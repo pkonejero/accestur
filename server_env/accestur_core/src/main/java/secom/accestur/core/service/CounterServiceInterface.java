@@ -1,12 +1,3 @@
-/**
- * 
- */
 package secom.accestur.core.service;
 
-/**
- * @author Sebastià
- *
- */
-public interface CounterServiceInterface {
-
-}
+public interface CounterServiceInterface{}

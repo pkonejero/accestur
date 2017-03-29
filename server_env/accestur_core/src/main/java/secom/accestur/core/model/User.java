@@ -1,24 +1,33 @@
 package secom.accestur.core.model;
 
 import java.util.List;
-
 import javax.persistence.*;
+
+import org.springframework.stereotype.Component;
 
 @Entity
 @Table(name="userEntity")
+@Component("userModel")
 public class User extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 
-	public User(){}
-	
-	@Column(name = "PSEUDONYM")
-	private String pseudonym;
-	 
-	
+	// MCityPass
 	@OneToMany(mappedBy="user")
 	private List<MCityPass> mCityPass;
+
+	public List<MCityPass> getmCityPass(){
+		return mCityPass;
+	}
+
+	public void setmCityPass(List<MCityPass> mCityPass){
+		this.mCityPass = mCityPass;
+	}
+
+	private String pseudonym;
+
+	public User(){}
 
 	public String getPseudonym(){
 		return pseudonym;
