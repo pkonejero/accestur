@@ -18,8 +18,20 @@ public class UserService implements UserServiceInterface{
 	private UserRepository userRepository;
 	
 	public String getUserByPseudonym(String pseudonym){
-		user.setPseudonym(pseudonym);
-		userRepository.save(user);
+		// Pick the first element - If you comment this line a new element will be created
+		user = userRepository.findAll().iterator().next();
+		if(user != null)
+		{
+			// Modify the first element
+			user.setPseudonym(pseudonym);
+			// Save the firts element
+			userRepository.save(user);
+		}
+
 		return pseudonym;
+	}
+	
+	public User getUser(){
+		return userRepository.findAll().iterator().next();
 	}
 }
