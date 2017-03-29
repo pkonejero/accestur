@@ -15,7 +15,7 @@ public class User extends DomainObjectModel{
 	
 	@Column(name = "PSEUDONYM")
 	private String pseudonym;
-	
+	 
 	
 	@OneToMany(mappedBy="user")
 	private List<MCityPass> mCityPass;

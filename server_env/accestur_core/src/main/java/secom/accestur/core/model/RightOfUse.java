@@ -23,4 +23,37 @@ public class RightOfUse extends DomainObjectModel {
 	private List<String> deltas;
 
 	public RightOfUse(){}
+	
+	public RightOfUse(String k, List<String> rI, List<String> deltas) {
+		super();
+		this.k = k;
+		RI = rI;
+		this.deltas = deltas;
+	}
+
+	public String getK() {
+		return k;
+	}
+
+	public void setK(String k) {
+		this.k = k;
+	}
+
+	public List<String> getRI() {
+		return RI;
+	}
+
+	public void setRI(List<String> rI) {
+		RI = rI;
+	}
+
+	public List<String> getDeltas() {
+		return deltas;
+	}
+
+	public void setDeltas(List<String> deltas) {
+		this.deltas = deltas;
+	}
+	
+	
 }

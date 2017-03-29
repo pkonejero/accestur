@@ -12,6 +12,16 @@ public class TrustedThirdParty extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
+	
+	private String name;
 
 	public TrustedThirdParty(){}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

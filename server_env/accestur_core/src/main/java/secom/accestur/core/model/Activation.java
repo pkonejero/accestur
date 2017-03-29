@@ -23,4 +23,39 @@ public class Activation extends DomainObjectModel {
 	private String state;
 
 	public Activation(){}
+
+	public Date getActDate() {
+		return actDate;
+	}
+
+	public void setActDate(Date actDate) {
+		this.actDate = actDate;
+	}
+
+	public MCityPass getmCityPass() {
+		return mCityPass;
+	}
+
+	public void setmCityPass(MCityPass mCityPass) {
+		this.mCityPass = mCityPass;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public Activation(Date actDate, MCityPass mCityPass, String state) {
+		super();
+		this.actDate = actDate;
+		this.mCityPass = mCityPass;
+		this.state = state;
+	}
+	
+	
+	
+	
 }
