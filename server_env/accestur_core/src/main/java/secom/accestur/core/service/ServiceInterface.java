@@ -1,3 +1,13 @@
 package secom.accestur.core.service;
 
-public interface ServiceInterface{}
+import java.util.List;
+
+import secom.accestur.core.model.Service;
+
+public interface ServiceInterface{
+	
+	public List<Service> getServicesByProvider();
+	
+	public List<Service> getServicesByMCityPass();
+	
+}

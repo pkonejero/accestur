@@ -18,5 +18,16 @@ public class Elgamal_SecretKey{
 
 	public BigInteger getX(){
 		return x;
-	}   
+	}      
+	public String toJson() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
+    
+    public static Elgamal_SecretKey fromJson(String json){
+        Gson gson = new Gson();
+        return gson.fromJson(json, Elgamal_SecretKey.class);
+    }
+	
+	
 }

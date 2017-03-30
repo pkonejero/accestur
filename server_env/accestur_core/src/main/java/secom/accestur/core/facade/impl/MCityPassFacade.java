@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 
 import secom.accestur.core.facade.MCityPassFacadeInterface;
+import secom.accestur.core.model.MCityPass;
 import secom.accestur.core.service.impl.MCityPassService;
 
 @Component("mCityPassFacade")
@@ -18,5 +19,25 @@ public class MCityPassFacade implements MCityPassFacadeInterface{
 	
 	public MCityPassService getMCityPassService(){
 		return this.mCityPassService;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see secom.accestur.core.facade.MCityPassFacadeInterface#getMCityPass()
+	 */
+	@Override
+	public MCityPass getMCityPass() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see secom.accestur.core.facade.MCityPassFacadeInterface#activateMCityPass()
+	 */
+	@Override
+	public boolean activateMCityPass() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

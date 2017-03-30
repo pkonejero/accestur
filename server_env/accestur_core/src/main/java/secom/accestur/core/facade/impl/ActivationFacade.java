@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import secom.accestur.core.facade.ActivationFacadeInterface;
+import secom.accestur.core.model.Activation;
 import secom.accestur.core.service.impl.ActivationService;
 
 @Component("activationFacade")
@@ -16,4 +17,11 @@ public class ActivationFacade implements ActivationFacadeInterface {
 	public ActivationService getActivationService(){
 		return this.activationService;
 	}
+
+	public Activation getActivation() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
 }

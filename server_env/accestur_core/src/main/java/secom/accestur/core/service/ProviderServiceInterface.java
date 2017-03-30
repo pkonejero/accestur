@@ -1,3 +1,17 @@
 package secom.accestur.core.service;
 
-public interface ProviderServiceInterface{}
+import java.util.List;
+
+import secom.accestur.core.model.Provider;
+
+public interface ProviderServiceInterface{
+	
+	public Provider getProviderByName();
+	
+	public List<Provider> getProvidersByIssuer(long sn);
+
+	public String authenticateProvider();
+	
+	public String verifyPass();
+	
+}

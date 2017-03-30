@@ -26,7 +26,7 @@ public class ActivationService implements ActivationServiceInterface{
 	private ActivationRepository activationRepository;
 
 
-	public String getActivationByMCityPassSn(long sn) {
+	public Activation getActivationByMCityPassSn(long sn) {
 		// TODO Auto-generated method stub
 		return null;
 	}
