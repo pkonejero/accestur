@@ -4,11 +4,13 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Random;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import secom.accestur.core.utils.Constants;
 
 @Component("schnorr")
+@Scope("prototype")
 public class Schnorr{
 	private BigInteger p;
 	private BigInteger q;
@@ -73,8 +75,9 @@ public class Schnorr{
 
 	public BigInteger send_b_to_a_challenge(){
 		e = new BigInteger(Constants.PRIME_BITS, new Random());
-		h = c.add((x.multiply(e)).mod(q));
-		return h;
+		//h = c.add((x.multiply(e)).mod(q));
+		//return h;
+		return e;
 	}
 
 	public BigInteger send_a_to_b_resolve(){
@@ -91,7 +94,6 @@ public class Schnorr{
 		else
 			return false;
 	}
-
 	public void setPublicValues(BigInteger[] values){
 		p = values[0];
 		q = values[1];
