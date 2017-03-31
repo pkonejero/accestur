@@ -43,5 +43,18 @@ public class ProviderService implements ProviderServiceInterface{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+
+	public String[] authenticateProvider(String[] params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+	public String[] verifyPass(String[] params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

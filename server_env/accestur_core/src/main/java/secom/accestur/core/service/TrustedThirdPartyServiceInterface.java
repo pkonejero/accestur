@@ -6,7 +6,7 @@ public interface TrustedThirdPartyServiceInterface{
 	
 	public TrustedThirdParty getTrustedThirdPartyByName(String name);
 	
-	public String generatePseudonym();
+	public String[] generatePseudonym(String[] params);
 	
 	
 	

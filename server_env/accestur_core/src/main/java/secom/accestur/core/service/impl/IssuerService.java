@@ -22,6 +22,36 @@ public class IssuerService implements IssuerServiceInterface{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+	public String generateCertificate() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public String[] getChallenge(String[] params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public String[] getPASS(String[] params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public String[] verifyTicket(String[] params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public boolean arrayGeneration() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 	
 }

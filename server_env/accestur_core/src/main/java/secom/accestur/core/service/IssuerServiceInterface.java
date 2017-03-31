@@ -5,7 +5,11 @@ public interface IssuerServiceInterface{
 	
 	public String generateCertificate();
 	
-	public boolean arrayGeneration();
+	public String[] getChallenge(String [] params);
 	
-	public String verifyTicket();
+	public String[] getPASS(String[] params);
+	
+	public String[] verifyTicket(String[] params);
+	
+	public boolean arrayGeneration();
 }

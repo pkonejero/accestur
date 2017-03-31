@@ -12,14 +12,14 @@ public class Elgamal_CipherText{
 		this.gr=gr;
 	}
 	
-	 public Elgamal_CipherText(String s) {
+	public Elgamal_CipherText(String s) {
 	        String[] lines = s.split("\r\n");
 	        gr = new BigInteger(lines[0].substring(0, lines[0].length()));
 	        mhr = new BigInteger[lines.length-1];
 	        for(int i = 1; i < lines.length; i++){
 	            mhr[i-1] = new BigInteger(lines[i].substring(0, lines[i].length()));
 	        }
-	    }
+	 }
 
 	public BigInteger[] getCt(){
 		return mhr;

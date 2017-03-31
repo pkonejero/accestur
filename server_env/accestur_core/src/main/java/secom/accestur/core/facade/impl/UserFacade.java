@@ -23,28 +23,19 @@ public class UserFacade implements UserFacadeInterface{
 		return this.userService.getUser();
 	}
 
-	/* (non-Javadoc)
-	 * @see secom.accestur.core.facade.UserFacadeInterface#createUser()
-	 */
-	@Override
+	
 	public User createUser() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see secom.accestur.core.facade.UserFacadeInterface#pseudonymGenerator()
-	 */
-	@Override
+	
 	public boolean pseudonymGenerator() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see secom.accestur.core.facade.UserFacadeInterface#passPurchase()
-	 */
-	@Override
+
 	public MCityPass passPurchase() {
 		// TODO Auto-generated method stub
 		return null;

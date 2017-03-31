@@ -10,8 +10,8 @@ public interface ProviderServiceInterface{
 	
 	public List<Provider> getProvidersByIssuer(long sn);
 
-	public String authenticateProvider();
+	public String[] authenticateProvider(String[] params);
 	
-	public String verifyPass();
+	public String[] verifyPass(String[] params);
 	
 }

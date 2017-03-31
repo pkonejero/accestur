@@ -8,23 +8,25 @@ public interface UserServiceInterface{
 	
 	public User getUserByPseudonym(String pseudonym);
 	
-	public String authenticateUser();
+	public String[] authenticateUser();
 	
-	public String getService();
+	public boolean verifyPseudonym(String[] params);
 	
-	public String showPass();
+	public String[] getService();
 	
-	public String showProof();
+	public String[] showTicket();
+	
+	public String[] showPass();
+	
+	public String[] showProof(String[] params);
 	
 	public boolean getValidationConfirmation();
 	
-	public String solveChallenge();
+	public String[] solveChallenge(String[] params);
 	
-	public String receivePass();
+	public String[] receivePass(String[] params);
 	
 	public String sendPass();
-	
-	public boolean verifyPseudonym();
 	
 	public void createCertificate();
 }

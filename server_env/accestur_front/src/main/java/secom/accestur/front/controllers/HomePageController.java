@@ -11,29 +11,28 @@ import secom.accestur.core.crypto.elgamal.Elgamal;
 import secom.accestur.core.crypto.rsa.RSA;
 import secom.accestur.core.facade.impl.UserFacade;
 import secom.accestur.core.model.User;
+import secom.accestur.core.service.impl.TrustedThirdPartyService;
+import secom.accestur.core.service.impl.UserService;
 
 @Controller
 public class HomePageController{
-	@Autowired
-	@Qualifier("elGamal")
-	Elgamal elgamal;
 
 	@Autowired
-	@Qualifier("rsa")
-	RSA rsa;
+	@Qualifier("userService")
+	UserService userService;
 	
 	@Autowired
-	@Qualifier("userFacade")
-	UserFacade userFacade;
-	
-	@Autowired
-	@Qualifier("userModel")
-	User user;
+	@Qualifier("trustedThirdPartyService")
+	TrustedThirdPartyService trustedThirdPartyService;
 
-	@RequestMapping("/home")
+	@RequestMapping("/")
 	public String welcome(Map<String, Object> model){
-		// Example 
-		userFacade.getUserService().getUserByPseudonym("OHHHHH");
-		return "welcome";
+		
+		userService.createCertificate();
+		trustedThirdPartyService.createCertificate();
+		boolean pseudonym = userService.verifyPseudonym(trustedThirdPartyService.generatePseudonym(userService.authenticateUser()));
+		System.out.println("" + pseudonym);
+		model.put("elgamal", "" + pseudonym);
+		return "provider";
 	}
 }

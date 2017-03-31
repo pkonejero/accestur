@@ -1,6 +1,7 @@
 package secom.accestur.core.crypto.elgamal;
 
 import java.math.BigInteger;
+import com.google.gson.Gson;
 
 public class Elgamal_PublicKey{
 
