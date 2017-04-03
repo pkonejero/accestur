@@ -7,6 +7,9 @@ import java.math.BigInteger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import org.json.*;
+
+
 import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.schnorr.Schnorr;
 import secom.accestur.core.dao.IssuerRepository;
@@ -96,7 +99,7 @@ public class IssuerService implements IssuerServiceInterface{
 	
 	public static String getYu(String json){
 		JSONObject jsonObject = new JSONObject(json);
-		return jsonObject.getString(y);
+		return jsonObject.getString("y");
 	}
 
 

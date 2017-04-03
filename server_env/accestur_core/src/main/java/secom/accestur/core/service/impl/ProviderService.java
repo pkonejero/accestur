@@ -10,6 +10,8 @@ import secom.accestur.core.utils.Constants;
 
 import org.springframework.stereotype.Service;
 
+
+
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.List;
@@ -38,7 +40,7 @@ public class ProviderService implements ProviderServiceInterface{
 
 	public Provider getProviderByName(String name) {
 		// TODO Auto-generated method stub
-		return providerRepository.findByName(name);
+		return providerRepository.findByNameIgnoreCase(name);
 	}
 
 	
@@ -47,9 +49,10 @@ public class ProviderService implements ProviderServiceInterface{
 		provider = getProviderByName(name);
 	}
 	
-	public List<Provider> getProvidersByIssuer(Issuer issuer) {
+	public List<Provider> getProvidersByIssuer(String string) {
 		// TODO Auto-generated method stub
-		return providerRepository.findByIssuer(issuer);
+		//for(int i =0; i < )
+		return providerRepository.findByIssuerIgnoreCase(string);
 	}
 
 

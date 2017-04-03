@@ -177,6 +177,6 @@ public class UserService implements UserServiceInterface {
 	
 	public static String getYu(String json){
 		JSONObject jsonObject = new JSONObject(json);
-		return jsonObject.getString(y);
+		return jsonObject.getString("y");
 	}
 }

@@ -36,9 +36,10 @@ public class HomePageController{
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model){
 		//issuerService.newIssuer("ACCESTUR");
-		//providerService.newProvider("TIB", issuerService.getIssuerByName("Accestur"));
+		providerService.newProvider("EMT", issuerService.getIssuerByName("Accestur"));
+		providerService.getProvidersByIssuer(issuerService.getIssuerByName("ACCESTUR").getName());
 		//System.out.println(issuerService.getIssuerByName("ACCESTUR").getName());
-		createServices();
+		//createServices();
 		return "welcome";
 	}
 	
