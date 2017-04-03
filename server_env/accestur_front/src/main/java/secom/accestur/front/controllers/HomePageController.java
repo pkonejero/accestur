@@ -11,6 +11,8 @@ import secom.accestur.core.crypto.elgamal.Elgamal;
 import secom.accestur.core.crypto.rsa.RSA;
 import secom.accestur.core.facade.impl.UserFacade;
 import secom.accestur.core.model.User;
+import secom.accestur.core.service.impl.IssuerService;
+import secom.accestur.core.service.impl.ProviderService;
 import secom.accestur.core.service.impl.TrustedThirdPartyService;
 import secom.accestur.core.service.impl.UserService;
 
@@ -22,17 +24,43 @@ public class HomePageController{
 	UserService userService;
 	
 	@Autowired
-	@Qualifier("trustedThirdPartyService")
-	TrustedThirdPartyService trustedThirdPartyService;
-
+	@Qualifier("providerService")
+	ProviderService providerService;
+	
+	
+	@Autowired
+	@Qualifier("issuerService")
+	IssuerService issuerService;
+	
+	
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model){
+		//issuerService.newIssuer("ACCESTUR");
+		//providerService.newProvider("TIB", issuerService.getIssuerByName("Accestur"));
+		//System.out.println(issuerService.getIssuerByName("ACCESTUR").getName());
+		createServices();
+		return "welcome";
+	}
+	
+	
+	private void createServices(){
+		String[] names = new String[4];
+		int[] counters = new int[4];
 		
-		userService.createCertificate();
-		trustedThirdPartyService.createCertificate();
-		boolean pseudonym = userService.verifyPseudonym(trustedThirdPartyService.generatePseudonym(userService.authenticateUser()));
-		System.out.println("" + pseudonym);
-		model.put("elgamal", "" + pseudonym);
-		return "provider";
+		names[0] = "InfiniteReusable";
+		counters[0] = -1;
+		
+		names[1] = "NoReusable";
+		counters[1] = 1;
+		
+		names[2] = "TwoTimesReusable";
+		counters[2] = 2;
+		
+		names[3] = "TenTimesReusable";
+		counters[3] = 10;
+		
+		providerService.initiateProviderByName("TIB");
+		issuerService.generateCertificate(providerService.authenticateProvider(names, counters));
+		
 	}
 }

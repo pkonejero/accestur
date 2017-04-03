@@ -74,4 +74,6 @@ public class Service extends DomainObjectModel{
 	public void setIndexHash(String indexHash){
 		this.indexHash = indexHash;
 	}
+	
+	
 }

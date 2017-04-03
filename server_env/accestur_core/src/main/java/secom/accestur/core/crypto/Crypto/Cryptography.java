@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -304,6 +305,25 @@ public class Cryptography {
 		byte[] signatureBytes = Base64.getDecoder().decode(signature.getBytes());
 
 		return publicSignature.verify(signatureBytes);
+	}
+	
+	public static String hash(String text) {
+		String hash = "";
+		MessageDigest digest;
+		try {
+			digest = MessageDigest.getInstance("SHA-256");
+			byte[] hashBytes = digest.digest(text.getBytes("UTF-8"));
+			hash = new String(Base64.getEncoder().encode(hashBytes));
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return hash;
+		
 	}
 
 }

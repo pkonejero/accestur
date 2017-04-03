@@ -23,6 +23,15 @@ public class Schnorr{
 	private BigInteger e;
 	private BigInteger w;
 	private BigInteger j;
+	
+	private BigInteger a1;
+	private BigInteger a2;
+	
+	private BigInteger A_1;
+	private BigInteger A_2;
+	
+	private BigInteger w1;
+	private BigInteger w2;
 
 	public Schnorr(){}
 
@@ -36,30 +45,30 @@ public class Schnorr{
 		BigInteger aux = BigInteger.ZERO;
 		SecureRandom sr = new SecureRandom();
 
-		q = new BigInteger(256, 40, sr);
+		q = new BigInteger(Constants.PRIME_BITS, Constants.PRIME_CERTAINTY, sr);
 
 		do
 		{
 			p = q.multiply(aux).multiply(new BigInteger("2")).add(BigInteger.ONE);
-			if (p.isProbablePrime(256)) break;
+			if (p.isProbablePrime(Constants.PRIME_CERTAINTY)) break;
 			aux = aux.add(BigInteger.ONE);
 		}
 		while (true);
 
 		while(true)
 		{
-			aux = (new BigInteger("2").add(new BigInteger(256, 40, sr))).mod(p);
+			aux = (new BigInteger("2").add(new BigInteger(Constants.PRIME_BITS, Constants.PRIME_CERTAINTY, sr))).mod(p);
 			h = aux.modPow((p.subtract(BigInteger.ONE)).divide(q), p);
 			if (h.compareTo(BigInteger.ONE) != 0)
 				break;
 		}
 
-		aux = new BigInteger(256, sr);
+		aux = new BigInteger(Constants.PRIME_BITS, sr);
 		g = h.modPow(aux, p);
 	}
 
 	public BigInteger SecretKey(){		
-		x = new BigInteger(256, new Random());
+		x = new BigInteger(Constants.PRIME_BITS, new Random());
 		return x;
 	}
 
@@ -67,15 +76,39 @@ public class Schnorr{
 		y = g.modPow(q.subtract(x), p);
 		return y;
 	}
+	
+	public BigInteger getRandom(){
+		return new BigInteger(Constants.PRIME_BITS, new Random());
+	}
+	
+	public BigInteger getPower(BigInteger bg){
+		return g.modPow(bg, p);
+	}
+	
+	public void getServiceQuery(){
+		a1 = getRandom();
+		a2 = getRandom();
+		A_1 = getPower(a1);
+		A_2 = getPower(a2);
+	}
+	
+	public BigInteger getSessionSeed(BigInteger a, BigInteger RU){
+		return a.add(e.multiply(RU.mod(q)));
+	}
+	
+	public void solveChallengeQuery(BigInteger c, BigInteger RU){
+		w1 = a1.add(c.multiply(x)).mod(q);
+		w2 = a2.add(c.multiply(RU)).mod(q);
+	}
 
 	public BigInteger send_a_to_b_request(){
-		c = new BigInteger(256, new Random());
+		c = new BigInteger(Constants.PRIME_BITS, new Random());
 		w = g.modPow(c, p);
 		return w;
 	}
 
 	public BigInteger send_b_to_a_challenge(){
-		e = new BigInteger(256, new Random());
+		e = new BigInteger(Constants.PRIME_BITS, new Random());
 		//h = c.add((x.multiply(e)).mod(q));
 		//return h;
 		return e;
@@ -191,6 +224,56 @@ public class Schnorr{
 		this.j = j;
 	}
 	
+	
+	
+	public BigInteger getA1() {
+		return a1;
+	}
+
+	public void setA1(BigInteger a1) {
+		this.a1 = a1;
+	}
+
+	public BigInteger getA2() {
+		return a2;
+	}
+
+	public void setA2(BigInteger a2) {
+		this.a2 = a2;
+	}
+
+	public BigInteger getA_1() {
+		return A_1;
+	}
+
+	public void setA_1(BigInteger a_1) {
+		A_1 = a_1;
+	}
+
+	public BigInteger getA_2() {
+		return A_2;
+	}
+
+	public void setA_2(BigInteger a_2) {
+		A_2 = a_2;
+	}
+
+	public BigInteger getW1() {
+		return w1;
+	}
+
+	public void setW1(BigInteger w1) {
+		this.w1 = w1;
+	}
+
+	public BigInteger getW2() {
+		return w2;
+	}
+
+	public void setW2(BigInteger w2) {
+		this.w2 = w2;
+	}
+
 	public String getCertificate() {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("p", p.toString());

@@ -17,36 +17,36 @@ public class User extends DomainObjectModel{
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	
+	@Column(length = 4000)
 	private String pseudonym;
 	
-	@Column(length = 1000)
-	private String signature;
-	
-	public String getSignature() {
-		return signature;
-	}
+//	@Column(length = 4000)
+//	private String signature;
+//	
+//	public String getSignature() {
+//		return signature;
+//	}
+//
+//	public void setSignature(String signature) {
+//		this.signature = signature;
+//	}
 
-	public void setSignature(String signature) {
-		this.signature = signature;
-	}
-
-	public String[] getSchnorrParameters() {
-		String[] params = new String[schnorrParameters.size()];
-		for(int i = 0; i < schnorrParameters.size(); i++){
-			params[i] = schnorrParameters.get(i);
-		}
-		return params;
-	}
-
-	public void setSchnorrParameters(String[] params) {
-		List<String> list = new ArrayList<String>(Arrays.asList(params));
-		
-		this.schnorrParameters = list;
-	}
-
-	@ElementCollection
-	private List<String> schnorrParameters;
+//	public String[] getSchnorrParameters() {
+//		String[] params = new String[schnorrParameters.size()];
+//		for(int i = 0; i < schnorrParameters.size(); i++){
+//			params[i] = schnorrParameters.get(i);
+//		}
+//		return params;
+//	}
+//
+//	public void setSchnorrParameters(String[] params) {
+//		List<String> list = new ArrayList<String>(Arrays.asList(params));
+//		
+//		this.schnorrParameters = list;
+//	}
+//
+//	@ElementCollection
+//	private List<String> schnorrParameters;
 	
 	//private String schnorrCertificate;
 	
@@ -55,7 +55,17 @@ public class User extends DomainObjectModel{
 	private List<MCityPass> mCityPass;
 	
 	
+	@Column(length = 4000)
+	private String schnorr;
+	
+	
+	public String getSchnorr() {
+		return schnorr;
+	}
 
+	public void setSchnorr(String schnorr) {
+		this.schnorr = schnorr;
+	}
 
 	public List<MCityPass> getmCityPass(){
 		return mCityPass;

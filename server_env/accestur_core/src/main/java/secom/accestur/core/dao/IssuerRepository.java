@@ -6,6 +6,6 @@ import secom.accestur.core.model.Issuer;
 
 public interface IssuerRepository extends PagingAndSortingRepository<Issuer, Long>{
 	
-	
+	Issuer findByNameIgnoreCase(String name);
 	
 }

@@ -22,4 +22,15 @@ public class ServiceService implements ServiceInterface{
 	public List<secom.accestur.core.model.Service> getServicesByMCityPass() {
 		// TODO Auto-generated method stub
 		return null;
-	}}
+	}
+	
+	
+	public void storeServices(secom.accestur.core.model.Service[] services){
+		for (int i = 0; i < services.length; i++){
+			serviceRepository.save(services[i]);
+		}
+	}
+	
+}
+
+

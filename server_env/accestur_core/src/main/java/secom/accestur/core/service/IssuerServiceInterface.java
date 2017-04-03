@@ -1,15 +1,21 @@
 package secom.accestur.core.service;
 
+import secom.accestur.core.model.Issuer;
+
 public interface IssuerServiceInterface{
-	public String getIssuerByName(String name);
+	public Issuer getIssuerByName(String name);
 	
-	public String generateCertificate();
+	public String generateCertificate(secom.accestur.core.model.Service[] services);
 	
-	public String[] getChallenge(String [] params);
+	public void newIssuer(String name);
+	
+	public String getChallenge(String [] params);
 	
 	public String[] getPASS(String[] params);
 	
 	public String[] verifyTicket(String[] params);
 	
 	public boolean arrayGeneration();
+	
+	public void createCertificate();
 }
