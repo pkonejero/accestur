@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import javax.persistence.*;
 
+import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
 
@@ -19,7 +20,7 @@ public class User extends DomainObjectModel{
 	
 	private String pseudonym;
 	
-	@Type(type = "text")
+	@Column(length = 1000)
 	private String signature;
 	
 	public String getSignature() {
