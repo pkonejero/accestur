@@ -1,5 +1,6 @@
 package secom.accestur.core.service.impl;
 
+import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.elgamal.Elgamal;
 import secom.accestur.core.crypto.elgamal.Elgamal_CipherText;
 import secom.accestur.core.model.TrustedThirdParty;
@@ -16,8 +17,8 @@ public class TrustedThirdPartyService implements TrustedThirdPartyServiceInterfa
 	
 	
 	@Autowired
-	@Qualifier("elGamal")
-	private Elgamal elGamal;
+	@Qualifier("cryptography")
+	private Cryptography crypto;
 
 	
 	public TrustedThirdParty getTrustedThirdPartyByName(String name) {
@@ -27,20 +28,16 @@ public class TrustedThirdPartyService implements TrustedThirdPartyServiceInterfa
 
 	
 	public String[] generatePseudonym(String[] params) {
-		elGamal = new Elgamal(Elgamal.readPrivateCertificate("TTPPrivateCertificate"));
-		Elgamal userGamal = new Elgamal(Elgamal.readPublicCertificate("UserPublicCertificate"));
 		String[] message = new String[2];
-		Elgamal_CipherText ct = new Elgamal_CipherText(params[1]);
-		BigInteger y = new BigInteger(elGamal.Elgamal_PtToString(elGamal.decrypt(ct)));
-		
-		ct = new Elgamal_CipherText(params[0]);
-		int hY = new Integer( userGamal.Elgamal_PtToString(userGamal.decrypt(ct)));
-		if(hY != y.hashCode()){
-			System.out.println("Y and hY do not match");
+		String yU = crypto.decryptWithPrivateKey(params[1]);
+		if (crypto.getValidation(yU, params[0])){
+			message[0] = yU;
+			message[1] = crypto.getSignature(yU);
+			
 		} else {
-			message[0] = y.toString();
-			message[1] = elGamal.encrypt(""+ hY).toString();
+			message[0] = "Error";
 		}
+		
 		
 		return message;
 	}
@@ -48,7 +45,7 @@ public class TrustedThirdPartyService implements TrustedThirdPartyServiceInterfa
 	public void createCertificate() {
 		// TODO Auto-generated method stub
 		//elGamal.
-		elGamal.createPrivateCertificate("TTPPrivateCertificate");
-		elGamal.createPublicCertificate("TTPPublicCertificate");		
+		crypto.initPrivateKey("privateUser.der");
+		crypto.initPublicKey("publicUser.der");	
 	}
 }

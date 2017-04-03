@@ -3,11 +3,14 @@ package secom.accestur.core.service.impl;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.*;
+import org.json.*;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.elgamal.Elgamal;
 import secom.accestur.core.crypto.elgamal.Elgamal_CipherText;
 import secom.accestur.core.crypto.schnorr.Schnorr;
@@ -29,8 +32,8 @@ public class UserService implements UserServiceInterface {
 	private Schnorr schnorr;
 
 	@Autowired
-	@Qualifier("elGamal")
-	private Elgamal elGamal;
+	@Qualifier("cryptography")
+	private Cryptography crypto;
 
 	public String getUserByPseudonym1(String pseudonym) {
 		// Pick the first element - If you comment this line a new element will
@@ -81,62 +84,35 @@ public class UserService implements UserServiceInterface {
 	}
 
 	public boolean verifyPseudonym(String[] params) {
-		// TODO Auto-generated method stub
-		Elgamal ttpGamal = new Elgamal(Elgamal.readPublicCertificate("TTPPublicCertificate"));
-		String hY = ttpGamal.Elgamal_PtToString(ttpGamal.decrypt(new Elgamal_CipherText(params[1])));
-		String hashY = "";
-		try {
-			BigInteger y = new BigInteger(params[0]);
-			MessageDigest md = MessageDigest.getInstance("SHA-256");
-			hashY = new String(md.digest(y.toString().getBytes()), "UTF-8");
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		// TODO Auto-generated method stub		
+		boolean verified = crypto.getValidation(params[0], params[1]);
+		if(verified) {
+			user.setPseudonym(params[0]);
+			user.setSignature(params[1]);
+			user.setSchnorrParameters(schnorr.getParameters());
+			System.out.println(user.getPseudonym());
+			//System.out.println(user.getSchnorrCertificate());
+			userRepository.save(user);
 		}
-
-		return hY.equals(hashY);
+		return verified;
 	}
 
 	public void createCertificate() {
 		// TODO Auto-generated method stub
-		// elGamal.
-		elGamal.createPrivateCertificate("UserPrivateCertificate");
-		elGamal.createPublicCertificate("UserPublicCertificate");
+		schnorr.Init();
+		schnorr.SecretKey();
+		schnorr.PublicKey();
+		crypto.initPrivateKey("privateUser.der");
+		crypto.initPublicKey("publicUser.der");
 	}
 
 	public String[] authenticateUser() {
-		// TODO Auto-generated method stub
-		schnorr.Init();
-		elGamal = new Elgamal(Elgamal.readPrivateCertificate("UserPrivateCertificate"));
-		Elgamal ttpGamal = new Elgamal(Elgamal.readPublicCertificate("TTPPublicCertificate"));
-		String params[] = new String[2];
-		// Send Schnorr p
-		// params[0] schnorr.getP().toString();
-		// Send Schnorr q
-		// params[1] = schnorr.getQ().toString();
-		// Send Schnorr alpha
-		// params[2] = schnorr.getG().toString();
-		// Calulate Y
-		schnorr.SecretKey();
-		BigInteger y = schnorr.getG().modPow(schnorr.PublicKey(), schnorr.getP());
-		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-256");
-			String hY = new String(md.digest(y.toString().getBytes()), "UTF-8");
-			Elgamal_CipherText ct = elGamal.encrypt(y.toString());
-			params[0] = ct.toString();
-			ct = ttpGamal.encrypt(hY);
-			params[1] = ct.toString();
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		String params[] = new String[3];
+		BigInteger y = schnorr.getY();
+		params[0] = crypto.getSignature(y.toString());
+		params[1] = crypto.encryptWithPublicKey(y.toString());
+		
+		
 		return params;
 	}
 
@@ -168,5 +144,12 @@ public class UserService implements UserServiceInterface {
 	public String[] receivePass(String[] params) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	private static String generatePseudonym(String y, String signature){
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("y", y);
+		jsonObject.put("signature", signature);
+		return jsonObject.toString();
 	}
 }

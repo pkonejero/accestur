@@ -22,6 +22,7 @@ public class SchonorrController {
 	@Qualifier("schnorr")
 	Schnorr schnorr_b;
 	
+	
 	@Autowired
 	@Qualifier("cryptography")
 	Cryptography crA;
@@ -58,7 +59,7 @@ public class SchonorrController {
 		crA.initPrivateKey("privateUser.der");
 		crB.initPublicKey("publicUser.der");
 		
-		System.out.println(crA.decryptWithPublicKey(crA.encryptWithPrivateKey(Constants.LOREM)));
+		System.out.println(crB.getValidation(Constants.LOREM, crA.getSignature(Constants.LOREM)));
 		return "schnorr";
 	}
 }

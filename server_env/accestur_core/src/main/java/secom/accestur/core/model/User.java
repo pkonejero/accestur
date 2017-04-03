@@ -1,9 +1,12 @@
 package secom.accestur.core.model;
 
 import java.util.List;
+import java.util.Arrays;
+import java.util.ArrayList;
 import javax.persistence.*;
 
 import org.springframework.stereotype.Component;
+
 
 @Entity
 @Table(name="userEntity")
@@ -12,10 +15,46 @@ public class User extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
+	
+	
+	private String pseudonym;
+	
+	@Type(type = "text")
+	private String signature;
+	
+	public String getSignature() {
+		return signature;
+	}
 
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+
+	public String[] getSchnorrParameters() {
+		String[] params = new String[schnorrParameters.size()];
+		for(int i = 0; i < schnorrParameters.size(); i++){
+			params[i] = schnorrParameters.get(i);
+		}
+		return params;
+	}
+
+	public void setSchnorrParameters(String[] params) {
+		List<String> list = new ArrayList<String>(Arrays.asList(params));
+		
+		this.schnorrParameters = list;
+	}
+
+	@ElementCollection
+	private List<String> schnorrParameters;
+	
+	//private String schnorrCertificate;
+	
 	// MCityPass
 	@OneToMany(mappedBy="user")
 	private List<MCityPass> mCityPass;
+	
+	
+
 
 	public List<MCityPass> getmCityPass(){
 		return mCityPass;
@@ -25,7 +64,7 @@ public class User extends DomainObjectModel{
 		this.mCityPass = mCityPass;
 	}
 
-	private String pseudonym;
+
 
 	public User(){}
 

@@ -200,6 +200,16 @@ public class Schnorr{
 		return jsonObject.toString();
 	}
 	
+	public String getPrivateCertificate() {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("p", p.toString());
+		jsonObject.put("q", q.toString());
+		jsonObject.put("g", g.toString());
+		jsonObject.put("y", y.toString());
+		jsonObject.put("x", x.toString());
+		return jsonObject.toString();
+	}
+	
 	public static Schnorr fromCertificate(String json) {
 		JSONObject jsonObject = new JSONObject(json);
 		BigInteger p = new BigInteger(jsonObject.getString("p"));
@@ -213,5 +223,49 @@ public class Schnorr{
 		schnorr.setY(y);
 		
 		return schnorr;
+	}
+	
+	public static Schnorr fromPrivateCertificate(String json) {
+		JSONObject jsonObject = new JSONObject(json);
+		BigInteger p = new BigInteger(jsonObject.getString("p"));
+		BigInteger q = new BigInteger(jsonObject.getString("q"));
+		BigInteger g = new BigInteger(jsonObject.getString("g"));
+		BigInteger y = new BigInteger(jsonObject.getString("y"));
+		BigInteger x = new BigInteger(jsonObject.getString("x"));
+		Schnorr schnorr = new Schnorr();
+		schnorr.setP(p);
+		schnorr.setG(g);
+		schnorr.setP(p);
+		schnorr.setY(y);
+		schnorr.setX(x);
+		
+		return schnorr;
+	}
+	
+	public static Schnorr fromParameters(String[] params) {
+		BigInteger p = new BigInteger(params[0]);
+		BigInteger q = new BigInteger(params[1]);
+		BigInteger g = new BigInteger(params[2]);
+		BigInteger x = new BigInteger(params[3]);
+		BigInteger y = new BigInteger(params[4]);
+		
+		Schnorr schnorr = new Schnorr();
+		schnorr.setP(p);
+		schnorr.setG(g);
+		schnorr.setP(p);
+		schnorr.setY(y);
+		schnorr.setX(x);
+		
+		return schnorr;
+	}
+	
+	public String[] getParameters(){
+		String[] values = new String[5];
+		values[0] = p.toString();
+		values[1] = q.toString();
+		values[2] = g.toString();
+		values[3] = x.toString();
+		values[4] = y.toString();
+		return values;
 	}
 }
