@@ -13,24 +13,17 @@ public class ServiceService implements ServiceInterface{
 	@Autowired
 	private ServiceRepository serviceRepository;
 
-	public List<secom.accestur.core.model.Service> getServicesByProvider() {
-		// TODO Auto-generated method stub
+	public List<secom.accestur.core.model.Service> getServicesByProvider(){
 		return null;
 	}
 
-	
-	public List<secom.accestur.core.model.Service> getServicesByMCityPass() {
-		// TODO Auto-generated method stub
+	public List<secom.accestur.core.model.Service> getServicesByMCityPass(){
 		return null;
 	}
-	
 	
 	public void storeServices(secom.accestur.core.model.Service[] services){
 		for (int i = 0; i < services.length; i++){
 			serviceRepository.save(services[i]);
 		}
 	}
-	
 }
-
-

@@ -54,10 +54,10 @@ public class User extends DomainObjectModel{
 	@OneToMany(mappedBy="user")
 	private List<MCityPass> mCityPass;
 	
-	
 	@Column(length = 4000)
 	private String schnorr;
 	
+	public User(){}
 	
 	public String getSchnorr() {
 		return schnorr;
@@ -74,10 +74,6 @@ public class User extends DomainObjectModel{
 	public void setmCityPass(List<MCityPass> mCityPass){
 		this.mCityPass = mCityPass;
 	}
-
-
-
-	public User(){}
 
 	public String getPseudonym(){
 		return pseudonym;

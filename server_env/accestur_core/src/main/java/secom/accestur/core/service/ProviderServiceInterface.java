@@ -1,12 +1,11 @@
 package secom.accestur.core.service;
 
-import java.util.List;
-
 import secom.accestur.core.model.Issuer;
 import secom.accestur.core.model.Provider;
 
+import java.util.List;
+
 public interface ProviderServiceInterface{
-	
 	public Provider getProviderByName(String name);
 	
 	public void initiateProviderByName(String name);
@@ -20,5 +19,4 @@ public interface ProviderServiceInterface{
 	public String[] verifyPass(String[] params);
 	
 	public void createCertificate();
-	
 }

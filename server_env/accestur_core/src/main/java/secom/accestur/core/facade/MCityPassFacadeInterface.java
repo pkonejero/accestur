@@ -1,6 +1,5 @@
 package secom.accestur.core.facade;
 
-import secom.accestur.core.model.Activation;
 import secom.accestur.core.model.MCityPass;
 import secom.accestur.core.service.impl.MCityPassService;
 
@@ -10,5 +9,4 @@ public interface MCityPassFacadeInterface extends FacadeInterface{
 	public MCityPass getMCityPass();
 	
 	public boolean activateMCityPass();
-	
 }

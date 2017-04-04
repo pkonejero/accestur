@@ -1,9 +1,9 @@
 package secom.accestur.core.model;
 
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 import javax.persistence.*;
-
-import org.springframework.stereotype.Component;
 
 @Entity
 @Table(name="service")
@@ -74,6 +74,4 @@ public class Service extends DomainObjectModel{
 	public void setIndexHash(String indexHash){
 		this.indexHash = indexHash;
 	}
-	
-	
 }

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package secom.accestur.core.facade.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +8,8 @@ import secom.accestur.core.facade.CounterFacadeInterface;
 import secom.accestur.core.model.Counter;
 import secom.accestur.core.service.impl.CounterService;
 
-
-/**
- * @author Sebastià
- *
- */
 @Component("counterFacade")
-public class CounterFacade implements CounterFacadeInterface {
+public class CounterFacade implements CounterFacadeInterface{
 	@Autowired
 	@Qualifier("counterService")
 	private CounterService counterService;
@@ -25,14 +17,8 @@ public class CounterFacade implements CounterFacadeInterface {
 	public CounterService getCounterService(){
 		return this.counterService;
 	}
-
-	/* (non-Javadoc)
-	 * @see secom.accestur.core.facade.CounterFacadeInterface#getCounter()
-	 */
-	@Override
-	public Counter getCounter() {
-		// TODO Auto-generated method stub
+	
+	public Counter getCounter(){
 		return null;
 	}
-	
 }

@@ -14,22 +14,11 @@ public class RightOfUseFacade implements RightOfUseFacadeInterface{
 	@Qualifier("rightOfUseService")
 	private RightOfUseService rightOfUseService;
 
-	/* (non-Javadoc)
-	 * @see secom.accestur.core.facade.RightOfUseFacadeInterface#getRightOfUseService()
-	 */
-	@Override
-	public RightOfUseService getRightOfUseService() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see secom.accestur.core.facade.RightOfUseFacadeInterface#getRightOfUse()
-	 */
-	@Override
-	public RightOfUse getRightOfUse() {
-		// TODO Auto-generated method stub
+	public RightOfUseService getRightOfUseService(){
 		return null;
 	}
 	
+	public RightOfUse getRightOfUse(){
+		return null;
+	}
 }

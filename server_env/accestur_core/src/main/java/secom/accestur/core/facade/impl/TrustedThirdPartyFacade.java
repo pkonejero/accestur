@@ -17,23 +17,12 @@ public class TrustedThirdPartyFacade implements TrustedThirdPartyFacadeInterface
 	public TrustedThirdPartyService getTrustedThirdPartyService(){
 		return this.trustedThirdPartyService;
 	}
-
-	/* (non-Javadoc)
-	 * @see secom.accestur.core.facade.TrustedThirdPartyFacadeInterface#getTrustedThirdParty()
-	 */
-	@Override
-	public TrustedThirdParty getTrustedThirdParty() {
-		// TODO Auto-generated method stub
+	
+	public TrustedThirdParty getTrustedThirdParty(){
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see secom.accestur.core.facade.TrustedThirdPartyFacadeInterface#generatePseudonym()
-	 */
-	@Override
-	public boolean generatePseudonym() {
-		// TODO Auto-generated method stub
+	public boolean generatePseudonym(){
 		return false;
-	}
-	
+	}	
 }

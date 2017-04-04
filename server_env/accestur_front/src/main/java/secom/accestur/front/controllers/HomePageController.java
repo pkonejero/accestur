@@ -7,18 +7,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import secom.accestur.core.crypto.elgamal.Elgamal;
-import secom.accestur.core.crypto.rsa.RSA;
-import secom.accestur.core.facade.impl.UserFacade;
-import secom.accestur.core.model.User;
 import secom.accestur.core.service.impl.IssuerService;
 import secom.accestur.core.service.impl.ProviderService;
-import secom.accestur.core.service.impl.TrustedThirdPartyService;
 import secom.accestur.core.service.impl.UserService;
 
 @Controller
 public class HomePageController{
-
 	@Autowired
 	@Qualifier("userService")
 	UserService userService;
@@ -27,23 +21,20 @@ public class HomePageController{
 	@Qualifier("providerService")
 	ProviderService providerService;
 	
-	
 	@Autowired
 	@Qualifier("issuerService")
 	IssuerService issuerService;
 	
-	
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model){
 		//issuerService.newIssuer("ACCESTUR");
+		//createServices();
 		providerService.newProvider("EMT", issuerService.getIssuerByName("Accestur"));
 		providerService.getProvidersByIssuer(issuerService.getIssuerByName("ACCESTUR"));
 		System.out.println(providerService.getProvidersByIssuer(issuerService.getIssuerByName("ACCESTUR")).iterator().next().getName());
 		//System.out.println(issuerService.getIssuerByName("ACCESTUR").getName());
-		//createServices();
 		return "welcome";
 	}
-	
 	
 	private void createServices(){
 		String[] names = new String[4];
@@ -63,6 +54,5 @@ public class HomePageController{
 		
 		providerService.initiateProviderByName("TIB");
 		issuerService.generateCertificate(providerService.authenticateProvider(names, counters));
-		
 	}
 }

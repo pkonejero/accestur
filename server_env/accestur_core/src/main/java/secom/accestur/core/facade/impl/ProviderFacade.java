@@ -14,37 +14,19 @@ public class ProviderFacade implements ProviderFacadeInterface{
 	@Qualifier("providerService")
 	private ProviderService providerService;
 
-	public ProviderService getProviderService() {
+	public ProviderService getProviderService(){
 		return providerService;
 	}
 
-	/* (non-Javadoc)
-	 * @see secom.accestur.core.facade.ProviderFacadeInterface#getProvider()
-	 */
-	@Override
-	public Provider getProvider() {
-		// TODO Auto-generated method stub
+	public Provider getProvider(){
 		return null;
 	}
-
-	/* (non-Javadoc)
-	 * @see secom.accestur.core.facade.ProviderFacadeInterface#providerAffiliation()
-	 */
-	@Override
-	public boolean providerAffiliation() {
-		// TODO Auto-generated method stub
+	
+	public boolean providerAffiliation(){
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see secom.accestur.core.facade.ProviderFacadeInterface#passVerification()
-	 */
-	@Override
-	public boolean passVerification() {
-		// TODO Auto-generated method stub
+	public boolean passVerification(){
 		return false;
-	}
-	
-	
-	
+	}	
 }

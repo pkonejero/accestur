@@ -1,5 +1,13 @@
 package secom.accestur.core.service.impl;
 
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.util.List;
+
 import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.schnorr.Schnorr;
 import secom.accestur.core.dao.ProviderRepository;
@@ -7,18 +15,6 @@ import secom.accestur.core.model.Issuer;
 import secom.accestur.core.model.Provider;
 import secom.accestur.core.service.ProviderServiceInterface;
 import secom.accestur.core.utils.Constants;
-
-import org.springframework.stereotype.Service;
-
-
-
-import java.math.BigInteger;
-import java.security.SecureRandom;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
 
 @Service("providerService")
 public class ProviderService implements ProviderServiceInterface{
@@ -37,62 +33,42 @@ public class ProviderService implements ProviderServiceInterface{
 	@Autowired
 	private ProviderRepository providerRepository;
 
-
-	public Provider getProviderByName(String name) {
-		// TODO Auto-generated method stub
+	public Provider getProviderByName(String name){
 		return providerRepository.findByNameIgnoreCase(name);
 	}
 
-	
-	public void initiateProviderByName(String name) {
-		// TODO Auto-generated method stub
+	public void initiateProviderByName(String name){
 		provider = getProviderByName(name);
 	}
 	
-	public List<Provider> getProvidersByIssuer(Issuer issuer) {
-		// TODO Auto-generated method stub
-		//for(int i =0; i < )
+	public List<Provider> getProvidersByIssuer(Issuer issuer){
 		return providerRepository.findByIssuer(issuer);
 	}
 
-
-	
-	public String verifyPass() {
-		// TODO Auto-generated method stub
+	public String verifyPass(){
 		return null;
 	}
 
-
-
-	public String[] authenticateProvider(String[] params) {
-		
-		
-		
+	public String[] authenticateProvider(String[] params){
 		return null;
 	}
 
-	
-	public String[] verifyPass(String[] params) {
-		// TODO Auto-generated method stub
+	public String[] verifyPass(String[] params){
 		return null;
 	}
 
-
-	
-	public void createCertificate() {
+	public void createCertificate(){
 		crypto.initPrivateKey("privateUser.der");
 		crypto.initPublicKey("publicUser.der");	
 	}
 
-
-	public void newProvider(String name, Issuer issuer) {
+	public void newProvider(String name, Issuer issuer){
 		provider.setName(name);
 		provider.setIssuer(issuer);
 		providerRepository.save(provider);
 	}
-
-
-	public secom.accestur.core.model.Service[] authenticateProvider(String[] names, int[] counters) {
+	
+	public secom.accestur.core.model.Service[] authenticateProvider(String[] names, int[] counters){
 		secom.accestur.core.model.Service[] service = new secom.accestur.core.model.Service[names.length];
 		for (int i = 0; i< names.length; i++){
 			SecureRandom sr = new SecureRandom();
@@ -102,13 +78,7 @@ public class ProviderService implements ProviderServiceInterface{
 			service[i].setM(counters[i]);
 			service[i].setName(names[i]);
 			service[i].setProvider(provider);
-		}
-				
+		}	
 		return service;
-	}
-
-
-
-	
-	
+	}	
 }

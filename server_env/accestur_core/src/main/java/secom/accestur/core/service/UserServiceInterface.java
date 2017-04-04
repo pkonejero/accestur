@@ -3,7 +3,6 @@ package secom.accestur.core.service;
 import secom.accestur.core.model.User;
 
 public interface UserServiceInterface{
-	
 	public String getUserByPseudonym1(String pseudonym);
 	
 	public User getUserByPseudonym(String pseudonym);

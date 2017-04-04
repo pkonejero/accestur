@@ -1,5 +1,7 @@
 package secom.accestur.core.facade.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -23,21 +25,19 @@ public class UserFacade implements UserFacadeInterface{
 		return this.userService.getUser();
 	}
 
-	
-	public User createUser() {
-		// TODO Auto-generated method stub
+	public User createUser(){
 		return null;
 	}
 
-	
-	public boolean pseudonymGenerator() {
-		// TODO Auto-generated method stub
+	public boolean pseudonymGenerator(){
 		return false;
 	}
-
-
-	public MCityPass passPurchase() {
-		// TODO Auto-generated method stub
+	
+	public MCityPass passPurchase(){
+		return null;
+	}
+	
+	public List<MCityPass> getMCityPasses(){
 		return null;
 	}
 }

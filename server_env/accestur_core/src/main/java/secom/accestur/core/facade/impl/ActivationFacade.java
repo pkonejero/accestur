@@ -9,7 +9,7 @@ import secom.accestur.core.model.Activation;
 import secom.accestur.core.service.impl.ActivationService;
 
 @Component("activationFacade")
-public class ActivationFacade implements ActivationFacadeInterface {
+public class ActivationFacade implements ActivationFacadeInterface{
 	@Autowired
 	@Qualifier("activationService")
 	private ActivationService activationService;
@@ -18,10 +18,7 @@ public class ActivationFacade implements ActivationFacadeInterface {
 		return this.activationService;
 	}
 
-	public Activation getActivation() {
-		// TODO Auto-generated method stub
+	public Activation getActivation(){
 		return null;
 	}
-	
-	
 }

@@ -13,10 +13,9 @@ public interface UserFacadeInterface extends FacadeInterface{
 	
 	public User createUser();
 	
-	//public List<MCityPass> getMCityPasses(); 
+	public List<MCityPass> getMCityPasses(); 
 		
 	public boolean pseudonymGenerator();
 	
 	public MCityPass passPurchase();
-	
 }

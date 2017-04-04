@@ -109,8 +109,6 @@ public class Schnorr{
 
 	public BigInteger send_b_to_a_challenge(){
 		e = new BigInteger(Constants.PRIME_BITS, new Random());
-		//h = c.add((x.multiply(e)).mod(q));
-		//return h;
 		return e;
 	}
 
@@ -224,57 +222,55 @@ public class Schnorr{
 		this.j = j;
 	}
 	
-	
-	
-	public BigInteger getA1() {
+	public BigInteger getA1(){
 		return a1;
 	}
 
-	public void setA1(BigInteger a1) {
+	public void setA1(BigInteger a1){
 		this.a1 = a1;
 	}
 
-	public BigInteger getA2() {
+	public BigInteger getA2(){
 		return a2;
 	}
 
-	public void setA2(BigInteger a2) {
+	public void setA2(BigInteger a2){
 		this.a2 = a2;
 	}
 
-	public BigInteger getA_1() {
+	public BigInteger getA_1(){
 		return A_1;
 	}
 
-	public void setA_1(BigInteger a_1) {
+	public void setA_1(BigInteger a_1){
 		A_1 = a_1;
 	}
 
-	public BigInteger getA_2() {
+	public BigInteger getA_2(){
 		return A_2;
 	}
 
-	public void setA_2(BigInteger a_2) {
+	public void setA_2(BigInteger a_2){
 		A_2 = a_2;
 	}
 
-	public BigInteger getW1() {
+	public BigInteger getW1(){
 		return w1;
 	}
 
-	public void setW1(BigInteger w1) {
+	public void setW1(BigInteger w1){
 		this.w1 = w1;
 	}
 
-	public BigInteger getW2() {
+	public BigInteger getW2(){
 		return w2;
 	}
 
-	public void setW2(BigInteger w2) {
+	public void setW2(BigInteger w2){
 		this.w2 = w2;
 	}
 
-	public String getCertificate() {
+	public String getCertificate(){
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("p", p.toString());
 		jsonObject.put("q", q.toString());
@@ -283,7 +279,7 @@ public class Schnorr{
 		return jsonObject.toString();
 	}
 	
-	public String getPrivateCertificate() {
+	public String getPrivateCertificate(){
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("p", p.toString());
 		jsonObject.put("q", q.toString());
@@ -293,7 +289,7 @@ public class Schnorr{
 		return jsonObject.toString();
 	}
 	
-	public static Schnorr fromCertificate(String json) {
+	public static Schnorr fromCertificate(String json){
 		JSONObject jsonObject = new JSONObject(json);
 		BigInteger p = new BigInteger(jsonObject.getString("p"));
 		BigInteger q = new BigInteger(jsonObject.getString("q"));
@@ -308,7 +304,7 @@ public class Schnorr{
 		return schnorr;
 	}
 	
-	public static Schnorr fromPrivateCertificate(String json) {
+	public static Schnorr fromPrivateCertificate(String json){
 		JSONObject jsonObject = new JSONObject(json);
 		BigInteger p = new BigInteger(jsonObject.getString("p"));
 		BigInteger q = new BigInteger(jsonObject.getString("q"));
@@ -325,7 +321,7 @@ public class Schnorr{
 		return schnorr;
 	}
 	
-	public static Schnorr fromParameters(String[] params) {
+	public static Schnorr fromParameters(String[] params){
 		BigInteger p = new BigInteger(params[0]);
 		BigInteger q = new BigInteger(params[1]);
 		BigInteger g = new BigInteger(params[2]);
