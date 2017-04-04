@@ -49,10 +49,10 @@ public class ProviderService implements ProviderServiceInterface{
 		provider = getProviderByName(name);
 	}
 	
-	public List<Provider> getProvidersByIssuer(String string) {
+	public List<Provider> getProvidersByIssuer(Issuer issuer) {
 		// TODO Auto-generated method stub
 		//for(int i =0; i < )
-		return providerRepository.findByIssuerIgnoreCase(string);
+		return providerRepository.findByIssuer(issuer);
 	}
 
 

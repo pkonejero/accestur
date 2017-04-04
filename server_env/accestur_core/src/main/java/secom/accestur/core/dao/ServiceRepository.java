@@ -15,7 +15,7 @@ public interface ServiceRepository extends PagingAndSortingRepository<Service, L
 	
 	Service findByNameIgnoreCase(String name);
 	
-	List<Service> findByProviderIgnoreCase(Provider provider);
+	List<Service> findByProvider(Provider provider);
 	
 	
 }

@@ -11,5 +11,5 @@ public interface ProviderRepository extends PagingAndSortingRepository<Provider,
 	
 	Provider findByNameIgnoreCase(String name);
 	
-	List<Provider> findByIssuerIgnoreCase(String issuer);
+	List<Provider> findByIssuer(Issuer issuerr);
 }

@@ -11,7 +11,7 @@ public interface ProviderServiceInterface{
 	
 	public void initiateProviderByName(String name);
 	
-	public List<Provider> getProvidersByIssuer(String string);
+	public List<Provider> getProvidersByIssuer(Issuer issuer);
 	
 	public void newProvider (String name, Issuer issuer);
 
