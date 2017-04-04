@@ -1,9 +1,9 @@
 package secom.accestur.core.model;
 
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 import javax.persistence.*;
-
-import org.springframework.stereotype.Component;
 
 @Entity
 @Table(name="providerEntity")
@@ -20,14 +20,14 @@ public class Provider extends DomainObjectModel{
 
 	// Service
 	@OneToMany(mappedBy="provider")
-	private List<Service> services;
+	private List<ServiceAgent> services;
 
 	// Name
 	private String name;
 
 	Provider(){}
 	
-	public Provider(String name, Issuer issuer, List<Service> services){
+	public Provider(String name, Issuer issuer, List<ServiceAgent> services){
 		super();
 		this.name = name;
 		this.issuer = issuer;
@@ -42,11 +42,11 @@ public class Provider extends DomainObjectModel{
 		this.issuer = issuer;
 	}
 
-	public List<Service> getServices(){
+	public List<ServiceAgent> getServices(){
 		return services;
 	}
 
-	public void setServices(List<Service> services){
+	public void setServices(List<ServiceAgent> services){
 		this.services = services;
 	}
 

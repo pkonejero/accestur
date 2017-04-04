@@ -20,14 +20,14 @@ public class Counter extends DomainObjectModel{
 	// Service
 	@ManyToOne
 	@JoinColumn(name = "SERVICE_ID", referencedColumnName = "ID",updatable = false)
-	private Service service;
+	private ServiceAgent service;
 
 	// Counter
 	private int counter;
 
 	public Counter (){}
 
-	public Counter(int counter, MCityPass mCityPass, Service service){
+	public Counter(int counter, MCityPass mCityPass, ServiceAgent service){
 		super();
 		this.counter = counter;
 		this.mCityPass = mCityPass;
@@ -42,11 +42,11 @@ public class Counter extends DomainObjectModel{
 		this.mCityPass = mCityPass;
 	}
 
-	public Service getService(){
+	public ServiceAgent getService(){
 		return service;
 	}
 
-	public void setService(Service service){
+	public void setService(ServiceAgent service){
 		this.service = service;
 	}	
 

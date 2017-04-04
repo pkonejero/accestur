@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="service")
 @Component("serviceModel")
-public class Service extends DomainObjectModel{
+public class ServiceAgent extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
@@ -24,7 +24,7 @@ public class Service extends DomainObjectModel{
 	private int m;
 	private String indexHash;
 
-	public Service(String name, int m, String indexHash, Provider provider, List<Counter> counters){
+	public ServiceAgent(String name, int m, String indexHash, Provider provider, List<Counter> counters){
 		super();
 		this.name = name;
 		this.m = m;
@@ -33,7 +33,7 @@ public class Service extends DomainObjectModel{
 		this.counters = counters;
 	}
 
-	public Service(){}
+	public ServiceAgent(){}
 
 	public Provider getProvider(){
 		return provider;

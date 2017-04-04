@@ -27,7 +27,6 @@ public class IssuerFacade implements IssuerFacadeInterface{
 		return false;
 	}
 
-	@Override
 	public Activation activateMCityPass(){
 		return null;
 	}

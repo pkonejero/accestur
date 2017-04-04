@@ -15,6 +15,7 @@ public class ActivationService implements ActivationServiceInterface{
 	private Activation activation;
 	
 	@Autowired
+	@Qualifier("activationRepository")
 	private ActivationRepository activationRepository;
 
 	public Activation getActivationByMCityPassSn(long sn){

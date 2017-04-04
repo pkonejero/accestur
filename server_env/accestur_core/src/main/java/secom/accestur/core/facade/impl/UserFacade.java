@@ -1,10 +1,10 @@
 package secom.accestur.core.facade.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 import secom.accestur.core.facade.UserFacadeInterface;
 import secom.accestur.core.model.MCityPass;

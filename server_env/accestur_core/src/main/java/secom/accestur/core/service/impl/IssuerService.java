@@ -11,20 +11,22 @@ import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.schnorr.Schnorr;
 import secom.accestur.core.dao.IssuerRepository;
 import secom.accestur.core.model.Issuer;
+import secom.accestur.core.model.ServiceAgent;
 import secom.accestur.core.service.IssuerServiceInterface;
 
 @Service("issuerService")
 public class IssuerService implements IssuerServiceInterface{
 	@Autowired
-	@Qualifier("serviceService")
-	ServiceService serviceService;
-	
-	@Autowired
 	@Qualifier("issuerModel")
 	private Issuer issuer;
+
+	@Autowired
+	@Qualifier("issuerRepository")
+	private IssuerRepository issuerRepository;
 	
 	@Autowired
-	private IssuerRepository issuerRepository;
+	@Qualifier("serviceAgentService")
+	ServiceAgentService serviceAgentService;
 	
 	@Autowired
 	@Qualifier("schnorr")
@@ -43,8 +45,8 @@ public class IssuerService implements IssuerServiceInterface{
 		return issuerRepository.findByNameIgnoreCase(name);
 	}
 
-	public String generateCertificate(secom.accestur.core.model.Service[] services){
-		serviceService.storeServices(services);
+	public String generateCertificate(ServiceAgent[] services){
+		serviceAgentService.storeServices(services);
 		arrayGeneration();
 		return "Services Generated";
 	}

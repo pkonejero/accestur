@@ -17,6 +17,7 @@ public class CounterService implements CounterServiceInterface{
 	private Counter counter;
 	
 	@Autowired
+	@Qualifier("counterRepository")
 	private CounterRepository counterRepository;
 
 	public List<Counter> getCountersByMCityPass(long sn){

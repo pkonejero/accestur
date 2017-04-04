@@ -5,11 +5,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import secom.accestur.core.crypto.Crypto.Cryptography;
+import secom.accestur.core.dao.TrustedThirdPartyRepository;
 import secom.accestur.core.model.TrustedThirdParty;
 import secom.accestur.core.service.TrustedThirdPartyServiceInterface;
 
 @Service("trustedThirdPartyService")
 public class TrustedThirdPartyService implements TrustedThirdPartyServiceInterface{
+	@Autowired
+	@Qualifier("ttpRepository")
+	TrustedThirdPartyRepository trustedThirdPartyRepository;
+	
 	@Autowired
 	@Qualifier("cryptography")
 	private Cryptography crypto;

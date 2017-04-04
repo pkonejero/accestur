@@ -1,8 +1,8 @@
 package secom.accestur.core.service;
 
-import secom.accestur.core.model.MCityPass;
-
 import java.util.List;
+
+import secom.accestur.core.model.MCityPass;
 
 public interface MCityPassServiceInterface{
 	public MCityPass getMCityPassBySn(long sn);

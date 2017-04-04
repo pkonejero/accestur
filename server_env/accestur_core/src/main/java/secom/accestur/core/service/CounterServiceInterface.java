@@ -1,8 +1,8 @@
 package secom.accestur.core.service;
 
-import secom.accestur.core.model.Counter;
-
 import java.util.List;
+
+import secom.accestur.core.model.Counter;
 
 public interface CounterServiceInterface{
 	public List<Counter> getCountersByMCityPass(long sn);

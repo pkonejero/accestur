@@ -1,12 +1,12 @@
 package secom.accestur.core.service.impl;
 
-import java.math.BigInteger;
-import java.util.List;
-
 import org.json.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import java.math.BigInteger;
+import java.util.List;
 
 import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.schnorr.Schnorr;
@@ -22,6 +22,7 @@ public class UserService implements UserServiceInterface {
 	private User user;
 
 	@Autowired
+	@Qualifier("userRepository")
 	private UserRepository userRepository;
 
 	@Autowired
