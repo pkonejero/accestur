@@ -40,13 +40,7 @@ public class ProviderService implements ProviderServiceInterface{
 		provider.setIssuer(issuer);
 		providerRepository.save(provider);
 	}
-	
-	public void addServiceProvider(Provider provider, List<ServiceAgent> serviceAgent){
-		provider = getProviderByName(provider.getName());
-		provider.setServices(serviceAgent);
-		providerRepository.save(provider);
-	}
-	
+		
 	public Provider getProviderByName(String name){
 		return providerRepository.findByNameIgnoreCase(name);
 	}

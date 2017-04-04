@@ -34,10 +34,6 @@ public class HomePageController{
 		// CREATE PROVIDER 
 		providerService.newProvider("EMT", issuerService.getIssuerByName("Accestur"));
 		
-		// CREATE SERV_1 
-		
-		
-		
 		//createServices();
 		//providerService.newProvider("EMT", issuerService.getIssuerByName("Accestur"));
 		providerService.getProvidersByIssuer(issuerService.getIssuerByName("ACCESTUR"));

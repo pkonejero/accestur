@@ -8,9 +8,7 @@ import secom.accestur.core.model.ServiceAgent;
 
 public interface ProviderServiceInterface{
 	public void newProvider (String name, Issuer issuer);
-	
-	public void addServiceProvider(Provider provider, List<ServiceAgent> serviceAgent);
-	
+		
 	public Provider getProviderByName(String name);
 	
 	public void initiateProviderByName(String name);
