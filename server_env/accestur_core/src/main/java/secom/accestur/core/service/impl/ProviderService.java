@@ -36,9 +36,18 @@ public class ProviderService implements ProviderServiceInterface{
 	private Cryptography crypto;
 
 	public void newProvider(String name, Issuer issuer){
-		provider.setName(name);
-		provider.setIssuer(issuer);
-		providerRepository.save(provider);
+		Provider p = getProviderByName(name);
+		if(p == null){
+			provider.setName(name);
+			provider.setIssuer(issuer);
+			providerRepository.save(provider);
+			System.out.println("Name: = " + provider.getName());
+		} else {
+			System.out.println("This provider already exisits, it will be initialized to the existing values");
+			provider = p;
+			System.out.println("Name: = " + provider.getName());
+		}
+		
 	}
 		
 	public Provider getProviderByName(String name){

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import secom.accestur.core.service.impl.IssuerService;
 import secom.accestur.core.service.impl.ProviderService;
+import secom.accestur.core.service.impl.TrustedThirdPartyService;
 import secom.accestur.core.service.impl.UserService;
 
 @Controller
@@ -25,11 +26,18 @@ public class HomePageController{
 	@Qualifier("issuerService")
 	IssuerService issuerService;
 	
+	@Autowired
+	@Qualifier("trustedThirdPartyService")
+	TrustedThirdPartyService ttpService;
+	
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model){
 		
 		// INIT
 		Init();
+		
+		//Generate  User
+		//generateUser();
 		
 		//providerService.newProvider("EMT", issuerService.getIssuerByName("Accestur"));
 		//providerService.getProvidersByIssuer(issuerService.getIssuerByName("ACCESTUR"));
@@ -40,13 +48,15 @@ public class HomePageController{
 	
 	private void Init(){
 		// CREATE ISSUER
+		//issuerService.newIssuer("UIB");
 		issuerService.newIssuer("Accestur");
 		
 		// CREATE PROVIDER 
 		providerService.newProvider("TIB", issuerService.getIssuerByName("Accestur"));
+		providerService.newProvider("EMT", issuerService.getIssuerByName("Accestur"));
 		
 		// CREATE SERVICES
-		createServices();
+		//createServices();
 	}
 	private void createServices(){
 		String[] names = new String[4];
@@ -66,5 +76,12 @@ public class HomePageController{
 		
 		providerService.initiateProviderByName("TIB");
 		issuerService.generateCertificate(providerService.authenticateProvider(names, counters));
+	}
+	
+	
+	private void generateUser(){
+		userService.createCertificate();
+		ttpService.createCertificate();
+		System.out.println(userService.verifyPseudonym(ttpService.generatePseudonym(userService.authenticateUser())));
 	}
 }

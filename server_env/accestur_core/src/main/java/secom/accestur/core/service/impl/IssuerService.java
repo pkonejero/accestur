@@ -78,8 +78,17 @@ public class IssuerService implements IssuerServiceInterface{
 	}
 
 	public void newIssuer(String name){
-		issuer.setName(name);
-		issuerRepository.save(issuer);
+		Issuer i = getIssuerByName(name);
+		if(i==null){
+			issuer.setName(name);
+			System.out.println("Name: = " + issuer.getName());
+			issuerRepository.save(issuer);		
+		} else {
+			System.out.println("This issuer already exisits, it will be initialized to the existing values");
+			issuer = i;
+			System.out.println("Name: = " + issuer.getName());
+		}
+		
 	}
 	
 	public static String getYu(String json){
