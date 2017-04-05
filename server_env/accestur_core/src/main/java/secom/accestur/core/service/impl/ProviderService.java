@@ -75,8 +75,8 @@ public class ProviderService implements ProviderServiceInterface{
 	}
 
 	public void createCertificate(){
-		crypto.initPrivateKey("privateUser.der");
-		crypto.initPublicKey("publicUser.der");	
+		crypto.initPrivateKey("private_ISSUER.der");
+		crypto.initPublicKey("public_ISSUER.der");		
 	}
 	
 	public ServiceAgent[] authenticateProvider(String[] names, int[] counters){
