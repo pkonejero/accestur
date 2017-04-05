@@ -94,7 +94,7 @@ public class UserService implements UserServiceInterface {
 		schnorr.SecretKey();
 		schnorr.PublicKey();
 		crypto.initPrivateKey("privateUser.der");
-		crypto.initPublicKey("publicUser.der");
+		crypto.initPublicKey("ttp.crt");
 	}
 
 	public String[] authenticateUser(){

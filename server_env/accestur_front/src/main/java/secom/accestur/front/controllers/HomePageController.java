@@ -34,10 +34,10 @@ public class HomePageController{
 	public String welcome(Map<String, Object> model){
 		
 		// INIT
-		Init();
+		//Init();
 		
 		//Generate  User
-		//generateUser();
+		generateUser();
 		
 		//providerService.newProvider("EMT", issuerService.getIssuerByName("Accestur"));
 		//providerService.getProvidersByIssuer(issuerService.getIssuerByName("ACCESTUR"));
