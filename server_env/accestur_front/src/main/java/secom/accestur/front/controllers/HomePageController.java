@@ -28,20 +28,26 @@ public class HomePageController{
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model){
 		
-		// CREATE ISSUER
-		issuerService.newIssuer("Accestur");
+		// INIT
+		Init();
 		
-		// CREATE PROVIDER 
-		providerService.newProvider("EMT", issuerService.getIssuerByName("Accestur"));
-		
-		//createServices();
 		//providerService.newProvider("EMT", issuerService.getIssuerByName("Accestur"));
-		providerService.getProvidersByIssuer(issuerService.getIssuerByName("ACCESTUR"));
-		System.out.println(providerService.getProvidersByIssuer(issuerService.getIssuerByName("ACCESTUR")).iterator().next().getName());
+		//providerService.getProvidersByIssuer(issuerService.getIssuerByName("ACCESTUR"));
+		//System.out.println(providerService.getProvidersByIssuer(issuerService.getIssuerByName("ACCESTUR")).iterator().next().getName());
 		//System.out.println(issuerService.getIssuerByName("ACCESTUR").getName());
 		return "welcome";
 	}
 	
+	private void Init(){
+		// CREATE ISSUER
+		issuerService.newIssuer("Accestur");
+		
+		// CREATE PROVIDER 
+		providerService.newProvider("TIB", issuerService.getIssuerByName("Accestur"));
+		
+		// CREATE SERVICES
+		createServices();
+	}
 	private void createServices(){
 		String[] names = new String[4];
 		int[] counters = new int[4];
