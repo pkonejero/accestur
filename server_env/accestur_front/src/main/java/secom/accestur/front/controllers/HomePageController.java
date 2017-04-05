@@ -37,7 +37,7 @@ public class HomePageController{
 		Init();
 		
 		//Generate  User
-		//generateUser();
+		generateUser();
 		
 		//providerService.newProvider("EMT", issuerService.getIssuerByName("Accestur"));
 		//providerService.getProvidersByIssuer(issuerService.getIssuerByName("ACCESTUR"));
