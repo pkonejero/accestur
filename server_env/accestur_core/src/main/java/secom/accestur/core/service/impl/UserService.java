@@ -116,6 +116,7 @@ public class UserService implements UserServiceInterface {
 		schnorr = Schnorr.fromPrivateCertificate(user.getSchnorr());
 		String[] params = new String[8];
 		params[0] = user.getPseudonym();
+		params[1] = schnorr.getCertificate();
 		// schnorr.printValues();
 		RU = schnorr.getRandom();
 		params[2] = Cryptography.hash(RU.toString());
@@ -126,7 +127,7 @@ public class UserService implements UserServiceInterface {
 		params[5] = schnorr.getA_2().toString();
 		params[6] = Constants.LIFETIME;
 		params[7] = Constants.CATEGORY;
-		params[1] = schnorr.getCertificate();
+		
 		return params;
 	}
 
@@ -163,6 +164,10 @@ public class UserService implements UserServiceInterface {
 			}
 		}
 		String[] ws = new String[2];
+		//System.out.println("User sends:");
+		//System.out.println("w1: "+ schnorr.getW1().toString());
+		//System.out.println("w2: " + schnorr.getW2().toString());
+		//System.out.println("yU:" + schnorr.getY().toString());
 		ws[0] = schnorr.getW1().toString();
 		ws[1] = schnorr.getW2().toString();
 
@@ -185,14 +190,14 @@ public class UserService implements UserServiceInterface {
 			jsonObject.put("service", services[i]);
 			jsonObject.put("psi", psi[i]);
 			String s = crypto.encryptWithPublicKey(jsonObject.toString());
-			System.out.println(s);
+			//System.out.println(s);
 			jsonArray.put(i, s);
 		}
 
 		json.put("services", jsonArray);
 		String message = json.toString();
-		System.out.println(message);
-		System.out.println(message.length());
+		//System.out.println(message);
+		//System.out.println(message.length());
 		
 		return message;
 		

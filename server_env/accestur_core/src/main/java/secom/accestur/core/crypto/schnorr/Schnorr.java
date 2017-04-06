@@ -78,7 +78,7 @@ public class Schnorr{
 	}
 	
 	public BigInteger getRandom(){
-		return new BigInteger(Constants.PRIME_BITS, new Random());
+		return new BigInteger(128, new Random());
 	}
 	
 	public BigInteger getPower(BigInteger bg){
@@ -90,6 +90,11 @@ public class Schnorr{
 		a2 = getRandom();
 		A_1 = getPower(a1);
 		A_2 = getPower(a2);
+		System.out.println("User values:");
+		System.out.println("a1: " + a1);
+		System.out.println("a2: " + a2);
+		System.out.println("A_1: " + A_1);
+		System.out.println("A_2 " + A_2);
 	}
 	
 	public BigInteger getSessionSeed(BigInteger a, BigInteger RU){
@@ -97,31 +102,53 @@ public class Schnorr{
 	}
 	
 	public void solveChallengeQuery(BigInteger c, BigInteger RU){
-		w1 = a1.add(c.multiply(x)).mod(q);
-		w2 = a2.add(c.multiply(RU)).mod(q);
+		BigInteger cx = c.multiply(x);
+		BigInteger a_cx = a1.add(cx);
+		w1 = a_cx.mod(q);
+		
+		BigInteger cRU = c.multiply(RU);
+		BigInteger a2_cRU = a2.add(cRU);
+		w2 = a2_cRU.mod(q);
+		System.out.println("User values:");
+		System.out.println("w1: " + w1);
+		System.out.println("w2: " + w2);
 	}
 	
 	public void verifyPASSQuery(BigInteger yu_C, BigInteger Hu_C){
 		boolean first;
 		boolean second;
 		
+		System.out.println("Issuer parameters:");
+		System.out.println("w1: " + w1);
+		System.out.println("w2: " + w2);
+		System.out.println("A_1: " + A_1);
+		System.out.println("A_2 " + A_2);
+		
 		BigInteger g_w1 = g.modPow(w1, p);
 		BigInteger g_w2 = g.modPow(w2, p);
 		
-		first = g_w1.equals(yu_C.multiply(A_1));
-		second = g_w2.equals(Hu_C.multiply(A_2));
+		BigInteger yca = yu_C.multiply(A_1);
+		BigInteger ycaMODp = yca.mod(p);
+		
+		BigInteger hca = Hu_C.multiply(A_2);
+		BigInteger hcaMODp = hca.mod(p);
+		
+		first = g_w1.equals(ycaMODp);
+		second = g_w2.equals(hcaMODp);
 		
 		System.out.println("First check: " + first + "  Second check: " +second);
 	}
 
 	public BigInteger send_a_to_b_request(){
 		c = new BigInteger(Constants.PRIME_BITS, new Random());
+		System.out.println(c);
 		w = g.modPow(c, p);
 		return w;
 	}
 
 	public BigInteger send_b_to_a_challenge(){
 		e = new BigInteger(Constants.PRIME_BITS, new Random());
+		System.out.println(e);
 		return e;
 	}
 
@@ -285,10 +312,10 @@ public class Schnorr{
 
 	public String getCertificate(){
 		JSONObject jsonObject = new JSONObject();
-		System.out.println(p.toString());
-		System.out.println(q.toString());
-		System.out.println(g.toString());
-		System.out.println(y.toString());
+		//System.out.println(p.toString());
+		//System.out.println(q.toString());
+		//System.out.println(g.toString());
+		//System.out.println(y.toString());
 		jsonObject.put("p", p.toString());
 		jsonObject.put("q", q.toString());
 		jsonObject.put("g", g.toString());
@@ -317,7 +344,10 @@ public class Schnorr{
 		schnorr.setG(g);
 		schnorr.setP(p);
 		schnorr.setY(y);
-		
+		System.out.println("p: " +p.toString());
+		System.out.println("q: " +q.toString());
+		System.out.println("g: " +g.toString());
+		System.out.println("y: " +y.toString());
 		return schnorr;
 	}
 	
@@ -338,10 +368,11 @@ public class Schnorr{
 		schnorr.setQ(q);
 		schnorr.setY(y);
 		schnorr.setX(x);
-//		System.out.println("p: "+schnorr.getP().toString());
-//		System.out.println("q: "+schnorr.getQ().toString());
-//		System.out.println("g: "+schnorr.getG().toString());
-//		System.out.println("y: "+schnorr.getY().toString());
+		System.out.println("p: "+schnorr.getP().toString());
+		System.out.println("q: "+schnorr.getQ().toString());
+		System.out.println("g: "+schnorr.getG().toString());
+		System.out.println("y: "+schnorr.getY().toString());
+		System.out.println("x: "+schnorr.getX().toString());
 		//schnorr.printValues();
 		return schnorr;
 	}
