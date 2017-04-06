@@ -62,7 +62,7 @@ public class IssuerService implements IssuerServiceInterface{
 		schnorr.setA_2(new BigInteger(params[5]));
 		BigInteger yU = new BigInteger(getYu(params[0]));
 		BigInteger Hu = new BigInteger(params[3]);
-		BigInteger c = schnorr.getRandom();
+		BigInteger c = new BigInteger("543");
 		schnorr.setC(c);
 		System.out.println("Issuer sends:");
 		System.out.println("c: " +c.toString());

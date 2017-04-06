@@ -78,7 +78,7 @@ public class Schnorr{
 	}
 	
 	public BigInteger getRandom(){
-		return new BigInteger(128, new Random());
+		return new BigInteger(Constants.PRIME_BITS, new Random());
 	}
 	
 	public BigInteger getPower(BigInteger bg){
@@ -363,11 +363,11 @@ public class Schnorr{
 //		System.out.println("g: "+g.toString());
 //		System.out.println("y: "+y.toString());
 		Schnorr schnorr = new Schnorr();
-		schnorr.setP(p);
-		schnorr.setG(g);
-		schnorr.setQ(q);
-		schnorr.setY(y);
-		schnorr.setX(x);
+		schnorr.setP(new BigInteger("88667"));
+		schnorr.setG(new BigInteger("70322"));
+		schnorr.setQ(new BigInteger("1031"));
+		schnorr.setY(new BigInteger("13136"));
+		schnorr.setX(new BigInteger("755"));
 		System.out.println("p: "+schnorr.getP().toString());
 		System.out.println("q: "+schnorr.getQ().toString());
 		System.out.println("g: "+schnorr.getG().toString());
