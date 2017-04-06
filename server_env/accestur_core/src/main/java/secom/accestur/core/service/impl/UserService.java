@@ -94,9 +94,9 @@ public class UserService implements UserServiceInterface {
 	}
 
 	public void createCertificate() {
-		 schnorr.Init();
-		 schnorr.SecretKey();
-		 schnorr.PublicKey();
+		 //schnorr.Init();
+		 //schnorr.SecretKey();
+		 //schnorr.PublicKey();
 		crypto.initPrivateKey("cert/user/private_USER.der");
 		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
 	}
@@ -111,7 +111,7 @@ public class UserService implements UserServiceInterface {
 	}
 
 	public String[] getService() {
-		initUser();
+		//initUser();
 		System.out.println(user.getSchnorr());
 		schnorr = Schnorr.fromPrivateCertificate(user.getSchnorr());
 		String[] params = new String[8];
