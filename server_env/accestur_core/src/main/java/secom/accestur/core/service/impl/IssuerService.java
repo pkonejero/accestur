@@ -40,6 +40,10 @@ public class IssuerService implements IssuerServiceInterface{
 	private String[] paramsOfPass;
 	private BigInteger yU_c;
 	private BigInteger Hu_c;
+	
+	private String[] ws;
+	private String[] services;
+	private String[] psi;
 
 	public Issuer getIssuerByName(String name){
 		return issuerRepository.findByNameIgnoreCase(name);
@@ -54,6 +58,8 @@ public class IssuerService implements IssuerServiceInterface{
 	public String getChallenge(String[] params){
 		paramsOfPass = params;
 		schnorr = Schnorr.fromCertificate(params[1]);
+		schnorr.setA_1(new BigInteger(params[4]));
+		schnorr.setA_2(new BigInteger(params[5]));
 		BigInteger yU = new BigInteger(getYu(params[0]));
 		BigInteger Hu = new BigInteger(params[3]);
 		BigInteger c = schnorr.send_b_to_a_challenge();
@@ -62,8 +68,41 @@ public class IssuerService implements IssuerServiceInterface{
 		return c.toString();
 	}
 
-	public String[] getPASS(String[] params){
+	public String[] getPASS(String params){
+		getChallengeMessage(params);
+		schnorr.setW1(new BigInteger(ws[0]));
+		schnorr.setW2(new BigInteger(ws[1]));
+		
+		schnorr.verifyPASSQuery(yU_c, Hu_c);
+		
+		
+		
 		return null;
+	}
+	
+	private void getChallengeMessage(String params){
+		System.out.println(params);
+		JSONObject json = new JSONObject(params);
+		//System.out.println(json.toString());
+		ws = new String[2];
+		System.out.println(json.getString("w1"));
+		ws[0] = crypto.decryptWithPublicKey(json.getString("w1"));
+		ws[1] = crypto.decryptWithPublicKey(json.getString("w2"));
+		
+		JSONArray jsonArray = json.getJSONArray("services");
+		psi = new String[jsonArray.length()];
+		services = new String[jsonArray.length()];
+		JSONObject jsonObject;
+		String s;
+		for(int i = 0; i < psi.length; i++){
+			s = jsonArray.getString(i);
+			jsonObject = new JSONObject(crypto.decryptWithPrivateKey(s));
+			psi[i] = jsonObject.getString("psi");
+			services[i] = jsonObject.getString("service");
+		}
+		
+		
+		
 	}
 
 	public String[] verifyTicket(String[] params){
@@ -74,7 +113,9 @@ public class IssuerService implements IssuerServiceInterface{
 		return false;
 	}
 
-	public void createCertificate(){		
+	public void createCertificate(){
+		crypto.initPrivateKey("cert/issuer/private_ISSUER.der");
+		crypto.initPublicKey("cert/user/public_USER.der");	
 	}
 
 	public void newIssuer(String name){

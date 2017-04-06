@@ -7,6 +7,8 @@ public interface UserServiceInterface{
 	
 	public User getUserByPseudonym(String pseudonym);
 	
+	public void initUser();
+	
 	public String[] authenticateUser();
 	
 	public boolean verifyPseudonym(String[] params);
@@ -21,7 +23,7 @@ public interface UserServiceInterface{
 	
 	public boolean getValidationConfirmation();
 	
-	public String[] solveChallenge(String[] params);
+	public String solveChallenge(String c, String[] services);
 	
 	public String[] receivePass(String[] params);
 	

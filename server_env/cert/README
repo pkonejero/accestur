@@ -2,8 +2,8 @@
 
 2 - OBTAIN PUBLIC KEY  (JAVA)  - openssl rsa -in keypair.pem -outform DER -pubout -out public.der
 
-3 - OBTAIN PRIVATE KEY (JAVA)  - openssl pkcs8 -topk8 -nocrypt -in keypair.pem -outform DER -out private.der 
+3 - OBTAIN PRIVATE KEY (JAVA)  - openssl pkcs8 -topk8 -nocrypt -in keypair.pem -outform DER -out private.der
 
-4 - GENERATE CSR               - openssl req -new -key keypair.key -out server.csr
+4 - GENERATE CSR               - openssl req -new -key keypair.pem -out server.csr
 
-5 - GENERATE SELF-SIGNED CERT  - openssl x509 -req -days 365 -in server.csr -signkey keyair.pem -out server.crt
+5 - GENERATE SELF-SIGNED CERT  - openssl x509 -req -days 365 -in server.csr -signkey keypair.pem -out server.crt

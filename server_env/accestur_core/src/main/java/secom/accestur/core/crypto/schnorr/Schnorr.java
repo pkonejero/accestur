@@ -100,6 +100,19 @@ public class Schnorr{
 		w1 = a1.add(c.multiply(x)).mod(q);
 		w2 = a2.add(c.multiply(RU)).mod(q);
 	}
+	
+	public void verifyPASSQuery(BigInteger yu_C, BigInteger Hu_C){
+		boolean first;
+		boolean second;
+		
+		BigInteger g_w1 = g.modPow(w1, p);
+		BigInteger g_w2 = g.modPow(w2, p);
+		
+		first = g_w1.equals(yu_C.multiply(A_1));
+		second = g_w2.equals(Hu_C.multiply(A_2));
+		
+		System.out.println("First check: " + first + "  Second check: " +second);
+	}
 
 	public BigInteger send_a_to_b_request(){
 		c = new BigInteger(Constants.PRIME_BITS, new Random());
@@ -272,6 +285,10 @@ public class Schnorr{
 
 	public String getCertificate(){
 		JSONObject jsonObject = new JSONObject();
+		System.out.println(p.toString());
+		System.out.println(q.toString());
+		System.out.println(g.toString());
+		System.out.println(y.toString());
 		jsonObject.put("p", p.toString());
 		jsonObject.put("q", q.toString());
 		jsonObject.put("g", g.toString());
@@ -306,18 +323,26 @@ public class Schnorr{
 	
 	public static Schnorr fromPrivateCertificate(String json){
 		JSONObject jsonObject = new JSONObject(json);
-		BigInteger p = new BigInteger(jsonObject.getString("p"));
+		BigInteger p = new BigInteger(jsonObject.getString("p"));		
 		BigInteger q = new BigInteger(jsonObject.getString("q"));
 		BigInteger g = new BigInteger(jsonObject.getString("g"));
 		BigInteger y = new BigInteger(jsonObject.getString("y"));
 		BigInteger x = new BigInteger(jsonObject.getString("x"));
+//		System.out.println("p: "+ p.toString());
+//		System.out.println("q: "+q.toString());
+//		System.out.println("g: "+g.toString());
+//		System.out.println("y: "+y.toString());
 		Schnorr schnorr = new Schnorr();
 		schnorr.setP(p);
 		schnorr.setG(g);
-		schnorr.setP(p);
+		schnorr.setQ(q);
 		schnorr.setY(y);
 		schnorr.setX(x);
-		
+//		System.out.println("p: "+schnorr.getP().toString());
+//		System.out.println("q: "+schnorr.getQ().toString());
+//		System.out.println("g: "+schnorr.getG().toString());
+//		System.out.println("y: "+schnorr.getY().toString());
+		//schnorr.printValues();
 		return schnorr;
 	}
 	
@@ -346,5 +371,12 @@ public class Schnorr{
 		values[3] = x.toString();
 		values[4] = y.toString();
 		return values;
+	}
+	
+	public void printValues(){
+		System.out.println(p.toString());
+		System.out.println(q.toString());
+		System.out.println(g.toString());
+		System.out.println(y.toString());
 	}
 }

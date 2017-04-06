@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import secom.accestur.core.dao.ServiceAgentRepository;
+import secom.accestur.core.model.MCityPass;
+import secom.accestur.core.model.Provider;
 import secom.accestur.core.model.ServiceAgent;
 import secom.accestur.core.service.ServiceAgentInterface;
 
@@ -16,17 +18,31 @@ public class ServiceAgentService implements ServiceAgentInterface{
 	@Qualifier("serviceAgentRepository")
 	private ServiceAgentRepository serviceAgentRepository;
 
-	public List<ServiceAgent> getServicesByProvider(){
-		return null;
-	}
-
-	public List<ServiceAgent> getServicesByMCityPass(){
-		return null;
+	
+	public ServiceAgent getServiceByName(String name){
+		return  serviceAgentRepository.findByNameIgnoreCase(name);
 	}
 	
 	public void storeServices(ServiceAgent[] services){
 		for (int i = 0; i < services.length; i++){
-			serviceAgentRepository.save(services[i]);
+			if(serviceAgentRepository.findByNameIgnoreCase(services[i].getName())==null){
+				serviceAgentRepository.save(services[i]);
+			} else {
+				System.out.println("This service already exists");
+			}
+			
 		}
+	}
+
+
+	public List<ServiceAgent> getServicesByProvider(Provider provider) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public List<ServiceAgent> getServicesByMCityPass(MCityPass mCityPass) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -12,7 +12,7 @@ public interface IssuerServiceInterface{
 
 	public String getChallenge(String [] params);
 
-	public String[] getPASS(String[] params);
+	public String[] getPASS(String params);
 
 	public String[] verifyTicket(String[] params);
 

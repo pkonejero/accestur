@@ -37,7 +37,7 @@ public class TrustedThirdPartyService implements TrustedThirdPartyServiceInterfa
 	}
 
 	public void createCertificate(){
-		crypto.initPrivateKey("private_ISSUER.der");
-		crypto.initPublicKey("public_ISSUER.der");		
+		crypto.initPrivateKey("cert/ttp/private_TTP.der");
+		crypto.initPublicKey("cert/user/public_USER.der");		
 	}
 }

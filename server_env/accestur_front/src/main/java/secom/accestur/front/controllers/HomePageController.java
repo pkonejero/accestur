@@ -34,10 +34,13 @@ public class HomePageController{
 	public String welcome(Map<String, Object> model){
 		
 		// INIT
-		//Init();
+		Init();
 		
 		//Generate  User
 		generateUser();
+		createServices();
+		
+		passPurchase();
 		
 		//providerService.newProvider("EMT", issuerService.getIssuerByName("Accestur"));
 		//providerService.getProvidersByIssuer(issuerService.getIssuerByName("ACCESTUR"));
@@ -83,5 +86,18 @@ public class HomePageController{
 		userService.createCertificate();
 		ttpService.createCertificate();
 		System.out.println(userService.verifyPseudonym(ttpService.generatePseudonym(userService.authenticateUser())));
+	}
+	
+	
+	private void passPurchase(){
+		//userService.initUser();
+		userService.createCertificate();
+		issuerService.createCertificate();
+		String[] names = new String[4];
+		names[0] = "InfiniteReusable";
+		names[1] = "NoReusable";
+		names[2] = "TwoTimesReusable";
+		names[3] = "TenTimesReusable";
+		issuerService.getPASS(userService.solveChallenge(issuerService.getChallenge(userService.getService()), names));
 	}
 }
