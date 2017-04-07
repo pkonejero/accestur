@@ -13,7 +13,7 @@ public interface UserServiceInterface{
 	
 	public boolean verifyPseudonym(String[] params);
 	
-	public String[] getService();
+	public String getService();
 	
 	public String[] showTicket();
 	

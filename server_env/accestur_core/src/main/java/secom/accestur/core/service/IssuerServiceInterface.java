@@ -10,9 +10,9 @@ public interface IssuerServiceInterface{
 
 	public void newIssuer(String name);
 
-	public String getChallenge(String [] params);
+	public String getChallenge(String params);
 
-	public String[] getPASS(String params);
+	public String getPASS(String params);
 
 	public String[] verifyTicket(String[] params);
 

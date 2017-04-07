@@ -26,10 +26,20 @@ public class MCityPass extends DomainObjectModel{
 	// Activation
 	@OneToOne(fetch=FetchType.LAZY, mappedBy="mCityPass")
 	private Activation activation;
+	
+	@OneToOne(fetch=FetchType.LAZY, mappedBy="mCityPass")
+	private RightOfUse rightOfUse;
 
-	//Hash of All Secret numbers
-	@ElementCollection
-	private List<String> hRI;
+	public RightOfUse getRightOfUse() {
+		return rightOfUse;
+	}
+
+	public void setRightOfUse(RightOfUse rightOfUse) {
+		this.rightOfUse = rightOfUse;
+	}
+
+
+	private String hRI;
 
 	//@ManyToMany
 	//@JoinTable(
@@ -39,9 +49,11 @@ public class MCityPass extends DomainObjectModel{
 	//private List<Service> services;
 
 	//Type
-	private Long lifeTime;
+	private String lifeTime;
 	private String category;
 	private String termsAndContions;
+
+	private String delta;
 
 	//Dates
 	private Date purDate;
@@ -76,19 +88,19 @@ public class MCityPass extends DomainObjectModel{
 		this.activation = activation;
 	}
 
-	public List<String> gethRI(){
+	public String gethRI(){
 		return hRI;
 	}
 
-	public void sethRI(List<String> hRI){
+	public void sethRI(String hRI){
 		this.hRI = hRI;
 	}
 
-	public Long getLifeTime(){
+	public String getLifeTime(){
 		return lifeTime;
 	}
 
-	public void setLifeTime(Long lifeTime){
+	public void setLifeTime(String lifeTime){
 		this.lifeTime = lifeTime;
 	}
 
@@ -130,5 +142,13 @@ public class MCityPass extends DomainObjectModel{
 
 	public void sethRU(String hRU){
 		this.hRU = hRU;
+	}
+	
+	public String getDelta() {
+		return delta;
+	}
+
+	public void setDelta(String delta) {
+		this.delta = delta;
 	}
 }

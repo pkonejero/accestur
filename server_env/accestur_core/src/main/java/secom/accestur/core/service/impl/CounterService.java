@@ -31,4 +31,5 @@ public class CounterService implements CounterServiceInterface{
 	public Counter getCounter(long mCityPass, long service){
 		return null;
 	}
+	
 }

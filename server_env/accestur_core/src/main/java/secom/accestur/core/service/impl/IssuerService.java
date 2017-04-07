@@ -5,14 +5,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.math.BigInteger;
+import java.util.Random;
+
 import org.json.*;
 
 import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.schnorr.Schnorr;
 import secom.accestur.core.dao.IssuerRepository;
 import secom.accestur.core.model.Issuer;
+import secom.accestur.core.model.Counter;
+import secom.accestur.core.model.MCityPass;
+import secom.accestur.core.model.RightOfUse;
 import secom.accestur.core.model.ServiceAgent;
 import secom.accestur.core.service.IssuerServiceInterface;
+import secom.accestur.core.utils.Constants;
 
 @Service("issuerService")
 public class IssuerService implements IssuerServiceInterface{
@@ -36,6 +42,12 @@ public class IssuerService implements IssuerServiceInterface{
 	@Qualifier("cryptography")
 	private Cryptography crypto;
 	
+	@Autowired
+	@Qualifier("mcitypassModel")
+	MCityPass mCityPass;
+	
+	
+	
 	//Values necessary to create CiyPass;
 	private String[] paramsOfPass;
 	private BigInteger yU_c;
@@ -55,7 +67,8 @@ public class IssuerService implements IssuerServiceInterface{
 		return "Services Generated";
 	}
 
-	public String getChallenge(String[] params){
+	public String getChallenge(String json){
+		String[] params = solveChallengeMessage(json);
 		paramsOfPass = params;
 		schnorr = Schnorr.fromCertificate(params[1]);
 		schnorr.setA_1(new BigInteger(params[4]));
@@ -70,18 +83,21 @@ public class IssuerService implements IssuerServiceInterface{
 		Hu_c = Hu.modPow(c, schnorr.getP());
 		return c.toString();
 	}
-
-	public String[] getPASS(String params){
-		getChallengeMessage(params);
-		schnorr.setW1(new BigInteger(ws[0]));
-		schnorr.setW2(new BigInteger(ws[1]));
+	
+	private String[] solveChallengeMessage (String message){
+		JSONObject json = new JSONObject(message);
+		String[] params = new String[8];
+		params[0] = json.getString("user");
+		params[1] = json.getString("certificate");
+		params[2] = json.getString("hRU");
+		params[3] = json.getString("Hu");
+		params[4] = json.getString("A1");
+		params[5] = json.getString("A2");
+		params[6] = json.getString("Lifetime");
+		params[7] = json.getString("Category");
 		
-		schnorr.verifyPASSQuery(yU_c, Hu_c);
-		
-		
-		
-		return null;
-	}
+		return params;
+ 	}
 	
 	private void getChallengeMessage(String params){
 		//System.out.println(params);
@@ -106,8 +122,45 @@ public class IssuerService implements IssuerServiceInterface{
 			services[i] = jsonObject.getString("service");
 		}
 		
+	}
+	
+	public String getPASS(String params){
+		getChallengeMessage(params);
+		schnorr.setW1(new BigInteger(ws[0]));
+		schnorr.setW2(new BigInteger(ws[1]));
+		
+		if(!schnorr.verifyPASSQuery(yU_c, Hu_c)){
+			System.out.println("Authentication failed");
+			return 	"Authentication failed";		
+		} else {
+			BigInteger RI = new BigInteger(Constants.PRIME_BITS, new Random());
+			String hRI = Cryptography.hash(RI.toString());
+			//Generate k
+			crypto.initPublicKey("cert/ttp/public_TTP.der");
+			JSONObject json = new JSONObject();
+			json.put("K", Cryptography.hash((new BigInteger(ws[1])).toString()));
+			json.put("RI", RI);
+			String k = crypto.getSignature(json.toString());
+			JSONObject rou = new JSONObject();
+			rou.put("k", crypto.encryptWithPublicKey(json.toString()));
+			rou.put("signature" , k);
+			String delta = rou.toString();
+			RightOfUse rightOfUse = new RightOfUse(json.toString(), k);
+			
+			mCityPass.setCategory(paramsOfPass[7]);
+			mCityPass.setLifeTime(paramsOfPass[6]);
+			mCityPass.sethRI(hRI);
+			mCityPass.sethRU(paramsOfPass[2]);
+			
+			
+			List<Counter> counters;
+			
+			
+		}
 		
 		
+		
+		return null;
 	}
 
 	public String[] verifyTicket(String[] params){

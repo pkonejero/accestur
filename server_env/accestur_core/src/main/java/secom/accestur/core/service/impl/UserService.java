@@ -94,14 +94,14 @@ public class UserService implements UserServiceInterface {
 	}
 
 	public void createCertificate() {
-		 schnorr.Init();
-		 schnorr.SecretKey();
-		 schnorr.PublicKey();
 		crypto.initPrivateKey("cert/user/private_USER.der");
 	}
 
 	public String[] authenticateUser() {
-		crypto.initPublicKey("cert/ttp/public_TTP.der");
+		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
+		 schnorr.Init();
+		 schnorr.SecretKey();
+		 schnorr.PublicKey();
 		String params[] = new String[3];
 		BigInteger y = schnorr.getY();
 		params[0] = crypto.getSignature(y.toString());
@@ -110,7 +110,7 @@ public class UserService implements UserServiceInterface {
 		return params;
 	}
 
-	public String[] getService() {
+	public String getService() {
 		//initUser();
 		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
 		System.out.println(user.getSchnorr());
@@ -129,7 +129,20 @@ public class UserService implements UserServiceInterface {
 		params[6] = Constants.LIFETIME;
 		params[7] = Constants.CATEGORY;
 		
-		return params;
+		return getServiceMessage(params);
+	}
+	
+	private String getServiceMessage(String[] params){
+		JSONObject json = new JSONObject();
+		json.put("user", params[0]);
+		json.put("certificate", params[1]);
+		json.put("hRU", params[2]);
+		json.put("Hu", params[3]);
+		json.put("A1", params[4]);
+		json.put("A2", params[5]);
+		json.put("Lifetime", params[6]);
+		json.put("Category", params[7]);
+		return json.toString();
 	}
 
 	public String[] showTicket() {

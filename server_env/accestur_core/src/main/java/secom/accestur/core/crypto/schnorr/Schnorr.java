@@ -114,7 +114,7 @@ public class Schnorr{
 		System.out.println("w2: " + w2);
 	}
 	
-	public void verifyPASSQuery(BigInteger yu_C, BigInteger Hu_C){
+	public boolean verifyPASSQuery(BigInteger yu_C, BigInteger Hu_C){
 		boolean first;
 		boolean second;
 		
@@ -149,6 +149,7 @@ public class Schnorr{
 //		second = g_w1.equals(hcaMODp);
 		
 		System.out.println("First check: " + first + "  Second check: " +second);
+		return first && second;
 	}
 
 	public BigInteger send_a_to_b_request(){

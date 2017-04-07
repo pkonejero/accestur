@@ -2,51 +2,38 @@ package secom.accestur.core.model;
 
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
 @Entity
 @Table(name = "rightOfUseEntity")
-@Component("rightOfUseModel")
+@Component("rightofuseModel")
 public class RightOfUse extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	// Set of Random Values;
-	@ElementCollection
-	private List<String> RI;
 
-	// Encryption of the rights of use
-	@ElementCollection
-	private List<String> deltas;
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="MCITYPASS_ID")
+	private MCityPass mCityPass;
 
 	// Shared Session Key
 	private String k;
+	private String signature;
 
 	public RightOfUse(){}
 
-	public RightOfUse(String k, List<String> rI, List<String> deltas){
-		super();
-		this.k = k;
-		RI = rI;
-		this.deltas = deltas;
+	public RightOfUse(String k, String signature, MCityPass mCityPass){
+		this.k = k;		
+		this.signature = signature;
+		this.mCityPass = mCityPass;
 	}
-
-	public List<String> getRI(){
-		return RI;
-	}
-
-	public void setRI(List<String> rI){
-		RI = rI;
-	}
-
-	public List<String> getDeltas(){
-		return deltas;
-	}
-
-	public void setDeltas(List<String> deltas){
-		this.deltas = deltas;
+	
+	public RightOfUse(String k, String signature){
+		this.k = k;		
+		this.signature = signature;
 	}
 
 	public String getK(){
@@ -56,4 +43,25 @@ public class RightOfUse extends DomainObjectModel{
 	public void setK(String k){
 		this.k = k;
 	}
+
+	public MCityPass getmCityPass() {
+		return mCityPass;
+	}
+
+	public void setmCityPass(MCityPass mCityPass) {
+		this.mCityPass = mCityPass;
+	}
+
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+	
+	
+	
+	
+
 }
