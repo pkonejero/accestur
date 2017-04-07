@@ -73,7 +73,7 @@ public class Schnorr{
 	}
 
 	public BigInteger PublicKey(){
-		y = g.modPow(q.subtract(x), p);
+		y = g.modPow(x, p);
 		return y;
 	}
 	
@@ -135,6 +135,18 @@ public class Schnorr{
 		
 		first = g_w1.equals(ycaMODp);
 		second = g_w2.equals(hcaMODp);
+		
+//		BigInteger g_w1 = g.modPow(w1, p);
+//		BigInteger g_w2 = g.modPow(w2, p);
+//		
+//		BigInteger yca = yu_C.multiply(g_w1);
+//		BigInteger ycaMODp = yca.mod(p);
+//		
+//		BigInteger hca = yu_C.multiply(A_1);
+//		BigInteger hcaMODp = hca.mod(p);
+//		
+//		first = A_1.equals(ycaMODp);
+//		second = g_w1.equals(hcaMODp);
 		
 		System.out.println("First check: " + first + "  Second check: " +second);
 	}
@@ -342,7 +354,7 @@ public class Schnorr{
 		Schnorr schnorr = new Schnorr();
 		schnorr.setP(p);
 		schnorr.setG(g);
-		schnorr.setP(p);
+		schnorr.setQ(q);
 		schnorr.setY(y);
 		System.out.println("p: " +p.toString());
 		System.out.println("q: " +q.toString());
@@ -363,11 +375,16 @@ public class Schnorr{
 //		System.out.println("g: "+g.toString());
 //		System.out.println("y: "+y.toString());
 		Schnorr schnorr = new Schnorr();
-		schnorr.setP(new BigInteger("88667"));
-		schnorr.setG(new BigInteger("70322"));
-		schnorr.setQ(new BigInteger("1031"));
-		schnorr.setY(new BigInteger("13136"));
-		schnorr.setX(new BigInteger("755"));
+//		schnorr.setP(new BigInteger("88667"));
+//		schnorr.setG(new BigInteger("70322"));
+//		schnorr.setQ(new BigInteger("1031"));
+//		schnorr.setY(new BigInteger("13136"));
+//		schnorr.setX(new BigInteger("755"));
+		schnorr.setP(p);
+		schnorr.setG(g);
+		schnorr.setQ(q);
+		schnorr.setY(y);
+		schnorr.setX(x);
 		System.out.println("p: "+schnorr.getP().toString());
 		System.out.println("q: "+schnorr.getQ().toString());
 		System.out.println("g: "+schnorr.getG().toString());
@@ -387,7 +404,7 @@ public class Schnorr{
 		Schnorr schnorr = new Schnorr();
 		schnorr.setP(p);
 		schnorr.setG(g);
-		schnorr.setP(p);
+		schnorr.setQ(q);
 		schnorr.setY(y);
 		schnorr.setX(x);
 		
