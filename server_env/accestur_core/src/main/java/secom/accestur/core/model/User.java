@@ -1,68 +1,28 @@
 package secom.accestur.core.model;
 
+import javax.persistence.*;
+
 import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.springframework.stereotype.Component;
-
 
 @Entity
 @Table(name="userEntity")
-@Component("userModel")
 public class User extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
-	
+
 	@Column(length = 4000)
 	private String pseudonym;
-	
-//	@Column(length = 4000)
-//	private String signature;
-//	
-//	public String getSignature() {
-//		return signature;
-//	}
-//
-//	public void setSignature(String signature) {
-//		this.signature = signature;
-//	}
 
-//	public String[] getSchnorrParameters() {
-//		String[] params = new String[schnorrParameters.size()];
-//		for(int i = 0; i < schnorrParameters.size(); i++){
-//			params[i] = schnorrParameters.get(i);
-//		}
-//		return params;
-//	}
-//
-//	public void setSchnorrParameters(String[] params) {
-//		List<String> list = new ArrayList<String>(Arrays.asList(params));
-//		
-//		this.schnorrParameters = list;
-//	}
-//
-//	@ElementCollection
-//	private List<String> schnorrParameters;
-	
-	//private String schnorrCertificate;
-	
 	// MCityPass
 	@OneToMany(mappedBy="user")
 	private List<MCityPass> mCityPass;
-	
+
 	@Column(length = 4000)
 	private String schnorr;
-	
+
 	public User(){}
-	
+
 	public String getSchnorr() {
 		return schnorr;
 	}

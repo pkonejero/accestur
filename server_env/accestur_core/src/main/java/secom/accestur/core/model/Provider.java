@@ -1,13 +1,11 @@
 package secom.accestur.core.model;
 
-import org.springframework.stereotype.Component;
+import javax.persistence.*;
 
 import java.util.List;
-import javax.persistence.*;
 
 @Entity
 @Table(name="providerEntity")
-@Component("providerModel")
 public class Provider extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -26,14 +24,14 @@ public class Provider extends DomainObjectModel{
 	private String name;
 
 	Provider(){}
-	
+
 	public Provider(String name, Issuer issuer, List<ServiceAgent> services){
 		super();
 		this.name = name;
 		this.issuer = issuer;
 		this.services = services;
 	}
-	
+
 	public Issuer getIssuer(){
 		return issuer;
 	}

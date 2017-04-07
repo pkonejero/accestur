@@ -1,14 +1,12 @@
 package secom.accestur.core.model;
 
-import org.springframework.stereotype.Component;
+import javax.persistence.*;
 
 import java.util.Date;
 import java.util.List;
-import javax.persistence.*;
 
 @Entity
 @Table(name="mcitypassEntity")
-@Component("mcitypassModel")
 public class MCityPass extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -30,13 +28,6 @@ public class MCityPass extends DomainObjectModel{
 	//Hash of All Secret numbers
 	@ElementCollection
 	private List<String> hRI;
-
-	//@ManyToMany
-	//@JoinTable(
-	//	      name="SERVICES_CITYPASS",
-	//	      joinColumns=@JoinColumn(name="CITYPASS_ID", referencedColumnName="ID"),
-	//	      inverseJoinColumns=@JoinColumn(name="SERVICE_ID", referencedColumnName="ID"))
-	//private List<Service> services;
 
 	//Type
 	private Long lifeTime;

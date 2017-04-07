@@ -1,13 +1,11 @@
 package secom.accestur.core.model;
 
-import org.springframework.stereotype.Component;
+import javax.persistence.*;
 
 import java.util.Date;
-import javax.persistence.*;
 
 @Entity
 @Table(name = "activationEntity")
-@Component("activationModel")
 public class Activation extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
