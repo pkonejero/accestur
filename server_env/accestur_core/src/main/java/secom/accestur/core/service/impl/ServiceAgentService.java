@@ -18,7 +18,6 @@ public class ServiceAgentService implements ServiceAgentInterface{
 	@Qualifier("serviceAgentRepository")
 	private ServiceAgentRepository serviceAgentRepository;
 
-	
 	public ServiceAgent getServiceByName(String name){
 		return  serviceAgentRepository.findByNameIgnoreCase(name);
 	}
@@ -30,19 +29,14 @@ public class ServiceAgentService implements ServiceAgentInterface{
 			} else {
 				System.out.println("This service already exists");
 			}
-			
 		}
 	}
 
-
-	public List<ServiceAgent> getServicesByProvider(Provider provider) {
-		// TODO Auto-generated method stub
+	public List<ServiceAgent> getServicesByProvider(Provider provider){
 		return null;
 	}
 
-
-	public List<ServiceAgent> getServicesByMCityPass(MCityPass mCityPass) {
-		// TODO Auto-generated method stub
+	public List<ServiceAgent> getServicesByMCityPass(MCityPass mCityPass){
 		return null;
 	}
 }

@@ -11,14 +11,12 @@ import secom.accestur.core.model.MCityPass;
 import secom.accestur.core.service.MCityPassServiceInterface;
 
 @Service("mCityPassService")
-public class MCityPassService implements MCityPassServiceInterface{
-	@Autowired
-	@Qualifier("mcitypassModel")
-	private MCityPass mCityPass;
-	
+public class MCityPassService implements MCityPassServiceInterface{	
 	@Autowired
 	@Qualifier("mcitypassRepository")
 	private MCityPassRepository mcitypassRepository;
+	
+	private MCityPass mCityPass;
 
 	public MCityPass getMCityPassBySn(long sn){
 		return null;

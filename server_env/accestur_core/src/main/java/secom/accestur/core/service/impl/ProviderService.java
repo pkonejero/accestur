@@ -20,10 +20,6 @@ import secom.accestur.core.utils.Constants;
 @Service("providerService")
 public class ProviderService implements ProviderServiceInterface{
 	@Autowired
-	@Qualifier("providerModel")
-	private Provider provider;
-
-	@Autowired
 	@Qualifier("providerRepository")
 	private ProviderRepository providerRepository;
 	
@@ -34,6 +30,8 @@ public class ProviderService implements ProviderServiceInterface{
 	@Autowired
 	@Qualifier("cryptography")
 	private Cryptography crypto;
+	
+	private Provider provider;
 
 	public void newProvider(String name, Issuer issuer){
 		Provider p = getProviderByName(name);

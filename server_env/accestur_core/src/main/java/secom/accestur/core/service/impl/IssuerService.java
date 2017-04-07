@@ -17,10 +17,6 @@ import secom.accestur.core.service.IssuerServiceInterface;
 @Service("issuerService")
 public class IssuerService implements IssuerServiceInterface{
 	@Autowired
-	@Qualifier("issuerModel")
-	private Issuer issuer;
-
-	@Autowired
 	@Qualifier("issuerRepository")
 	private IssuerRepository issuerRepository;
 	
@@ -35,6 +31,8 @@ public class IssuerService implements IssuerServiceInterface{
 	@Autowired
 	@Qualifier("cryptography")
 	private Cryptography crypto;
+
+	private Issuer issuer;
 	
 	//Values necessary to create CiyPass;
 	private String[] paramsOfPass;
