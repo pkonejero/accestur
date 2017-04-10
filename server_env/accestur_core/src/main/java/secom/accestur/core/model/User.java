@@ -17,13 +17,13 @@ public class User extends DomainObjectModel{
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	@Column(length = 4000)
+	@Column(length = 40000)
 	private String pseudonym;
 
 	@OneToMany(mappedBy="user")
 	private List<MCityPass> mCityPass;
 	
-	@Column(length = 4000)
+	@Column(length = 40000)
 	private String schnorr;
 	
 	public User(){}

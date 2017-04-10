@@ -19,8 +19,6 @@ import java.util.logging.Logger;
 
 import org.springframework.stereotype.Component;
 
-import secom.accestur.core.utils.Constants;
-
 @Component("elGamal")
 public class Elgamal {
 	private int nbits;
@@ -30,9 +28,7 @@ public class Elgamal {
 	private BigInteger i, j;
 	private BigInteger[] arr = new BigInteger[3];
 
-	public Elgamal() {
-		this.kset = new Elgamal_KeySet(Constants.ELGAMAL_DEFAULT_BITS);
-	}
+	public Elgamal() {}
 
 	public Elgamal(int nb_bits) {
 		this.nbits = nb_bits;

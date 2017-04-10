@@ -90,11 +90,6 @@ public class Schnorr{
 		a2 = getRandom();
 		A_1 = getPower(a1);
 		A_2 = getPower(a2);
-		System.out.println("User values:");
-		System.out.println("a1: " + a1);
-		System.out.println("a2: " + a2);
-		System.out.println("A_1: " + A_1);
-		System.out.println("A_2 " + A_2);
 	}
 	
 	public BigInteger getSessionSeed(BigInteger a, BigInteger RU){
@@ -109,21 +104,12 @@ public class Schnorr{
 		BigInteger cRU = c.multiply(RU);
 		BigInteger a2_cRU = a2.add(cRU);
 		w2 = a2_cRU.mod(q);
-		System.out.println("User values:");
-		System.out.println("w1: " + w1);
-		System.out.println("w2: " + w2);
 	}
 	
 	public void verifyPASSQuery(BigInteger yu_C, BigInteger Hu_C){
 		boolean first;
 		boolean second;
-		
-		System.out.println("Issuer parameters:");
-		System.out.println("w1: " + w1);
-		System.out.println("w2: " + w2);
-		System.out.println("A_1: " + A_1);
-		System.out.println("A_2 " + A_2);
-		
+				
 		BigInteger g_w1 = g.modPow(w1, p);
 		BigInteger g_w2 = g.modPow(w2, p);
 		
@@ -135,19 +121,7 @@ public class Schnorr{
 		
 		first = g_w1.equals(ycaMODp);
 		second = g_w2.equals(hcaMODp);
-		
-//		BigInteger g_w1 = g.modPow(w1, p);
-//		BigInteger g_w2 = g.modPow(w2, p);
-//		
-//		BigInteger yca = yu_C.multiply(g_w1);
-//		BigInteger ycaMODp = yca.mod(p);
-//		
-//		BigInteger hca = yu_C.multiply(A_1);
-//		BigInteger hcaMODp = hca.mod(p);
-//		
-//		first = A_1.equals(ycaMODp);
-//		second = g_w1.equals(hcaMODp);
-		
+	
 		System.out.println("First check: " + first + "  Second check: " +second);
 	}
 
@@ -324,14 +298,11 @@ public class Schnorr{
 
 	public String getCertificate(){
 		JSONObject jsonObject = new JSONObject();
-		//System.out.println(p.toString());
-		//System.out.println(q.toString());
-		//System.out.println(g.toString());
-		//System.out.println(y.toString());
 		jsonObject.put("p", p.toString());
 		jsonObject.put("q", q.toString());
 		jsonObject.put("g", g.toString());
 		jsonObject.put("y", y.toString());
+		
 		return jsonObject.toString();
 	}
 	
@@ -342,71 +313,40 @@ public class Schnorr{
 		jsonObject.put("g", g.toString());
 		jsonObject.put("y", y.toString());
 		jsonObject.put("x", x.toString());
+		
 		return jsonObject.toString();
 	}
 	
 	public static Schnorr fromCertificate(String json){
 		JSONObject jsonObject = new JSONObject(json);
-		BigInteger p = new BigInteger(jsonObject.getString("p"));
-		BigInteger q = new BigInteger(jsonObject.getString("q"));
-		BigInteger g = new BigInteger(jsonObject.getString("g"));
-		BigInteger y = new BigInteger(jsonObject.getString("y"));
 		Schnorr schnorr = new Schnorr();
-		schnorr.setP(p);
-		schnorr.setG(g);
-		schnorr.setQ(q);
-		schnorr.setY(y);
-		System.out.println("p: " +p.toString());
-		System.out.println("q: " +q.toString());
-		System.out.println("g: " +g.toString());
-		System.out.println("y: " +y.toString());
+		schnorr.setP((new BigInteger(jsonObject.getString("p"))));
+		schnorr.setG((new BigInteger(jsonObject.getString("g"))));
+		schnorr.setQ((new BigInteger(jsonObject.getString("q"))));
+		schnorr.setY((new BigInteger(jsonObject.getString("y"))));
+		
 		return schnorr;
 	}
 	
 	public static Schnorr fromPrivateCertificate(String json){
 		JSONObject jsonObject = new JSONObject(json);
-		BigInteger p = new BigInteger(jsonObject.getString("p"));		
-		BigInteger q = new BigInteger(jsonObject.getString("q"));
-		BigInteger g = new BigInteger(jsonObject.getString("g"));
-		BigInteger y = new BigInteger(jsonObject.getString("y"));
-		BigInteger x = new BigInteger(jsonObject.getString("x"));
-//		System.out.println("p: "+ p.toString());
-//		System.out.println("q: "+q.toString());
-//		System.out.println("g: "+g.toString());
-//		System.out.println("y: "+y.toString());
 		Schnorr schnorr = new Schnorr();
-//		schnorr.setP(new BigInteger("88667"));
-//		schnorr.setG(new BigInteger("70322"));
-//		schnorr.setQ(new BigInteger("1031"));
-//		schnorr.setY(new BigInteger("13136"));
-//		schnorr.setX(new BigInteger("755"));
-		schnorr.setP(p);
-		schnorr.setG(g);
-		schnorr.setQ(q);
-		schnorr.setY(y);
-		schnorr.setX(x);
-		System.out.println("p: "+schnorr.getP().toString());
-		System.out.println("q: "+schnorr.getQ().toString());
-		System.out.println("g: "+schnorr.getG().toString());
-		System.out.println("y: "+schnorr.getY().toString());
-		System.out.println("x: "+schnorr.getX().toString());
-		//schnorr.printValues();
+		schnorr.setP((new BigInteger(jsonObject.getString("p"))));
+		schnorr.setG((new BigInteger(jsonObject.getString("g"))));
+		schnorr.setQ((new BigInteger(jsonObject.getString("q"))));
+		schnorr.setY((new BigInteger(jsonObject.getString("y"))));
+		schnorr.setX((new BigInteger(jsonObject.getString("x"))));
+
 		return schnorr;
 	}
 	
 	public static Schnorr fromParameters(String[] params){
-		BigInteger p = new BigInteger(params[0]);
-		BigInteger q = new BigInteger(params[1]);
-		BigInteger g = new BigInteger(params[2]);
-		BigInteger x = new BigInteger(params[3]);
-		BigInteger y = new BigInteger(params[4]);
-		
 		Schnorr schnorr = new Schnorr();
-		schnorr.setP(p);
-		schnorr.setG(g);
-		schnorr.setQ(q);
-		schnorr.setY(y);
-		schnorr.setX(x);
+		schnorr.setP((new BigInteger(params[0])));
+		schnorr.setQ((new BigInteger(params[1])));
+		schnorr.setG((new BigInteger(params[2])));
+		schnorr.setX((new BigInteger(params[3])));
+		schnorr.setY((new BigInteger(params[4])));
 		
 		return schnorr;
 	}
@@ -418,6 +358,7 @@ public class Schnorr{
 		values[2] = g.toString();
 		values[3] = x.toString();
 		values[4] = y.toString();
+		
 		return values;
 	}
 	
