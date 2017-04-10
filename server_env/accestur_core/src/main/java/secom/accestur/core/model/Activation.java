@@ -2,6 +2,10 @@ package secom.accestur.core.model;
 
 import java.util.Date;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,17 +26,42 @@ public class Activation extends DomainObjectModel{
 	@JoinColumn(name="MCITYPASS_ID")
 	private MCityPass mCityPass;
 
-	private Date actDate;
+	private String actDate;
 
 	private String state;
+	
+	@Column(length = 40000)
+	private String signature;
+	
+	
 
 	public Activation(){}
 
-	public Activation(Date actDate, MCityPass mCityPass, String state){
+	public Activation(String actDate, MCityPass mCityPass, String state){
 		super();
 		this.actDate = actDate;
 		this.mCityPass = mCityPass;
 		this.state = state;
+	}
+	
+	
+
+	public Activation(MCityPass mCityPass, String actDate, String state, String signature) {
+		super();
+		this.mCityPass = mCityPass;
+		this.actDate = actDate;
+		this.state = state;
+		this.signature = signature;
+	}
+	
+	
+
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
 	}
 
 	public MCityPass getmCityPass(){
@@ -43,11 +72,11 @@ public class Activation extends DomainObjectModel{
 		this.mCityPass = mCityPass;
 	}
 
-	public Date getActDate(){
+	public String getActDate(){
 		return actDate;
 	}
 
-	public void setActDate(Date actDate){
+	public void setActDate(String actDate){
 		this.actDate = actDate;
 	}
 
@@ -57,5 +86,23 @@ public class Activation extends DomainObjectModel{
 
 	public void setState(String state){
 		this.state = state;
+	}
+	
+	public String stringToSign(){
+		JSONObject json = new JSONObject();
+		json.put("PASS", mCityPass.getId());
+		json.put("ACTDate", actDate);
+		json.put("State", state);
+		return json.toString();
+	}
+	
+	@Override
+	public String toString(){
+		JSONObject json = new JSONObject();
+		json.put("PASS", mCityPass.getId());
+		json.put("ACTDate", actDate);
+		json.put("State", state);
+		json.put("Signature", signature);
+		return json.toString();
 	}
 }

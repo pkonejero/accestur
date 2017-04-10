@@ -35,6 +35,7 @@ public class HomePageController{
 		Init();
 		generateUser();
 		passPurchase();
+		passActivation();
 		return "welcome";
 	}
 
@@ -79,5 +80,11 @@ public class HomePageController{
 		names[2] = "TwoTimesReusable";
 		names[3] = "TenTimesReusable";
 		userService.receivePass(issuerService.getPASS(userService.solveChallenge(issuerService.getChallenge(userService.getService()), names)));
+	}
+	
+	private void passActivation(){
+		userService.getUser();
+		issuerService.createCertificate();
+		userService.getVerifyTicketConfirmation(issuerService.verifyTicket(userService.showPass(1)));
 	}
 }

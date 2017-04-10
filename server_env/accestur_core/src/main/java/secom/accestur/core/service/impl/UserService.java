@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.schnorr.Schnorr;
+import secom.accestur.core.dao.MCityPassRepository;
 import secom.accestur.core.dao.UserRepository;
 import secom.accestur.core.model.SecretValue;
 import secom.accestur.core.model.ServiceAgent;
@@ -21,7 +22,7 @@ import secom.accestur.core.service.UserServiceInterface;
 import secom.accestur.core.utils.Constants;
 
 @Service("userService")
-public class UserService implements UserServiceInterface{
+public class UserService implements UserServiceInterface {
 	@Autowired
 	@Qualifier("userRepository")
 	private UserRepository userRepository;
@@ -29,11 +30,11 @@ public class UserService implements UserServiceInterface{
 	@Autowired
 	@Qualifier("serviceAgentService")
 	private ServiceAgentService serviceAgentService;
-	
+
 	@Autowired
 	@Qualifier("secretvalueService")
 	private SecretValueService secretValueService;
-	
+
 	@Autowired
 	@Qualifier("mCityPassService")
 	private MCityPassService mCityPassService;
@@ -45,9 +46,8 @@ public class UserService implements UserServiceInterface{
 	@Autowired
 	@Qualifier("cryptography")
 	private Cryptography crypto;
-	
-	
-	private User user; 
+
+	private User user;
 
 	private String[] paramsOfPass;
 	private String[] psi;
@@ -55,7 +55,7 @@ public class UserService implements UserServiceInterface{
 	private BigInteger random;
 	private BigInteger RU;
 
-	public String getUserByPseudonym1(String pseudonym){
+	public String getUserByPseudonym1(String pseudonym) {
 		User user = userRepository.findAll().iterator().next();
 		if (user != null) {
 			user.setPseudonym(pseudonym);
@@ -65,33 +65,33 @@ public class UserService implements UserServiceInterface{
 		return pseudonym;
 	}
 
-	public User getUser(){
+	public User getUser() {
 		return userRepository.findAll().iterator().next();
 	}
 
-	public User getUserByPseudonym(String pseudonym){
+	public User getUserByPseudonym(String pseudonym) {
 		return userRepository.findByPseudonym(pseudonym);
 	}
 
-	public String showProof(){
+	public String showProof() {
 		return null;
 	}
 
-	public boolean getValidationConfirmation(){
+	public boolean getValidationConfirmation() {
 		return false;
 	}
 
-	public String receivePass(){
+	public String receivePass() {
 		return null;
 	}
 
-	public String sendPass(){
+	public String sendPass() {
 		return null;
 	}
 
-	public boolean verifyPseudonym(String[] params){
+	public boolean verifyPseudonym(String[] params) {
 		boolean verified = crypto.getValidation(params[0], params[1]);
-		if (verified){
+		if (verified) {
 			User user = new User();
 			user.setPseudonym(generatePseudonym(params[0], params[1]));
 			user.setSchnorr(schnorr.getPrivateCertificate());
@@ -101,14 +101,14 @@ public class UserService implements UserServiceInterface{
 		return verified;
 	}
 
-	public void createCertificate(){
+	public void createCertificate() {
 
 		crypto.initPrivateKey("cert/user/private_USER.der");
 	}
 
-	public String[] authenticateUser(){
+	public String[] authenticateUser() {
 		crypto.initPublicKey("cert/ttp/public_TTP.der");
-		//crypto.initPublicKey("cert/issuer/public_ISSUER.der");
+		// crypto.initPublicKey("cert/issuer/public_ISSUER.der");
 		schnorr.Init();
 		schnorr.SecretKey();
 		schnorr.PublicKey();
@@ -120,7 +120,7 @@ public class UserService implements UserServiceInterface{
 		return params;
 	}
 
-	public String getService(){
+	public String getService() {
 		user = userRepository.findAll().iterator().next();
 		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
 		schnorr = Schnorr.fromPrivateCertificate(user.getSchnorr());
@@ -145,23 +145,29 @@ public class UserService implements UserServiceInterface{
 		return getServiceMessage(params);
 	}
 
-	public String[] showTicket(){
+	public String[] showTicket() {
 		return null;
 	}
 
-	public String[] showPass(){
+	public String showPass(long sn) {
+		JSONObject json = new JSONObject();
+		json.put("Sn", sn);
+		return json.toString();
+	}
+
+	public void getVerifyTicketConfirmation(String s) {
+		System.out.println(s);
+	}
+
+	public String[] showProof(String[] params) {
 		return null;
 	}
 
-	public String[] showProof(String[] params){
-		return null;
-	}
-
-	public String solveChallenge(String c, String[] services){
+	public String solveChallenge(String c, String[] services) {
 		schnorr.solveChallengeQuery(new BigInteger(c), RU);
 		K = Cryptography.hash(schnorr.getW2().toString());
 		random = schnorr.getRandom();
-		
+
 		psi = new String[services.length];
 		for (int i = 0; i < services.length; i++) {
 			ServiceAgent service = serviceAgentService.getServiceByName(services[i]);
@@ -184,14 +190,14 @@ public class UserService implements UserServiceInterface{
 		return solveChallengeMessage(psi, services, ws);
 	}
 
-	private String solveChallengeMessage(String[] psi, String[] services, String[] ws){
+	private String solveChallengeMessage(String[] psi, String[] services, String[] ws) {
 		JSONObject json = new JSONObject();
-		json.put("w1",crypto.encryptWithPublicKey( ws[0]));
-		json.put("w2",crypto.encryptWithPublicKey( ws[1]));
+		json.put("w1", crypto.encryptWithPublicKey(ws[0]));
+		json.put("w2", crypto.encryptWithPublicKey(ws[1]));
 		JSONArray jsonArray = new JSONArray();
 		JSONObject jsonObject;
 
-		for (int i = 0; i < psi.length; i++){
+		for (int i = 0; i < psi.length; i++) {
 			jsonObject = new JSONObject();
 			jsonObject.put("service", services[i]);
 			jsonObject.put("psi", psi[i]);
@@ -205,18 +211,19 @@ public class UserService implements UserServiceInterface{
 		return message;
 	}
 
-	public String receivePass(String params){
+	public String receivePass(String params) {
 		System.out.println(params);
 		JSONObject json = new JSONObject(params);
 		long id = json.getLong("Sn");
-		JSONArray jsonArray  = json.getJSONArray("Services");
+		JSONArray jsonArray = json.getJSONArray("Services");
 		JSONObject serviceJSON = jsonArray.getJSONObject(0);
 		String service = serviceJSON.getString("Service");
-		secretValueService.saveSecretValue(new SecretValue(mCityPassService.getMCityPassBySn(id), serviceAgentService.getServiceByName(service).getProvider(), random.toString()));
+		secretValueService.saveSecretValue(new SecretValue(mCityPassService.getMCityPassBySn(id),
+				serviceAgentService.getServiceByName(service).getProvider(), random.toString()));
 		return "Everything OK";
 	}
 
-	private static String generatePseudonym(String y, String signature){
+	private static String generatePseudonym(String y, String signature) {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("y", y);
 		jsonObject.put("signature", signature);
@@ -224,13 +231,13 @@ public class UserService implements UserServiceInterface{
 		return jsonObject.toString();
 	}
 
-	public static String getYu(String json){
+	public static String getYu(String json) {
 		JSONObject jsonObject = new JSONObject(json);
 
 		return jsonObject.getString("y");
 	}
 
-	private String getServiceMessage(String[] params){
+	private String getServiceMessage(String[] params) {
 		JSONObject json = new JSONObject();
 		json.put("user", params[0]);
 		json.put("certificate", params[1]);

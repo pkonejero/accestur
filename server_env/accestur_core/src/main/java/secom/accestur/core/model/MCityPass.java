@@ -63,6 +63,15 @@ public class MCityPass extends DomainObjectModel{
 	
 	public MCityPass(){}
 
+	
+	public Long getId() {
+		return id;
+	}
+
+
+
+
+
 	public User getUser(){
 		return user;
 	}

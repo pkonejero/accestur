@@ -2,6 +2,7 @@ package secom.accestur.core.service.impl;
 
 import java.math.BigInteger;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.schnorr.Schnorr;
 import secom.accestur.core.dao.IssuerRepository;
+import secom.accestur.core.model.Activation;
 import secom.accestur.core.model.Counter;
 import secom.accestur.core.model.Issuer;
 import secom.accestur.core.model.MCityPass;
@@ -41,6 +43,11 @@ public class IssuerService implements IssuerServiceInterface{
 	@Autowired
 	@Qualifier("serviceAgentService")
 	ServiceAgentService serviceAgentService;
+	
+	
+	@Autowired
+	@Qualifier("activationService")
+	private ActivationService activationService;
 
 	@Autowired
 	@Qualifier("schnorr")
@@ -102,9 +109,6 @@ public class IssuerService implements IssuerServiceInterface{
 		return params;
 	}
 
-	public String[] verifyTicket(String[] params){
-		return null;
-	}
 
 	public boolean arrayGeneration(){
 		return false;
@@ -201,4 +205,26 @@ public class IssuerService implements IssuerServiceInterface{
 			services[i] = jsonObject.getString("service");
 		}
 	}
+	
+	public String verifyTicket(String params){
+		
+		JSONObject json = new JSONObject(params);
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date now = new Date();
+		Activation activation = null;
+		mCityPassService.initMCityPass(json.getLong("Sn"));
+		if(mCityPassService.verifyMCityPass()){
+			activation = new Activation(dateFormat.format(now), mCityPassService.getMCityPass(),"Activated");
+			activation.setSignature(crypto.getSignature(activation.stringToSign()));
+			activationService.activateCityPass(activation);
+		}
+		
+		if(activation == null){
+			return "An error has ocurred";
+		} else {
+			return activation.toString();
+		}
+		
+	}
+
 }

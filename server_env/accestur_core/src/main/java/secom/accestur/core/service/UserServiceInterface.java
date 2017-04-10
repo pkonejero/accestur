@@ -15,7 +15,9 @@ public interface UserServiceInterface{
 	
 	public String[] showTicket();
 	
-	public String[] showPass();
+	public String showPass(long sn);
+	
+	public void getVerifyTicketConfirmation(String s);
 	
 	public String[] showProof(String[] params);
 	
