@@ -1,4 +1,4 @@
-package secom.accestur.core.model;
+package secom.accestur.core.model.coupon;
 
 import java.sql.Date;
 
@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import secom.accestur.core.model.DomainObjectModel;
 
 @Entity
 @Table(name='mcouponEntity')
