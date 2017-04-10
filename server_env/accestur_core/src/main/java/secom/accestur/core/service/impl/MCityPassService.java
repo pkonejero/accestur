@@ -17,10 +17,14 @@ public class MCityPassService implements MCityPassServiceInterface{
 	private MCityPassRepository mcitypassRepository;
 
 	public MCityPass getMCityPassBySn(long sn){
-		return null;
+		return mcitypassRepository.findById(sn);
 	}
 	
 	public List<MCityPass> getMCityPassesByUser(String user){
 		return null;
+	}
+	
+	public void saveMCityPass(MCityPass mCityPass){
+		mcitypassRepository.save(mCityPass);
 	}
 }

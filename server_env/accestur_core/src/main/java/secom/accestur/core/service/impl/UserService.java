@@ -1,6 +1,9 @@
 package secom.accestur.core.service.impl;
 
 import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.schnorr.Schnorr;
 import secom.accestur.core.dao.UserRepository;
+import secom.accestur.core.model.SecretValue;
 import secom.accestur.core.model.ServiceAgent;
 import secom.accestur.core.model.User;
 import secom.accestur.core.service.UserServiceInterface;
@@ -25,6 +29,14 @@ public class UserService implements UserServiceInterface{
 	@Autowired
 	@Qualifier("serviceAgentService")
 	private ServiceAgentService serviceAgentService;
+	
+	@Autowired
+	@Qualifier("secretvalueService")
+	private SecretValueService secretValueService;
+	
+	@Autowired
+	@Qualifier("mCityPassService")
+	private MCityPassService mCityPassService;
 
 	@Autowired
 	@Qualifier("schnorr")
@@ -33,6 +45,9 @@ public class UserService implements UserServiceInterface{
 	@Autowired
 	@Qualifier("cryptography")
 	private Cryptography crypto;
+	
+	
+	private User user; 
 
 	private String[] paramsOfPass;
 	private String[] psi;
@@ -55,7 +70,7 @@ public class UserService implements UserServiceInterface{
 	}
 
 	public User getUserByPseudonym(String pseudonym){
-		return null;
+		return userRepository.findByPseudonym(pseudonym);
 	}
 
 	public String showProof(){
@@ -106,10 +121,10 @@ public class UserService implements UserServiceInterface{
 	}
 
 	public String getService(){
-		User user = userRepository.findAll().iterator().next();
+		user = userRepository.findAll().iterator().next();
 		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
 		schnorr = Schnorr.fromPrivateCertificate(user.getSchnorr());
-		String[] params = new String[8];
+		String[] params = new String[10];
 		params[0] = user.getPseudonym();
 		params[1] = schnorr.getCertificate();
 		RU = schnorr.getRandom();
@@ -121,6 +136,11 @@ public class UserService implements UserServiceInterface{
 		params[5] = schnorr.getA_2().toString();
 		params[6] = Constants.LIFETIME;
 		params[7] = Constants.CATEGORY;
+		params[8] = Constants.EXPDATE;
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = new Date();
+		System.out.println("PURDATE:" + dateFormat.format(date));
+		params[9] = dateFormat.format(date);
 
 		return getServiceMessage(params);
 	}
@@ -141,6 +161,7 @@ public class UserService implements UserServiceInterface{
 		schnorr.solveChallengeQuery(new BigInteger(c), RU);
 		K = Cryptography.hash(schnorr.getW2().toString());
 		random = schnorr.getRandom();
+		
 		psi = new String[services.length];
 		for (int i = 0; i < services.length; i++) {
 			ServiceAgent service = serviceAgentService.getServiceByName(services[i]);
@@ -184,8 +205,15 @@ public class UserService implements UserServiceInterface{
 		return message;
 	}
 
-	public String[] receivePass(String[] params){
-		return null;
+	public String receivePass(String params){
+		System.out.println(params);
+		JSONObject json = new JSONObject(params);
+		long id = json.getLong("Sn");
+		JSONArray jsonArray  = json.getJSONArray("Services");
+		JSONObject serviceJSON = jsonArray.getJSONObject(0);
+		String service = serviceJSON.getString("Service");
+		secretValueService.saveSecretValue(new SecretValue(mCityPassService.getMCityPassBySn(id), serviceAgentService.getServiceByName(service).getProvider(), random.toString()));
+		return "Everything OK";
 	}
 
 	private static String generatePseudonym(String y, String signature){
@@ -212,7 +240,8 @@ public class UserService implements UserServiceInterface{
 		json.put("A2", params[5]);
 		json.put("Lifetime", params[6]);
 		json.put("Category", params[7]);
-		
+		json.put("EXPDATE", params[8]);
+		json.put("PURDATE", params[9]);
 		return json.toString();
 	}
 }

@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 import secom.accestur.core.model.MCityPass;
 
 @Repository("mcitypassRepository")
-public interface MCityPassRepository extends PagingAndSortingRepository<MCityPass, Long>{}
+public interface MCityPassRepository extends PagingAndSortingRepository<MCityPass, Long>{
+	MCityPass findById(long id);
+}

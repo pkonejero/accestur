@@ -3,6 +3,13 @@ package secom.accestur.core.model;
 import java.util.Date;
 import java.util.List;
 
+import org.json.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+import secom.accestur.core.service.impl.UserService;
+
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -31,17 +38,28 @@ public class MCityPass extends DomainObjectModel{
 
 	@OneToOne(fetch=FetchType.LAZY, mappedBy="mCityPass")
 	private Activation activation;
+	
+	@OneToOne(fetch=FetchType.LAZY, mappedBy="mCityPass")
+	private SecretValue secretValue;
 
 	private String hRI;
 	
 	private String lifeTime;
 	private String category;
-	private String termsAndContions;
+	private String termsAndConditions;
 
-	private Date purDate;
-	private Date expDate;
-
+	private String purDate;
+	private String expDate;
+	
+	@Column(length = 40000)
+	private String delta;
+	
 	private String hRU;
+	
+	
+	@Column(length = 40000)
+	private String signature;
+	
 	
 	public MCityPass(){}
 
@@ -93,27 +111,27 @@ public class MCityPass extends DomainObjectModel{
 		this.category = category;
 	}
 
-	public String getTermsAndContions(){
-		return termsAndContions;
+	public String getTermsAndConditions(){
+		return termsAndConditions;
 	}
 
-	public void setTermsAndContions(String termsAndContions){
-		this.termsAndContions = termsAndContions;
+	public void setTermsAndConditions(String termsAndConditions){
+		this.termsAndConditions = termsAndConditions;
 	}
 
-	public Date getPurDate(){
+	public String getPurDate() {
 		return purDate;
 	}
 
-	public void setPurDate(Date purDate){
+	public void setPurDate(String purDate) {
 		this.purDate = purDate;
 	}
 
-	public Date getExpDate(){
+	public String getExpDate() {
 		return expDate;
 	}
 
-	public void setExpDate(Date expDate){
+	public void setExpDate(String expDate) {
 		this.expDate = expDate;
 	}
 
@@ -124,4 +142,50 @@ public class MCityPass extends DomainObjectModel{
 	public void sethRU(String hRU){
 		this.hRU = hRU;
 	}
+
+	public String getDelta() {
+		return delta;
+	}
+
+	public void setDelta(String delta) {
+		this.delta = delta;
+	}
+	
+	
+	
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+
+	@Override
+	public String toString(){
+		JSONObject json = new JSONObject();
+		json.put("Sn", id);
+		json.put("User", user.getPseudonym());
+		json.put("hRI", hRI);
+		json.put("hRU", hRU);
+		json.put("expDate", expDate);
+		json.put("purDate", purDate);
+		json.put("Lifetime", lifeTime);
+		json.put("Category", category);
+		json.put("TermsAndConditions", termsAndConditions);
+		json.put("Signature", signature);
+		JSONArray jsonArray = new JSONArray();
+		JSONObject jsonObject;
+		for (int i = 0; i < counters.size(); i++){
+			jsonObject = new JSONObject();
+			jsonObject.put("Service", counters.get(i).getService().getName());
+			jsonObject.put("Psi", counters.get(i).getPsi());
+			jsonArray.put(jsonObject);
+		}
+		json.put("Services", jsonArray);
+		
+		return json.toString();
+	}
+	
+	
 }

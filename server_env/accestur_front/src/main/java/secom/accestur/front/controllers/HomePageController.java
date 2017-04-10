@@ -32,8 +32,8 @@ public class HomePageController{
 
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model){
-		//Init();
-		//generateUser();
+		Init();
+		generateUser();
 		passPurchase();
 		return "welcome";
 	}
@@ -78,6 +78,6 @@ public class HomePageController{
 		names[1] = "NoReusable";
 		names[2] = "TwoTimesReusable";
 		names[3] = "TenTimesReusable";
-		issuerService.getPASS(userService.solveChallenge(issuerService.getChallenge(userService.getService()), names));
+		userService.receivePass(issuerService.getPASS(userService.solveChallenge(issuerService.getChallenge(userService.getService()), names)));
 	}
 }
