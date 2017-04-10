@@ -17,78 +17,60 @@ public class HomePageController{
 	@Autowired
 	@Qualifier("userService")
 	UserService userService;
-	
+
 	@Autowired
 	@Qualifier("providerService")
 	ProviderService providerService;
-	
+
 	@Autowired
 	@Qualifier("issuerService")
 	IssuerService issuerService;
-	
+
 	@Autowired
 	@Qualifier("trustedThirdPartyService")
 	TrustedThirdPartyService ttpService;
-	
+
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model){
-		
-		// INIT
-		//Init();
-		
-		//Generate  User
-		//generateUser();
-		//createServices();
-		
+		Init();
+		generateUser();
+		createServices();		
 		passPurchase();
-		
-		//providerService.newProvider("EMT", issuerService.getIssuerByName("Accestur"));
-		//providerService.getProvidersByIssuer(issuerService.getIssuerByName("ACCESTUR"));
-		//System.out.println(providerService.getProvidersByIssuer(issuerService.getIssuerByName("ACCESTUR")).iterator().next().getName());
-		//System.out.println(issuerService.getIssuerByName("ACCESTUR").getName());
 		return "welcome";
 	}
-	
+
 	private void Init(){
-		// CREATE ISSUER
-		//issuerService.newIssuer("UIB");
 		issuerService.newIssuer("Accestur");
-		
-		// CREATE PROVIDER 
 		providerService.newProvider("TIB", issuerService.getIssuerByName("Accestur"));
-		providerService.newProvider("EMT", issuerService.getIssuerByName("Accestur"));
-		
-		// CREATE SERVICES
-		//createServices();
+		createServices();
 	}
+
 	private void createServices(){
 		String[] names = new String[4];
 		int[] counters = new int[4];
-		
+
 		names[0] = "InfiniteReusable";
 		counters[0] = -1;
-		
+
 		names[1] = "NoReusable";
 		counters[1] = 1;
-		
+
 		names[2] = "TwoTimesReusable";
 		counters[2] = 2;
-		
+
 		names[3] = "TenTimesReusable";
 		counters[3] = 10;
-		
+
 		providerService.initiateProviderByName("TIB");
 		issuerService.generateCertificate(providerService.authenticateProvider(names, counters));
 	}
-	
-	
+
 	private void generateUser(){
 		userService.createCertificate();
 		ttpService.createCertificate();
 		System.out.println(userService.verifyPseudonym(ttpService.generatePseudonym(userService.authenticateUser())));
 	}
-	
-	
+
 	private void passPurchase(){
 		userService.initUser();
 		userService.createCertificate();
