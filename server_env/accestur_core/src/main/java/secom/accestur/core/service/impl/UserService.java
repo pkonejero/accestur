@@ -87,15 +87,16 @@ public class UserService implements UserServiceInterface{
 	}
 
 	public void createCertificate(){
-		//schnorr.Init();
-		//schnorr.SecretKey();
-		//schnorr.PublicKey();
+
 		crypto.initPrivateKey("cert/user/private_USER.der");
 	}
 
 	public String[] authenticateUser(){
-		//crypto.initPublicKey("cert/ttp/public_TTP.der");
-		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
+		crypto.initPublicKey("cert/ttp/public_TTP.der");
+		//crypto.initPublicKey("cert/issuer/public_ISSUER.der");
+		schnorr.Init();
+		schnorr.SecretKey();
+		schnorr.PublicKey();
 		String params[] = new String[3];
 		BigInteger y = schnorr.getY();
 		params[0] = crypto.getSignature(y.toString());

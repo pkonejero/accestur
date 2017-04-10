@@ -42,7 +42,7 @@ public class MCityPass extends DomainObjectModel{
 	private Date expDate;
 
 	private String hRU;
-
+	
 	public MCityPass(){}
 
 	public User getUser(){

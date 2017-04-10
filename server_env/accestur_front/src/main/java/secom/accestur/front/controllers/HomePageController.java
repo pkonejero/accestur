@@ -32,8 +32,8 @@ public class HomePageController{
 
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model){
-		Init();
-		generateUser();
+		//Init();
+		//generateUser();
 		passPurchase();
 		return "welcome";
 	}

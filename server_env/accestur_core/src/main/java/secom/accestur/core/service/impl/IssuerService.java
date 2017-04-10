@@ -75,30 +75,6 @@ public class IssuerService implements IssuerServiceInterface{
 		return c.toString();
 	}
 
-	private void getChallengeMessage(String params){
-		//System.out.println(params);
-		JSONObject json = new JSONObject(params);
-		//System.out.println(json.toString());
-		ws = new String[2];
-		//System.out.println(json.getString("w1"));
-		ws[0] = crypto.decryptWithPrivateKey(json.getString("w1"));
-		ws[1] = crypto.decryptWithPrivateKey(json.getString("w2"));
-		//		System.out.println("Issuer gets:");
-		//		System.out.println("w1: " +ws[0]);
-		//		System.out.println("w2: " +ws[1]);
-		JSONArray jsonArray = json.getJSONArray("services");
-		psi = new String[jsonArray.length()];
-		services = new String[jsonArray.length()];
-		JSONObject jsonObject;
-		String s;
-		for(int i = 0; i < psi.length; i++){
-			s = jsonArray.getString(i);
-			jsonObject = new JSONObject(crypto.decryptWithPrivateKey(s));
-			psi[i] = jsonObject.getString("psi");
-			services[i] = jsonObject.getString("service");
-		}
-	}
-
 	private String[] solveChallengeMessage (String message){
 		JSONObject json = new JSONObject(message);
 		String[] params = new String[8];
@@ -172,8 +148,33 @@ public class IssuerService implements IssuerServiceInterface{
 			mCityPass.setLifeTime(paramsOfPass[6]);
 			mCityPass.sethRI(hRI);
 			mCityPass.sethRU(paramsOfPass[2]);
+			
 			List<Counter> counters;
 		}
 	return null;
+	}
+	
+	private void getChallengeMessage(String params){
+		//System.out.println(params);
+		JSONObject json = new JSONObject(params);
+		//System.out.println(json.toString());
+		ws = new String[2];
+		//System.out.println(json.getString("w1"));
+		ws[0] = crypto.decryptWithPrivateKey(json.getString("w1"));
+		ws[1] = crypto.decryptWithPrivateKey(json.getString("w2"));
+		//		System.out.println("Issuer gets:");
+		//		System.out.println("w1: " +ws[0]);
+		//		System.out.println("w2: " +ws[1]);
+		JSONArray jsonArray = json.getJSONArray("services");
+		psi = new String[jsonArray.length()];
+		services = new String[jsonArray.length()];
+		JSONObject jsonObject;
+		String s;
+		for(int i = 0; i < psi.length; i++){
+			s = jsonArray.getString(i);
+			jsonObject = new JSONObject(crypto.decryptWithPrivateKey(s));
+			psi[i] = jsonObject.getString("psi");
+			services[i] = jsonObject.getString("service");
+		}
 	}
 }
