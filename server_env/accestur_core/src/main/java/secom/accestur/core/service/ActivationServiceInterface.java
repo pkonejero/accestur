@@ -1,7 +1,7 @@
 package secom.accestur.core.service;
 
-public interface ActivationServiceInterface {
-	
-	public String getActivationByMCityPassSn(long sn);
-	
+import secom.accestur.core.model.Activation;
+
+public interface ActivationServiceInterface{
+	public Activation getActivationByMCityPassSn(long sn);
 }

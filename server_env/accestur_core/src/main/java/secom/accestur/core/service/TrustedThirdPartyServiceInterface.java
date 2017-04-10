@@ -1,3 +1,9 @@
 package secom.accestur.core.service;
 
-public interface TrustedThirdPartyServiceInterface{}
+import secom.accestur.core.model.TrustedThirdParty;
+
+public interface TrustedThirdPartyServiceInterface{
+	public TrustedThirdParty getTrustedThirdPartyByName(String name);
+	
+	public String[] generatePseudonym(String[] params);
+}

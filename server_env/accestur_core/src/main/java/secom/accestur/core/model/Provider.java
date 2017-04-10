@@ -1,13 +1,19 @@
 package secom.accestur.core.model;
 
 import java.util.List;
-import javax.persistence.*;
 
-import org.springframework.stereotype.Component;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name="providerEntity")
-@Component("providerModel")
 public class Provider extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -20,14 +26,14 @@ public class Provider extends DomainObjectModel{
 
 	// Service
 	@OneToMany(mappedBy="provider")
-	private List<Service> services;
+	private List<ServiceAgent> services;
 
 	// Name
 	private String name;
 
-	Provider(){}
+	public Provider(){}
 	
-	public Provider(String name, Issuer issuer, List<Service> services){
+	public Provider(String name, Issuer issuer, List<ServiceAgent> services){
 		super();
 		this.name = name;
 		this.issuer = issuer;
@@ -42,11 +48,11 @@ public class Provider extends DomainObjectModel{
 		this.issuer = issuer;
 	}
 
-	public List<Service> getServices(){
+	public List<ServiceAgent> getServices(){
 		return services;
 	}
 
-	public void setServices(List<Service> services){
+	public void setServices(List<ServiceAgent> services){
 		this.services = services;
 	}
 

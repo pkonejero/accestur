@@ -6,17 +6,13 @@ import java.util.Random;
 
 import org.springframework.stereotype.Component;
 
-import secom.accestur.core.utils.Constants;
-
 @Component("rsa")
 public class RSA{
 	private RSA_Parameters params;
 	private int nbits;
 	private RSA_KeySet keys;
 
-	public RSA(){
-		this.keys= new RSA_KeySet(Constants.RSA_DEFAULT_BITS);
-	}
+	public RSA(){}
 
 	public RSA(int nb_bits){
 		this.nbits=nb_bits;

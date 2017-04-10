@@ -1,3 +1,10 @@
 package secom.accestur.core.facade;
 
-public interface RightOfUseFacadeInterface extends FacadeInterface {}
+import secom.accestur.core.model.RightOfUse;
+import secom.accestur.core.service.impl.RightOfUseService;
+
+public interface RightOfUseFacadeInterface extends FacadeInterface{
+	public RightOfUseService getRightOfUseService();
+	
+	public RightOfUse getRightOfUse();
+}

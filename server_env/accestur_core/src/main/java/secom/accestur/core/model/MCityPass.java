@@ -2,52 +2,45 @@ package secom.accestur.core.model;
 
 import java.util.Date;
 import java.util.List;
-import javax.persistence.*;
 
-import org.springframework.stereotype.Component;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name="mcitypassEntity")
-@Component("mcitypassModel")
 public class MCityPass extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 
-	// User
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "USER_ID")
 	private User user;
 
-	// Counter
 	@OneToMany(mappedBy="mCityPass")
 	private List<Counter> counters;
 
-	// Activation
 	@OneToOne(fetch=FetchType.LAZY, mappedBy="mCityPass")
 	private Activation activation;
 
-	//Hash of All Secret numbers
-	@ElementCollection
-	private List<String> hRI;
-
-	//@ManyToMany
-	//@JoinTable(
-	//	      name="SERVICES_CITYPASS",
-	//	      joinColumns=@JoinColumn(name="CITYPASS_ID", referencedColumnName="ID"),
-	//	      inverseJoinColumns=@JoinColumn(name="SERVICE_ID", referencedColumnName="ID"))
-	//private List<Service> services;
-
-	//Type
-	private Long lifeTime;
+	private String hRI;
+	
+	private String lifeTime;
 	private String category;
 	private String termsAndContions;
 
-	//Dates
 	private Date purDate;
 	private Date expDate;
 
-	//Hash of the ownership of the pass
 	private String hRU;
 
 	public MCityPass(){}
@@ -76,19 +69,19 @@ public class MCityPass extends DomainObjectModel{
 		this.activation = activation;
 	}
 
-	public List<String> gethRI(){
+	public String gethRI(){
 		return hRI;
 	}
 
-	public void sethRI(List<String> hRI){
+	public void sethRI(String hRI){
 		this.hRI = hRI;
 	}
 
-	public Long getLifeTime(){
+	public String getLifeTime(){
 		return lifeTime;
 	}
 
-	public void setLifeTime(Long lifeTime){
+	public void setLifeTime(String lifeTime){
 		this.lifeTime = lifeTime;
 	}
 

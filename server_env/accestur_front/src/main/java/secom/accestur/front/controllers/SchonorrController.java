@@ -8,7 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import secom.accestur.core.crypto.schnorr.Schnorr;
-import secom.accestur.core.model.Issuer;
+import secom.accestur.core.service.impl.IssuerService;
+import secom.accestur.core.service.impl.UserService;
 
 @Controller
 public class SchonorrController {
@@ -21,25 +22,21 @@ public class SchonorrController {
 	Schnorr schnorr_b;
 	
 	@Autowired
-	@Qualifier("issuerModel")
-	Issuer issuer;
+	@Qualifier("userService")
+	UserService userService;
+	
+	@Autowired
+	@Qualifier("issuerService")
+	IssuerService issuerService;
 
 	@RequestMapping("/schnorr")
 	public String welcome(Map<String, Object> model){
-		schnorr_a.Init();
-		schnorr_a.SecretKey();
-		schnorr_a.PublicKey();
-		schnorr_b.setY(schnorr_a.PublicKey());
-		schnorr_b.setPublicValues(schnorr_a.getPublicValues());
-		
-		// A -> B (W)
-		schnorr_b.setW(schnorr_a.send_a_to_b_request());
-		// B -> A (e)
-		schnorr_a.setE(schnorr_b.send_b_to_a_challenge());
-		// A -> B (s)
-		schnorr_b.setJ(schnorr_a.send_a_to_b_resolve());
+		schnorr_a = Schnorr.fromPrivateCertificate(userService.getUser().getSchnorr());
+		schnorr_b = Schnorr.fromCertificate(schnorr_a.getCertificate());
+        schnorr_b.setW(schnorr_a.send_a_to_b_request());
+        schnorr_a.setE(schnorr_b.send_b_to_a_challenge());
+        schnorr_b.setJ(schnorr_a.send_a_to_b_resolve());
 
-		System.out.println(schnorr_b.verify());
 		return "schnorr";
 	}
 }

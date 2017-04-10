@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 import secom.accestur.core.facade.UserFacadeInterface;
+import secom.accestur.core.model.MCityPass;
 import secom.accestur.core.model.User;
 import secom.accestur.core.service.impl.UserService;
 
@@ -20,5 +23,21 @@ public class UserFacade implements UserFacadeInterface{
 
 	public User getUser(){
 		return this.userService.getUser();
+	}
+
+	public User createUser(){
+		return null;
+	}
+
+	public boolean pseudonymGenerator(){
+		return false;
+	}
+	
+	public MCityPass passPurchase(){
+		return null;
+	}
+	
+	public List<MCityPass> getMCityPasses(){
+		return null;
 	}
 }

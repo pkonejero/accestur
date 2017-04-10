@@ -1,14 +1,20 @@
 package secom.accestur.core.model;
 
 import java.util.List;
-import javax.persistence.*;
 
-import org.springframework.stereotype.Component;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name="service")
-@Component("serviceModel")
-public class Service extends DomainObjectModel{
+public class ServiceAgent extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
@@ -24,7 +30,7 @@ public class Service extends DomainObjectModel{
 	private int m;
 	private String indexHash;
 
-	public Service(String name, int m, String indexHash, Provider provider, List<Counter> counters){
+	public ServiceAgent(String name, int m, String indexHash, Provider provider, List<Counter> counters){
 		super();
 		this.name = name;
 		this.m = m;
@@ -33,7 +39,7 @@ public class Service extends DomainObjectModel{
 		this.counters = counters;
 	}
 
-	public Service(){}
+	public ServiceAgent(){}
 
 	public Provider getProvider(){
 		return provider;

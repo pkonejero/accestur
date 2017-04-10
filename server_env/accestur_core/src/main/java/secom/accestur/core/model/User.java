@@ -1,21 +1,40 @@
 package secom.accestur.core.model;
 
 import java.util.List;
-import javax.persistence.*;
 
-import org.springframework.stereotype.Component;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name="userEntity")
-@Component("userModel")
 public class User extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
+	
+	@Column(length = 40000)
+	private String pseudonym;
 
-	// MCityPass
 	@OneToMany(mappedBy="user")
 	private List<MCityPass> mCityPass;
+	
+	@Column(length = 40000)
+	private String schnorr;
+	
+	public User(){}
+	
+	public String getSchnorr() {
+		return schnorr;
+	}
+
+	public void setSchnorr(String schnorr) {
+		this.schnorr = schnorr;
+	}
 
 	public List<MCityPass> getmCityPass(){
 		return mCityPass;
@@ -24,10 +43,6 @@ public class User extends DomainObjectModel{
 	public void setmCityPass(List<MCityPass> mCityPass){
 		this.mCityPass = mCityPass;
 	}
-
-	private String pseudonym;
-
-	public User(){}
 
 	public String getPseudonym(){
 		return pseudonym;

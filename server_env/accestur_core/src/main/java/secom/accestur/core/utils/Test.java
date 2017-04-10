@@ -1,5 +1,3 @@
 package secom.accestur.core.utils;
 
-public class Test {
-
-}
+public class Test {}
