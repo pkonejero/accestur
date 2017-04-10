@@ -1,23 +1,24 @@
 package secom.accestur.core.model;
 
-import org.springframework.stereotype.Component;
-
 import java.util.List;
-import javax.persistence.*;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name="issuerEntity")
-@Component("issuerModel")
 public class Issuer extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 
-	// Provider
 	@OneToMany(mappedBy="issuer")
 	private List<Provider> providers;
 
-	// Name
 	private String name;
 
 	public Issuer(){}

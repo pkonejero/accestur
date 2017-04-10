@@ -1,28 +1,28 @@
 package secom.accestur.core.model;
 
-import org.springframework.stereotype.Component;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name="counterEntity")
-@Component("counterModel")
 public class Counter extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 
-	// MCityPass
 	@ManyToOne
 	@JoinColumn(name = "MCITYPASS_ID",referencedColumnName = "ID",updatable = false)
 	private MCityPass mCityPass;
 
-	// Service
 	@ManyToOne
 	@JoinColumn(name = "SERVICE_ID", referencedColumnName = "ID",updatable = false)
 	private ServiceAgent service;
 
-	// Counter
 	private int counter;
 
 	public Counter (){}

@@ -1,7 +1,5 @@
 package secom.accestur.core.model;
 
-import org.springframework.stereotype.Component;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,7 +8,6 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="ttpEntity")
-@Component("ttpModel")
 public class TrustedThirdParty extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

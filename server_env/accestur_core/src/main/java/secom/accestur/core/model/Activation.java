@@ -1,27 +1,29 @@
 package secom.accestur.core.model;
 
-import org.springframework.stereotype.Component;
-
 import java.util.Date;
-import javax.persistence.*;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "activationEntity")
-@Component("activationModel")
 public class Activation extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	// MCityPass
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="MCITYPASS_ID")
 	private MCityPass mCityPass;
 
-	// Activation
 	private Date actDate;
 
-	// State
 	private String state;
 
 	public Activation(){}

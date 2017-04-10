@@ -1,27 +1,27 @@
 package secom.accestur.core.model;
 
-import org.springframework.stereotype.Component;
-
 import java.util.List;
-import javax.persistence.*;
+
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "rightOfUseEntity")
-@Component("rightOfUseModel")
 public class RightOfUse extends DomainObjectModel{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	// Set of Random Values;
 	@ElementCollection
 	private List<String> RI;
 
-	// Encryption of the rights of use
 	@ElementCollection
 	private List<String> deltas;
 
-	// Shared Session Key
 	private String k;
 
 	public RightOfUse(){}
