@@ -1,12 +1,12 @@
 package secom.accestur.core.model;
 
-import java.util.List;
-
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -16,37 +16,32 @@ public class RightOfUse extends DomainObjectModel{
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@ElementCollection
-	private List<String> RI;
-
-	@ElementCollection
-	private List<String> deltas;
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="MCITYPASS_ID")
+	private MCityPass mCityPass;
 
 	private String k;
+	private String signature;
 
 	public RightOfUse(){}
 
-	public RightOfUse(String k, List<String> rI, List<String> deltas){
+	public RightOfUse(String k, String signature, MCityPass mCityPass){
 		super();
 		this.k = k;
-		RI = rI;
-		this.deltas = deltas;
+		this.mCityPass = mCityPass;
 	}
 
-	public List<String> getRI(){
-		return RI;
+	public RightOfUse(String k, String signature){
+		this.k = k;		
+		this.signature = signature;
 	}
 
-	public void setRI(List<String> rI){
-		RI = rI;
+	public MCityPass getmCityPass(){
+		return mCityPass;
 	}
 
-	public List<String> getDeltas(){
-		return deltas;
-	}
-
-	public void setDeltas(List<String> deltas){
-		this.deltas = deltas;
+	public void setmCityPass(MCityPass mCityPass){
+		this.mCityPass = mCityPass;
 	}
 
 	public String getK(){
@@ -56,4 +51,34 @@ public class RightOfUse extends DomainObjectModel{
 	public void setK(String k){
 		this.k = k;
 	}
+
+	public String getSignature(){
+		return signature;
+	}
+
+	public void setSignature(String signature){
+		this.signature = signature;
+	}
+
+	//	@ElementCollection
+	//	private List<String> RI;
+	//
+	//	@ElementCollection
+	//	private List<String> deltas;
+	//
+	//	public RightOfUse(String k, List<String> rI, List<String> deltas){
+	//	super();
+	//	this.k = k;
+	//	RI = rI;
+	//	this.deltas = deltas;
+	//	}
+
+	//	public List<String> getRI(){
+	//	return RI;
+	//}
+	//
+	//public void setRI(List<String> rI){
+	//	RI = rI;
+	//}
+
 }

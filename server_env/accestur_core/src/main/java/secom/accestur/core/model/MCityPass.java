@@ -32,10 +32,9 @@ public class MCityPass extends DomainObjectModel{
 	@OneToOne(fetch=FetchType.LAZY, mappedBy="mCityPass")
 	private Activation activation;
 
-	@ElementCollection
-	private List<String> hRI;
+	private String hRI;
 	
-	private Long lifeTime;
+	private String lifeTime;
 	private String category;
 	private String termsAndContions;
 
@@ -70,19 +69,19 @@ public class MCityPass extends DomainObjectModel{
 		this.activation = activation;
 	}
 
-	public List<String> gethRI(){
+	public String gethRI(){
 		return hRI;
 	}
 
-	public void sethRI(List<String> hRI){
+	public void sethRI(String hRI){
 		this.hRI = hRI;
 	}
 
-	public Long getLifeTime(){
+	public String getLifeTime(){
 		return lifeTime;
 	}
 
-	public void setLifeTime(Long lifeTime){
+	public void setLifeTime(String lifeTime){
 		this.lifeTime = lifeTime;
 	}
 

@@ -106,7 +106,7 @@ public class Schnorr{
 		w2 = a2_cRU.mod(q);
 	}
 	
-	public void verifyPASSQuery(BigInteger yu_C, BigInteger Hu_C){
+	public boolean verifyPASSQuery(BigInteger yu_C, BigInteger Hu_C){
 		boolean first;
 		boolean second;
 				
@@ -121,8 +121,10 @@ public class Schnorr{
 		
 		first = g_w1.equals(ycaMODp);
 		second = g_w2.equals(hcaMODp);
-	
+		
 		System.out.println("First check: " + first + "  Second check: " +second);
+
+		return first && second;	
 	}
 
 	public BigInteger send_a_to_b_request(){

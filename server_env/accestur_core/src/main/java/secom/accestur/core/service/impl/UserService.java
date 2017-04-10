@@ -87,14 +87,15 @@ public class UserService implements UserServiceInterface{
 	}
 
 	public void createCertificate(){
-		schnorr.Init();
-		schnorr.SecretKey();
-		schnorr.PublicKey();
+		//schnorr.Init();
+		//schnorr.SecretKey();
+		//schnorr.PublicKey();
 		crypto.initPrivateKey("cert/user/private_USER.der");
 	}
 
 	public String[] authenticateUser(){
-		crypto.initPublicKey("cert/ttp/public_TTP.der");
+		//crypto.initPublicKey("cert/ttp/public_TTP.der");
+		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
 		String params[] = new String[3];
 		BigInteger y = schnorr.getY();
 		params[0] = crypto.getSignature(y.toString());
@@ -103,7 +104,7 @@ public class UserService implements UserServiceInterface{
 		return params;
 	}
 
-	public String[] getService(){
+	public String getService(){
 		User user = userRepository.findAll().iterator().next();
 		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
 		schnorr = Schnorr.fromPrivateCertificate(user.getSchnorr());
@@ -120,7 +121,7 @@ public class UserService implements UserServiceInterface{
 		params[6] = Constants.LIFETIME;
 		params[7] = Constants.CATEGORY;
 
-		return params;
+		return getServiceMessage(params);
 	}
 
 	public String[] showTicket(){
@@ -178,7 +179,7 @@ public class UserService implements UserServiceInterface{
 
 		json.put("services", jsonArray);
 		String message = json.toString();
-		
+
 		return message;
 	}
 
@@ -190,13 +191,27 @@ public class UserService implements UserServiceInterface{
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("y", y);
 		jsonObject.put("signature", signature);
-		
+
 		return jsonObject.toString();
 	}
 
 	public static String getYu(String json){
 		JSONObject jsonObject = new JSONObject(json);
-		
+
 		return jsonObject.getString("y");
+	}
+
+	private String getServiceMessage(String[] params){
+		JSONObject json = new JSONObject();
+		json.put("user", params[0]);
+		json.put("certificate", params[1]);
+		json.put("hRU", params[2]);
+		json.put("Hu", params[3]);
+		json.put("A1", params[4]);
+		json.put("A2", params[5]);
+		json.put("Lifetime", params[6]);
+		json.put("Category", params[7]);
+		
+		return json.toString();
 	}
 }

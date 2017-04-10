@@ -71,7 +71,7 @@ public class HomePageController{
 
 	private void passPurchase(){
 		userService.getUser();
-		userService.createCertificate();
+		//userService.createCertificate();
 		issuerService.createCertificate();
 		String[] names = new String[4];
 		names[0] = "InfiniteReusable";
