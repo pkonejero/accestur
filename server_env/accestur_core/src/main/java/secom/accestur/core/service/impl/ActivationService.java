@@ -9,11 +9,7 @@ import secom.accestur.core.model.Activation;
 import secom.accestur.core.service.ActivationServiceInterface;
 
 @Service("activationService")
-public class ActivationService implements ActivationServiceInterface{
-	@Autowired
-	@Qualifier("activationModel")
-	private Activation activation;
-	
+public class ActivationService implements ActivationServiceInterface{	
 	@Autowired
 	@Qualifier("activationRepository")
 	private ActivationRepository activationRepository;

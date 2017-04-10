@@ -1,12 +1,12 @@
 package secom.accestur.core.service.impl;
 
-import org.json.*;
+import java.math.BigInteger;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import java.math.BigInteger;
-import java.util.List;
 
 import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.schnorr.Schnorr;
@@ -17,11 +17,7 @@ import secom.accestur.core.service.UserServiceInterface;
 import secom.accestur.core.utils.Constants;
 
 @Service("userService")
-public class UserService implements UserServiceInterface {
-	@Autowired
-	@Qualifier("userModel")
-	private User user;
-
+public class UserService implements UserServiceInterface{
 	@Autowired
 	@Qualifier("userRepository")
 	private UserRepository userRepository;
@@ -38,69 +34,66 @@ public class UserService implements UserServiceInterface {
 	@Qualifier("cryptography")
 	private Cryptography crypto;
 
-	// Values needed to create PASS
 	private String[] paramsOfPass;
 	private String[] psi;
 	private String K;
 	private BigInteger random;
 	private BigInteger RU;
 
-	public String getUserByPseudonym1(String pseudonym) {
-		// Pick the first element - If you comment this line a new element will
-		// be created
-		user = userRepository.findAll().iterator().next();
+	public String getUserByPseudonym1(String pseudonym){
+		User user = userRepository.findAll().iterator().next();
 		if (user != null) {
-			// Modify the first element
 			user.setPseudonym(pseudonym);
-			// Save the firts element
 			userRepository.save(user);
 		}
+
 		return pseudonym;
 	}
 
-	public User getUser() {
+	public User getUser(){
 		return userRepository.findAll().iterator().next();
 	}
 
-	public User getUserByPseudonym(String pseudonym) {
+	public User getUserByPseudonym(String pseudonym){
 		return null;
 	}
 
-	public String showProof() {
+	public String showProof(){
 		return null;
 	}
 
-	public boolean getValidationConfirmation() {
+	public boolean getValidationConfirmation(){
 		return false;
 	}
 
-	public String receivePass() {
+	public String receivePass(){
 		return null;
 	}
 
-	public String sendPass() {
+	public String sendPass(){
 		return null;
 	}
 
-	public boolean verifyPseudonym(String[] params) {
+	public boolean verifyPseudonym(String[] params){
 		boolean verified = crypto.getValidation(params[0], params[1]);
-		if (verified) {
+		if (verified){
+			User user = new User();
 			user.setPseudonym(generatePseudonym(params[0], params[1]));
 			user.setSchnorr(schnorr.getPrivateCertificate());
-			System.out.println(user.getPseudonym());
 			userRepository.save(user);
 		}
+
 		return verified;
 	}
 
-	public void createCertificate() {
-		 schnorr.Init();
-		 schnorr.SecretKey();
-		 schnorr.PublicKey();
+	public void createCertificate(){
+		schnorr.Init();
+		schnorr.SecretKey();
+		schnorr.PublicKey();
 		crypto.initPrivateKey("cert/user/private_USER.der");
 	}
 
-	public String[] authenticateUser() {
+	public String[] authenticateUser(){
 		crypto.initPublicKey("cert/ttp/public_TTP.der");
 		String params[] = new String[3];
 		BigInteger y = schnorr.getY();
@@ -110,15 +103,13 @@ public class UserService implements UserServiceInterface {
 		return params;
 	}
 
-	public String[] getService() {
-		//initUser();
+	public String[] getService(){
+		User user = userRepository.findAll().iterator().next();
 		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
-		System.out.println(user.getSchnorr());
 		schnorr = Schnorr.fromPrivateCertificate(user.getSchnorr());
 		String[] params = new String[8];
 		params[0] = user.getPseudonym();
 		params[1] = schnorr.getCertificate();
-		// schnorr.printValues();
 		RU = schnorr.getRandom();
 		params[2] = Cryptography.hash(RU.toString());
 		BigInteger Hu = schnorr.getPower(RU);
@@ -128,24 +119,23 @@ public class UserService implements UserServiceInterface {
 		params[5] = schnorr.getA_2().toString();
 		params[6] = Constants.LIFETIME;
 		params[7] = Constants.CATEGORY;
-		
+
 		return params;
 	}
 
-	public String[] showTicket() {
+	public String[] showTicket(){
 		return null;
 	}
 
-	public String[] showPass() {
+	public String[] showPass(){
 		return null;
 	}
 
-	public String[] showProof(String[] params) {
+	public String[] showProof(String[] params){
 		return null;
 	}
 
-	public String solveChallenge(String c, String[] services) {
-
+	public String solveChallenge(String c, String[] services){
 		schnorr.solveChallengeQuery(new BigInteger(c), RU);
 		K = Cryptography.hash(schnorr.getW2().toString());
 		random = schnorr.getRandom();
@@ -165,63 +155,48 @@ public class UserService implements UserServiceInterface {
 			}
 		}
 		String[] ws = new String[2];
-		//System.out.println("User sends:");
-		//System.out.println("w1: "+ schnorr.getW1().toString());
-		//System.out.println("w2: " + schnorr.getW2().toString());
-		//System.out.println("yU:" + schnorr.getY().toString());
 		ws[0] = schnorr.getW1().toString();
 		ws[1] = schnorr.getW2().toString();
-
-		
 
 		return solveChallengeMessage(psi, services, ws);
 	}
 
-	private String solveChallengeMessage(String[] psi, String[] services, String[] ws) {
+	private String solveChallengeMessage(String[] psi, String[] services, String[] ws){
 		JSONObject json = new JSONObject();
 		json.put("w1",crypto.encryptWithPublicKey( ws[0]));
 		json.put("w2",crypto.encryptWithPublicKey( ws[1]));
-		
-		
 		JSONArray jsonArray = new JSONArray();
 		JSONObject jsonObject;
-		
-		for (int i = 0; i < psi.length; i++) {
+
+		for (int i = 0; i < psi.length; i++){
 			jsonObject = new JSONObject();
 			jsonObject.put("service", services[i]);
 			jsonObject.put("psi", psi[i]);
 			String s = crypto.encryptWithPublicKey(jsonObject.toString());
-			//System.out.println(s);
 			jsonArray.put(i, s);
 		}
 
 		json.put("services", jsonArray);
 		String message = json.toString();
-		//System.out.println(message);
-		//System.out.println(message.length());
 		
 		return message;
-		
 	}
 
-	public String[] receivePass(String[] params) {
+	public String[] receivePass(String[] params){
 		return null;
 	}
 
-	private static String generatePseudonym(String y, String signature) {
+	private static String generatePseudonym(String y, String signature){
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("y", y);
 		jsonObject.put("signature", signature);
+		
 		return jsonObject.toString();
 	}
 
-	public static String getYu(String json) {
+	public static String getYu(String json){
 		JSONObject jsonObject = new JSONObject(json);
+		
 		return jsonObject.getString("y");
-	}
-
-	public void initUser() {
-		user = userRepository.findAll().iterator().next();
-
 	}
 }

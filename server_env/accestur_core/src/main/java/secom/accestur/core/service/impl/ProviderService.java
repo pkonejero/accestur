@@ -1,12 +1,12 @@
 package secom.accestur.core.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.schnorr.Schnorr;
@@ -19,10 +19,6 @@ import secom.accestur.core.utils.Constants;
 
 @Service("providerService")
 public class ProviderService implements ProviderServiceInterface{
-	@Autowired
-	@Qualifier("providerModel")
-	private Provider provider;
-
 	@Autowired
 	@Qualifier("providerRepository")
 	private ProviderRepository providerRepository;
@@ -38,24 +34,19 @@ public class ProviderService implements ProviderServiceInterface{
 	public void newProvider(String name, Issuer issuer){
 		Provider p = getProviderByName(name);
 		if(p == null){
+			Provider provider = new Provider();
 			provider.setName(name);
 			provider.setIssuer(issuer);
 			providerRepository.save(provider);
 			System.out.println("Name: = " + provider.getName());
 		} else {
 			System.out.println("This provider already exisits, it will be initialized to the existing values");
-			provider = p;
-			System.out.println("Name: = " + provider.getName());
 		}
 		
 	}
 		
 	public Provider getProviderByName(String name){
 		return providerRepository.findByNameIgnoreCase(name);
-	}
-
-	public void initiateProviderByName(String name){
-		provider = getProviderByName(name);
 	}
 	
 	public List<Provider> getProvidersByIssuer(Issuer issuer){
@@ -79,7 +70,7 @@ public class ProviderService implements ProviderServiceInterface{
 		crypto.initPublicKey("public_ISSUER.der");		
 	}
 	
-	public ServiceAgent[] authenticateProvider(String[] names, int[] counters){
+	public ServiceAgent[] authenticateProvider(String[] names, int[] counters, String providerName){
 		ServiceAgent[] service = new ServiceAgent[names.length];
 		for (int i = 0; i< names.length; i++){
 			SecureRandom sr = new SecureRandom();
@@ -88,7 +79,7 @@ public class ProviderService implements ProviderServiceInterface{
 			service[i].setIndexHash(bg.toString());
 			service[i].setM(counters[i]);
 			service[i].setName(names[i]);
-			service[i].setProvider(provider);
+			service[i].setProvider(getProviderByName(providerName));
 		}	
 		return service;
 	}	

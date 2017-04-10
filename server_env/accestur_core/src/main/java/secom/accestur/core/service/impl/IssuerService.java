@@ -1,11 +1,12 @@
 package secom.accestur.core.service.impl;
 
-import org.springframework.stereotype.Service;
+import java.math.BigInteger;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-
-import java.math.BigInteger;
-import org.json.*;
+import org.springframework.stereotype.Service;
 
 import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.schnorr.Schnorr;
@@ -16,10 +17,6 @@ import secom.accestur.core.service.IssuerServiceInterface;
 
 @Service("issuerService")
 public class IssuerService implements IssuerServiceInterface{
-	@Autowired
-	@Qualifier("issuerModel")
-	private Issuer issuer;
-
 	@Autowired
 	@Qualifier("issuerRepository")
 	private IssuerRepository issuerRepository;
@@ -126,15 +123,13 @@ public class IssuerService implements IssuerServiceInterface{
 	public void newIssuer(String name){
 		Issuer i = getIssuerByName(name);
 		if(i==null){
+			Issuer issuer = new Issuer();
 			issuer.setName(name);
 			System.out.println("Name: = " + issuer.getName());
 			issuerRepository.save(issuer);		
 		} else {
 			System.out.println("This issuer already exisits, it will be initialized to the existing values");
-			issuer = i;
-			System.out.println("Name: = " + issuer.getName());
 		}
-		
 	}
 	
 	public static String getYu(String json){

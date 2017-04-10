@@ -6,9 +6,7 @@ public interface UserServiceInterface{
 	public String getUserByPseudonym1(String pseudonym);
 	
 	public User getUserByPseudonym(String pseudonym);
-	
-	public void initUser();
-	
+
 	public String[] authenticateUser();
 	
 	public boolean verifyPseudonym(String[] params);

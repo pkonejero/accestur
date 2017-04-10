@@ -31,7 +31,7 @@ public class Provider extends DomainObjectModel{
 	// Name
 	private String name;
 
-	Provider(){}
+	public Provider(){}
 	
 	public Provider(String name, Issuer issuer, List<ServiceAgent> services){
 		super();

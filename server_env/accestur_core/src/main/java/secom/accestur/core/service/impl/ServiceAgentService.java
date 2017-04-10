@@ -1,10 +1,10 @@
 package secom.accestur.core.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 import secom.accestur.core.dao.ServiceAgentRepository;
 import secom.accestur.core.model.MCityPass;
@@ -34,15 +34,12 @@ public class ServiceAgentService implements ServiceAgentInterface{
 		}
 	}
 
-
-	public List<ServiceAgent> getServicesByProvider(Provider provider) {
-		// TODO Auto-generated method stub
+	public List<ServiceAgent> getServicesByProvider(Provider provider){
 		return null;
 	}
 
 
-	public List<ServiceAgent> getServicesByMCityPass(MCityPass mCityPass) {
-		// TODO Auto-generated method stub
+	public List<ServiceAgent> getServicesByMCityPass(MCityPass mCityPass){
 		return null;
 	}
 }

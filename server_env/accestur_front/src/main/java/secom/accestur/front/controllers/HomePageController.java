@@ -34,7 +34,6 @@ public class HomePageController{
 	public String welcome(Map<String, Object> model){
 		Init();
 		generateUser();
-		createServices();		
 		passPurchase();
 		return "welcome";
 	}
@@ -42,27 +41,26 @@ public class HomePageController{
 	private void Init(){
 		issuerService.newIssuer("Accestur");
 		providerService.newProvider("TIB", issuerService.getIssuerByName("Accestur"));
-		createServices();
+		createServices("Accestur");
 	}
 
-	private void createServices(){
-		String[] names = new String[4];
+	private void createServices(String providerName){
+		String[] serviceName = new String[4];
 		int[] counters = new int[4];
 
-		names[0] = "InfiniteReusable";
+		serviceName[0] = "InfiniteReusable";
 		counters[0] = -1;
 
-		names[1] = "NoReusable";
+		serviceName[1] = "NoReusable";
 		counters[1] = 1;
 
-		names[2] = "TwoTimesReusable";
+		serviceName[2] = "TwoTimesReusable";
 		counters[2] = 2;
 
-		names[3] = "TenTimesReusable";
+		serviceName[3] = "TenTimesReusable";
 		counters[3] = 10;
 
-		providerService.initiateProviderByName("TIB");
-		issuerService.generateCertificate(providerService.authenticateProvider(names, counters));
+		issuerService.generateCertificate(providerService.authenticateProvider(serviceName, counters, providerName));
 	}
 
 	private void generateUser(){
@@ -72,7 +70,7 @@ public class HomePageController{
 	}
 
 	private void passPurchase(){
-		userService.initUser();
+		userService.getUser();
 		userService.createCertificate();
 		issuerService.createCertificate();
 		String[] names = new String[4];

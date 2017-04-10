@@ -11,11 +11,9 @@ public interface ProviderServiceInterface{
 		
 	public Provider getProviderByName(String name);
 	
-	public void initiateProviderByName(String name);
-	
 	public List<Provider> getProvidersByIssuer(Issuer issuer);
 	
-	public ServiceAgent[] authenticateProvider(String[] names, int[] counters);
+	public ServiceAgent[] authenticateProvider(String[] serviceName, int[] counters, String providerName);
 	
 	public String[] verifyPass(String[] params);
 	
