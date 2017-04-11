@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import secom.accestur.core.model.DomainObjectModel;
 
 @Entity
-@Table(name='mcouponEntity')
+//@Table(name='mcouponEntity')
 public class MCoupon extends DomainObjectModel{
 	
 	@Id
