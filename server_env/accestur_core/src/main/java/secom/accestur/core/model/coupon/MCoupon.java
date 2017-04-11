@@ -32,9 +32,18 @@ public class MCoupon extends DomainObjectModel{
 	
 	//Share Hash
 	private String chain_Y;
+	private Integer q; //Number of times to hash.
 	
 	//Own Hash
 	private String chain_X;
+	private Integer p;//Number of times to hash.
+	
+	//Serial Number
+	private Long serialNumber;
+	
+	//Activation
+	@OneToOne(fetch=FetchType.LAZY, mappedBy="mCoupon")
+	private Activation activation;
 	
 	//Dates
 	private Date expDate;
