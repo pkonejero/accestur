@@ -1,6 +1,7 @@
 package secom.accestur.core.model.coupon;
 
 import java.sql.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,16 +10,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import secom.accestur.core.model.Activation;
+import secom.accestur.core.model.Counter;
 import secom.accestur.core.model.DomainObjectModel;
+import secom.accestur.core.model.Provider;
 import secom.accestur.core.model.User;
 
 @Entity
 @Table(name="mcouponEntity")
-public class MCoupon extends DomainObjectModel{
+public class MCoupon extends DomainObjectModelCoupon{
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -29,6 +33,10 @@ public class MCoupon extends DomainObjectModel{
 	@JoinColumn(name = "USER_ID")
 	private UserMCoupon user;
 	
+	//Merchant
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="MERCHANT_ID")
+	private MerchantMCoupon merchant;
 	
 	//Share Hash
 	private String chain_Y;
@@ -43,7 +51,7 @@ public class MCoupon extends DomainObjectModel{
 	
 	//Activation
 	@OneToOne(fetch=FetchType.LAZY, mappedBy="mCoupon")
-	private Activation activation;
+	private ActivationMCoupon activation;
 	
 	//Dates
 	private Date expDate;
