@@ -21,7 +21,7 @@ import secom.accestur.core.model.coupon.ManufacturerMCoupon;
 import secom.accestur.core.service.coupon.IssuerMCouponServiceInterface;
 import secom.accestur.core.utils.Constants;
 
-@Service("issuermcouponcouponService")
+@Service("issuermcouponService")
 public class IssuerMCouponService implements IssuerMCouponServiceInterface{	
 	@Autowired
 	@Qualifier("issuermcouponRepository")
