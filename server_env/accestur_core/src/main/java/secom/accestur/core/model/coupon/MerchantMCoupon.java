@@ -39,11 +39,11 @@ public class MerchantMCoupon extends DomainObjectModelCoupon{
 		this.issuer = issuer;
 	}
 	
-	public IssuerMCoupon getIssuer(){
+	public IssuerMCoupon getIssuerMCoupon(){
 		return issuer;
 	}
 
-	public void setIssuer(IssuerMCoupon issuer){
+	public void setIssuerMCoupon(IssuerMCoupon issuer){
 		this.issuer = issuer;
 	}
 

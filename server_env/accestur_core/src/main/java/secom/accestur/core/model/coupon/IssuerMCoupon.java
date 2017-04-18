@@ -41,7 +41,7 @@ public class IssuerMCoupon extends DomainObjectModelCoupon{
 		return merchants;
 	}
 
-	public void setProviders(List<MerchantMCoupon> merchants){
+	public void setMerchantMCoupon(List<MerchantMCoupon> merchants){
 		this.merchants = merchants;
 	}
 

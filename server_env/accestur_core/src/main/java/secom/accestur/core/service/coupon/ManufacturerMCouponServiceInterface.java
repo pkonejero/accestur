@@ -4,9 +4,9 @@ import secom.accestur.core.model.coupon.ManufacturerMCoupon;
 
 public interface ManufacturerMCouponServiceInterface{
 	
-	public ManufacturerMCoupon getManufacturerByName(String name);
+	public ManufacturerMCoupon getManufacturerMCouponByName(String name);
 
-	public void newManufacturer(String name);
+	public void newManufacturerMCoupon(String name);
 
 	public String getChallenge(String params);
 

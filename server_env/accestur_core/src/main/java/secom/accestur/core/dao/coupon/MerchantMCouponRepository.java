@@ -12,4 +12,5 @@ public interface MerchantMCouponRepository extends PagingAndSortingRepository<Me
 	MerchantMCoupon findByNameIgnoreCase(String name);
 	
 	List<MerchantMCoupon> findByIssuer(IssuerMCoupon issuerr);
+	
 }

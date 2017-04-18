@@ -21,7 +21,7 @@ public interface UserMCouponServiceInterface{
 	
 	public boolean getValidationConfirmation();
 	
-	public String solveChallenge(String c, String[] services);
+	//public String solveChallenge(String c, String[] services);
 	
 	public String[] receivePass(String[] params);
 	

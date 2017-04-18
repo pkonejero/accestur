@@ -10,9 +10,9 @@ public interface MerchantMCouponServiceInterface{
 		
 	public MerchantMCoupon getMerchantMCouponByName(String name);
 	
-	public List<MerchantMCoupon> getMerchantMCouponByIssuerMCoupon(IssuerMCoupon issuer);
+	//public List<MerchantMCoupon> getMerchantMCouponByIssuerMCoupon(IssuerMCoupon issuer);
 	
-	public String[] verifyPass(String[] params);
+	public String[] verifyMCoupon(String[] params);
 	
 	public void createCertificate();
 }

@@ -3,9 +3,9 @@ package secom.accestur.core.service.coupon;
 import secom.accestur.core.model.coupon.IssuerMCoupon;
 
 public interface IssuerMCouponServiceInterface{
-	public IssuerMCoupon getIssuerByName(String name);
+	public IssuerMCoupon getIssuerMCouponByName(String name);
 
-	public void newIssuer(String name);
+	public void newIssuerMCoupon(String name);
 
 	public String getChallenge(String params);
 
