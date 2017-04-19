@@ -7,6 +7,11 @@ import secom.accestur.core.model.Provider;
 import secom.accestur.core.model.ServiceAgent;
 
 public interface ServiceAgentInterface{
+	
+	public void initService(long id);
+	
+	public ServiceAgent getServiceBySn(long id);
+	
 	public List<ServiceAgent> getServicesByProvider(Provider provider);
 	
 	public List<ServiceAgent> getServicesByMCityPass(MCityPass mCityPass);

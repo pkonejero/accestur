@@ -10,6 +10,9 @@ import secom.accestur.core.model.ServiceAgent;
 
 @Repository("serviceAgentRepository")
 public interface ServiceAgentRepository extends PagingAndSortingRepository<ServiceAgent, Long>{
+	
+	ServiceAgent findById(long id);
+	
 	ServiceAgent findByNameIgnoreCase(String name);
 	
 	List<ServiceAgent> findByProvider(Provider provider);

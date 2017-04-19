@@ -6,6 +6,8 @@ public interface UserServiceInterface{
 	public String getUserByPseudonym1(String pseudonym);
 	
 	public User getUserByPseudonym(String pseudonym);
+	
+	public void initUser();
 
 	public String[] authenticateUser();
 	
@@ -13,7 +15,7 @@ public interface UserServiceInterface{
 	
 	public String getService();
 	
-	public String[] showTicket();
+	public String showTicket(long CityPassId, long serviceId);
 	
 	public String showPass(long sn);
 	
@@ -21,7 +23,7 @@ public interface UserServiceInterface{
 	
 	public String[] showProof(String[] params);
 	
-	public boolean getValidationConfirmation();
+	public boolean getValidationConfirmation(String params);
 	
 	public String solveChallenge(String c, String[] services);
 	

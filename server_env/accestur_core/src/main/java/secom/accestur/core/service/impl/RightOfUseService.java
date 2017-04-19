@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.dao.RightOfUseRepository;
+import secom.accestur.core.model.MCityPass;
 import secom.accestur.core.model.RightOfUse;
 import secom.accestur.core.service.RightOfUseServiceInterface;
 
@@ -25,7 +26,22 @@ public class RightOfUseService implements RightOfUseServiceInterface{
 	public void setDelta(String k) {
 	}
 	
+	public RightOfUse getRightOfUse(){
+		return rightOfUse;
+	}
+	
 	public void saveRightOfUse(RightOfUse rou){
 		rightOfUseRepository.save(rou);
 	}
+
+	public RightOfUse getByMCityPass(MCityPass mCityPass) {
+		return rightOfUseRepository.findByMCityPass(mCityPass);
+	}
+
+
+	public void initRightOfUseByCityPass(MCityPass mCityPass) {
+		rightOfUse = getByMCityPass(mCityPass);
+		
+	}
+	
 }

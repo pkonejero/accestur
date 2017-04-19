@@ -55,6 +55,7 @@ public class MCityPass extends DomainObjectModel{
 	private String delta;
 	
 	private String hRU;
+	private String Hu;
 	
 	
 	@Column(length = 40000)
@@ -162,6 +163,26 @@ public class MCityPass extends DomainObjectModel{
 	
 	
 	
+	public SecretValue getSecretValue() {
+		return secretValue;
+	}
+
+
+	public void setSecretValue(SecretValue secretValue) {
+		this.secretValue = secretValue;
+	}
+
+
+	public String getHu() {
+		return Hu;
+	}
+
+
+	public void setHu(String hu) {
+		Hu = hu;
+	}
+
+
 	public String getSignature() {
 		return signature;
 	}
@@ -177,6 +198,7 @@ public class MCityPass extends DomainObjectModel{
 		json.put("User", user.getPseudonym());
 		json.put("hRI", hRI);
 		json.put("hRU", hRU);
+		json.put("Hu", Hu);
 		json.put("expDate", expDate);
 		json.put("purDate", purDate);
 		json.put("Lifetime", lifeTime);

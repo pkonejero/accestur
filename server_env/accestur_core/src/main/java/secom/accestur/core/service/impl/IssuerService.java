@@ -44,10 +44,17 @@ public class IssuerService implements IssuerServiceInterface{
 	@Qualifier("serviceAgentService")
 	ServiceAgentService serviceAgentService;
 	
+	@Autowired
+	@Qualifier("rightOfUseService")
+	private RightOfUseService rightOfUseService;
 	
 	@Autowired
 	@Qualifier("activationService")
 	private ActivationService activationService;
+	
+	@Autowired
+	@Qualifier("counterService")
+	private CounterService counterService;
 
 	@Autowired
 	@Qualifier("schnorr")
@@ -159,7 +166,7 @@ public class IssuerService implements IssuerServiceInterface{
 			rou.put("signature" , k);
 			String delta = rou.toString();
 			RightOfUse rightOfUse = new RightOfUse(json.toString(), k);
-			
+			mCityPass.setHu(paramsOfPass[3]);
 			mCityPass.setUser(userService.getUserByPseudonym(paramsOfPass[0]));
 			mCityPass.setCategory(paramsOfPass[7]);
 			mCityPass.setLifeTime(paramsOfPass[6]);
@@ -176,6 +183,9 @@ public class IssuerService implements IssuerServiceInterface{
 			mCityPass.setCounters(counters);
 			mCityPass.setSignature(crypto.getSignature(mCityPass.toString()));
 			mCityPassService.saveMCityPass(mCityPass);
+			counterService.saveCounters(counters);
+			rightOfUse.setmCityPass(mCityPass);
+			rightOfUseService.saveRightOfUse(rightOfUse);
 //			System.out.println(mCityPass.toString());
 //			System.out.println("Signature:" + crypto.getSignature(mCityPass.toString()));
 		}
@@ -206,8 +216,7 @@ public class IssuerService implements IssuerServiceInterface{
 		}
 	}
 	
-	public String verifyTicket(String params){
-		
+	public String verifyTicket(String params){		
 		JSONObject json = new JSONObject(params);
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date now = new Date();
