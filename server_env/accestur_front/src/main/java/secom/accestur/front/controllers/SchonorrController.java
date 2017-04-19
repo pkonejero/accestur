@@ -29,7 +29,7 @@ public class SchonorrController {
 	@Qualifier("issuerService")
 	IssuerService issuerService;
 
-	@RequestMapping("/schnorr")
+	@RequestMapping("/schnorr_test")
 	public String welcome(Map<String, Object> model){
 		schnorr_a = Schnorr.fromPrivateCertificate(userService.getUser().getSchnorr());
 		schnorr_b = Schnorr.fromCertificate(schnorr_a.getCertificate());
