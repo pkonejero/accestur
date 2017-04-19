@@ -46,73 +46,7 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 	private String[] services;
 	private String[] psi;
 
-	public ManufacturerMCoupon getManufacturerMCouponByName(String name){
-		return manufacturermcouponRepository.findByNameIgnoreCase(name);
-	}
 
-	public String getChallenge(String json){
-		String[] params = solveChallengeMessage(json);
-		paramsOfPass = params;
-		schnorr = Schnorr.fromCertificate(params[1]);
-		schnorr.setA_1(new BigInteger(params[4]));
-		schnorr.setA_2(new BigInteger(params[5]));
-		BigInteger yU = new BigInteger(getYu(params[0]));
-		BigInteger Hu = new BigInteger(params[3]);
-		BigInteger c = schnorr.getRandom();
-		schnorr.setC(c);
-		System.out.println("Issuer sends:");
-		System.out.println("c: " +c.toString());
-		yU_c = yU.modPow(c, schnorr.getP());
-		Hu_c = Hu.modPow(c, schnorr.getP());
-		return c.toString();
-	}
-
-	private void getChallengeMessage(String params){
-		//System.out.println(params);
-		JSONObject json = new JSONObject(params);
-		//System.out.println(json.toString());
-		ws = new String[2];
-		//System.out.println(json.getString("w1"));
-		ws[0] = crypto.decryptWithPrivateKey(json.getString("w1"));
-		ws[1] = crypto.decryptWithPrivateKey(json.getString("w2"));
-		//		System.out.println("Issuer gets:");
-		//		System.out.println("w1: " +ws[0]);
-		//		System.out.println("w2: " +ws[1]);
-		JSONArray jsonArray = json.getJSONArray("services");
-		psi = new String[jsonArray.length()];
-		services = new String[jsonArray.length()];
-		JSONObject jsonObject;
-		String s;
-		for(int i = 0; i < psi.length; i++){
-			s = jsonArray.getString(i);
-			jsonObject = new JSONObject(crypto.decryptWithPrivateKey(s));
-			psi[i] = jsonObject.getString("psi");
-			services[i] = jsonObject.getString("service");
-		}
-	}
-
-	private String[] solveChallengeMessage (String message){
-		JSONObject json = new JSONObject(message);
-		String[] params = new String[8];
-		params[0] = json.getString("user");
-		params[1] = json.getString("certificate");
-		params[2] = json.getString("hRU");
-		params[3] = json.getString("Hu");
-		params[4] = json.getString("A1");
-		params[5] = json.getString("A2");
-		params[6] = json.getString("Lifetime");
-		params[7] = json.getString("Category");
-
-		return params;
-	}
-
-	public String[] verifyTicket(String[] params){
-		return null;
-	}
-
-	public boolean arrayGeneration(){
-		return false;
-	}
 
 	public void createCertificate(){
 		crypto.initPrivateKey("cert/issuer/private_ISSUER.der");
@@ -130,43 +64,25 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 			System.out.println("This manufacturer already exisits, it will be initialized to the existing values");
 		}
 	}
-
-	public static String getYu(String json){
-		JSONObject jsonObject = new JSONObject(json);
-		return jsonObject.getString("y");
+	
+	public ManufacturerMCoupon getManufacturerMCouponByName(String name){
+		return manufacturermcouponRepository.findByNameIgnoreCase(name);
 	}
-
-
-	public String getPASS(String params){
-		getChallengeMessage(params);
-		schnorr.setW1(new BigInteger(ws[0]));
-		schnorr.setW2(new BigInteger(ws[1]));
-
-		if(!schnorr.verifyPASSQuery(yU_c, Hu_c)){
-			System.out.println("Authentication failed");
-			return 	"Authentication failed";		
+	
+	public String[] generateUsername(String[] params){
+		String[] message = new String[3];
+		String username = crypto.decryptWithPrivateKey(params[1]);
+		String password = crypto.decryptWithPrivateKey(params[2]);
+		if (crypto.getValidation(username+password, params[0])){
+			message[0] = username;
+			message[1] = password;
+			message[2] = crypto.getSignature(username+password);
+			
 		} else {
-			BigInteger RI = new BigInteger(Constants.PRIME_BITS, new Random());
-			String hRI = Cryptography.hash(RI.toString());
-			//Generate k
-			crypto.initPublicKey("cert/ttp/public_TTP.der");
-			JSONObject json = new JSONObject();
-			json.put("K", Cryptography.hash((new BigInteger(ws[1])).toString()));
-			json.put("RI", RI);
-			String k = crypto.getSignature(json.toString());
-			JSONObject rou = new JSONObject();
-			rou.put("k", crypto.encryptWithPublicKey(json.toString()));
-			rou.put("signature" , k);
-			String delta = rou.toString();
-			RightOfUse rightOfUse = new RightOfUse(json.toString(), k);
-			MCityPass mCityPass = new MCityPass();
-			mCityPass.setCategory(paramsOfPass[7]);
-			mCityPass.setLifeTime(paramsOfPass[6]);
-			mCityPass.sethRI(hRI);
-			mCityPass.sethRU(paramsOfPass[2]);
-			List<Counter> counters;
+			message[0] = "Error";
 		}
-	return null;
+		return message;
 	}
+
 
 }

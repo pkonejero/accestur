@@ -20,8 +20,11 @@ public class UserMCoupon extends DomainObjectModelCoupon{
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	@Column(length = 40000)
-	private String pseudonym;
+	@Column(length = 20)
+	private String username;
+	
+	@Column(length = 20)
+	private String password;
 	
 	//MCoupons of the user
 	@OneToMany(mappedBy="user")
@@ -32,18 +35,9 @@ public class UserMCoupon extends DomainObjectModelCoupon{
 	@JoinColumn(name="MANUFACTURER_ID")
 	private ManufacturerMCoupon manufacturer;
 	
-	@Column(length = 40000)
-	private String schnorr;
 	
 	public UserMCoupon(){}
 	
-	public String getSchnorr() {
-		return schnorr;
-	}
-
-	public void setSchnorr(String schnorr) {
-		this.schnorr = schnorr;
-	}
 
 	public List<MCoupon> getmCoupon(){
 		return mCoupon;
@@ -53,12 +47,20 @@ public class UserMCoupon extends DomainObjectModelCoupon{
 		this.mCoupon = mCoupon;
 	}
 
-	public String getPseudonym(){
-		return pseudonym;
+	public String getUsername(){
+		return username;
 	}
 
-	public void setPseudonym(String pseudonym){
-		this.pseudonym = pseudonym;
+	public void setUsername(String username){
+		this.username = username;
+	}
+	
+	public String getPassword(){
+		return password;
+	}
+
+	public void setPassword(String password){
+		this.password = password;
 	}
 
 	@Override
@@ -70,13 +72,13 @@ public class UserMCoupon extends DomainObjectModelCoupon{
 		if (getClass() != obj.getClass())
 			return false;
 		UserMCoupon other = (UserMCoupon) obj;
-		if ( pseudonym != other.pseudonym)
+		if ( username != other.username)
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString(){
-		return "User [pseudonym=" + pseudonym + "]";
+		return "User [username=" + username + "]";
 	}
 }

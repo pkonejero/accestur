@@ -34,7 +34,7 @@ public class HomePageControllerMCoupon{
 	@RequestMapping("/mcoupon")
 	public String welcome(Map<String, Object> model){
 		Init();
-		//generateUser();
+		generateUser();
 		//passPurchase();
 		return "mcoupon";
 	}
@@ -43,6 +43,11 @@ public class HomePageControllerMCoupon{
 		manufacturermcouponService.newManufacturerMCoupon("AccesturManufacturer");
 		issuermcouponService.newIssuerMCoupon("AccesturIssuer");
 		merchantmcouponService.newMerchantMCoupon("AccesturMerchant", issuermcouponService.getIssuerMCouponByName("AccesturIssuer"));
-		//createServices("Accestur");
+	}
+	
+	private void generateUser(){
+		usermcouponService.createCertificate();
+		manufacturermcouponService.createCertificate();
+		System.out.println(usermcouponService.verifyUsername(manufacturermcouponService.generateUsername(usermcouponService.authenticateUsername("Toni","toni1992"))));
 	}
 }

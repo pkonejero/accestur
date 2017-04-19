@@ -3,29 +3,13 @@ package secom.accestur.core.service.coupon;
 import secom.accestur.core.model.coupon.UserMCoupon;
 
 public interface UserMCouponServiceInterface{
-	public String getUserMCouponByPseudonym1(String pseudonym);
+	public String getUserMCouponByUsername1(String username);
 	
-	public UserMCoupon getUserMCouponByPseudonym(String pseudonym);
+	public UserMCoupon getUserMCouponByUsername(String username);
 
-	public String[] authenticateUserMCoupon();
+	public String[] authenticateUsername(String username, String password);
 	
-	public boolean verifyPseudonym(String[] params);
-	
-	public String getService();
-	
-	public String[] showTicket();
-	
-	public String[] showPass();
-	
-	public String[] showProof(String[] params);
-	
-	public boolean getValidationConfirmation();
-	
-	//public String solveChallenge(String c, String[] services);
-	
-	public String[] receivePass(String[] params);
-	
-	public String sendPass();
+	public boolean verifyUsername(String[] params);
 	
 	public void createCertificate();
 }

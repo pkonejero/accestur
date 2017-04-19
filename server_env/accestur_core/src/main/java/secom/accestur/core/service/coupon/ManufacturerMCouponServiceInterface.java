@@ -8,13 +8,13 @@ public interface ManufacturerMCouponServiceInterface{
 
 	public void newManufacturerMCoupon(String name);
 
-	public String getChallenge(String params);
+	//public String getChallenge(String params);
 
-	public String getPASS(String params);
+	//public String getPASS(String params);
 
-	public String[] verifyTicket(String[] params);
+	//public String[] verifyTicket(String[] params);
 
-	public boolean arrayGeneration();
+	//public boolean arrayGeneration();
 
 	public void createCertificate();
 }
