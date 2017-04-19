@@ -4,4 +4,7 @@ import secom.accestur.core.model.Activation;
 
 public interface ActivationServiceInterface{
 	public Activation getActivationByMCityPassSn(long sn);
+	
+	public void activateCityPass(Activation activation);
+	
 }

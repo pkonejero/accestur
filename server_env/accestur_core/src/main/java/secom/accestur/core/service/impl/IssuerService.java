@@ -1,6 +1,10 @@
 package secom.accestur.core.service.impl;
 
 import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -13,6 +17,7 @@ import org.springframework.stereotype.Service;
 import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.schnorr.Schnorr;
 import secom.accestur.core.dao.IssuerRepository;
+import secom.accestur.core.model.Activation;
 import secom.accestur.core.model.Counter;
 import secom.accestur.core.model.Issuer;
 import secom.accestur.core.model.MCityPass;
@@ -26,10 +31,23 @@ public class IssuerService implements IssuerServiceInterface{
 	@Autowired
 	@Qualifier("issuerRepository")
 	private IssuerRepository issuerRepository;
+	
+	@Autowired
+	@Qualifier("userService")
+	private UserService userService;
+	
+	@Autowired
+	@Qualifier("mCityPassService")
+	private MCityPassService mCityPassService;
 
 	@Autowired
 	@Qualifier("serviceAgentService")
 	ServiceAgentService serviceAgentService;
+	
+	
+	@Autowired
+	@Qualifier("activationService")
+	private ActivationService activationService;
 
 	@Autowired
 	@Qualifier("schnorr")
@@ -75,33 +93,9 @@ public class IssuerService implements IssuerServiceInterface{
 		return c.toString();
 	}
 
-	private void getChallengeMessage(String params){
-		//System.out.println(params);
-		JSONObject json = new JSONObject(params);
-		//System.out.println(json.toString());
-		ws = new String[2];
-		//System.out.println(json.getString("w1"));
-		ws[0] = crypto.decryptWithPrivateKey(json.getString("w1"));
-		ws[1] = crypto.decryptWithPrivateKey(json.getString("w2"));
-		//		System.out.println("Issuer gets:");
-		//		System.out.println("w1: " +ws[0]);
-		//		System.out.println("w2: " +ws[1]);
-		JSONArray jsonArray = json.getJSONArray("services");
-		psi = new String[jsonArray.length()];
-		services = new String[jsonArray.length()];
-		JSONObject jsonObject;
-		String s;
-		for(int i = 0; i < psi.length; i++){
-			s = jsonArray.getString(i);
-			jsonObject = new JSONObject(crypto.decryptWithPrivateKey(s));
-			psi[i] = jsonObject.getString("psi");
-			services[i] = jsonObject.getString("service");
-		}
-	}
-
 	private String[] solveChallengeMessage (String message){
 		JSONObject json = new JSONObject(message);
-		String[] params = new String[8];
+		String[] params = new String[10];
 		params[0] = json.getString("user");
 		params[1] = json.getString("certificate");
 		params[2] = json.getString("hRU");
@@ -110,13 +104,11 @@ public class IssuerService implements IssuerServiceInterface{
 		params[5] = json.getString("A2");
 		params[6] = json.getString("Lifetime");
 		params[7] = json.getString("Category");
-
+		params[8] = json.getString("EXPDATE");
+		params[9] = json.getString("PURDATE");
 		return params;
 	}
 
-	public String[] verifyTicket(String[] params){
-		return null;
-	}
 
 	public boolean arrayGeneration(){
 		return false;
@@ -149,7 +141,7 @@ public class IssuerService implements IssuerServiceInterface{
 		getChallengeMessage(params);
 		schnorr.setW1(new BigInteger(ws[0]));
 		schnorr.setW2(new BigInteger(ws[1]));
-
+		MCityPass mCityPass = new MCityPass();
 		if(!schnorr.verifyPASSQuery(yU_c, Hu_c)){
 			System.out.println("Authentication failed");
 			return 	"Authentication failed";		
@@ -167,13 +159,72 @@ public class IssuerService implements IssuerServiceInterface{
 			rou.put("signature" , k);
 			String delta = rou.toString();
 			RightOfUse rightOfUse = new RightOfUse(json.toString(), k);
-			MCityPass mCityPass = new MCityPass();
+			
+			mCityPass.setUser(userService.getUserByPseudonym(paramsOfPass[0]));
 			mCityPass.setCategory(paramsOfPass[7]);
 			mCityPass.setLifeTime(paramsOfPass[6]);
 			mCityPass.sethRI(hRI);
 			mCityPass.sethRU(paramsOfPass[2]);
-			List<Counter> counters;
+			mCityPass.setDelta(delta);
+			mCityPass.setTermsAndConditions(Constants.TERMS_AND_CONDITIONS);
+			mCityPass.setExpDate(paramsOfPass[8]);
+			mCityPass.setPurDate(paramsOfPass[9]);
+			List<Counter> counters = new ArrayList<Counter>();
+			for(int i = 0; i< services.length; i++ ){
+				counters.add(new Counter(0, mCityPass, serviceAgentService.getServiceByName(services[i]), psi[i]));
+			}
+			mCityPass.setCounters(counters);
+			mCityPass.setSignature(crypto.getSignature(mCityPass.toString()));
+			mCityPassService.saveMCityPass(mCityPass);
+//			System.out.println(mCityPass.toString());
+//			System.out.println("Signature:" + crypto.getSignature(mCityPass.toString()));
 		}
-	return null;
+	return mCityPass.toString();
 	}
+	
+	private void getChallengeMessage(String params){
+		//System.out.println(params);
+		JSONObject json = new JSONObject(params);
+		//System.out.println(json.toString());
+		ws = new String[2];
+		//System.out.println(json.getString("w1"));
+		ws[0] = crypto.decryptWithPrivateKey(json.getString("w1"));
+		ws[1] = crypto.decryptWithPrivateKey(json.getString("w2"));
+		//		System.out.println("Issuer gets:");
+		//		System.out.println("w1: " +ws[0]);
+		//		System.out.println("w2: " +ws[1]);
+		JSONArray jsonArray = json.getJSONArray("services");
+		psi = new String[jsonArray.length()];
+		services = new String[jsonArray.length()];
+		JSONObject jsonObject;
+		String s;
+		for(int i = 0; i < psi.length; i++){
+			s = jsonArray.getString(i);
+			jsonObject = new JSONObject(crypto.decryptWithPrivateKey(s));
+			psi[i] = jsonObject.getString("psi");
+			services[i] = jsonObject.getString("service");
+		}
+	}
+	
+	public String verifyTicket(String params){
+		
+		JSONObject json = new JSONObject(params);
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date now = new Date();
+		Activation activation = null;
+		mCityPassService.initMCityPass(json.getLong("Sn"));
+		if(mCityPassService.verifyMCityPass()){
+			activation = new Activation(dateFormat.format(now), mCityPassService.getMCityPass(),"Activated");
+			activation.setSignature(crypto.getSignature(activation.stringToSign()));
+			activationService.activateCityPass(activation);
+		}
+		
+		if(activation == null){
+			return "An error has ocurred";
+		} else {
+			return activation.toString();
+		}
+		
+	}
+
 }

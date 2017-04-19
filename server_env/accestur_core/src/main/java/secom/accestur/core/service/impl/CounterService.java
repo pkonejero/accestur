@@ -27,4 +27,12 @@ public class CounterService implements CounterServiceInterface{
 	public Counter getCounter(long mCityPass, long service){
 		return null;
 	}
+	
+	public void saveCounter(Counter counter){
+		counterRepository.save(counter);
+	}
+	
+	public void savaCounters(List<Counter> counters){
+		counterRepository.save(counters);
+	}
 }

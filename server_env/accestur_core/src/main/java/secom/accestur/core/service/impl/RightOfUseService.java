@@ -24,4 +24,8 @@ public class RightOfUseService implements RightOfUseServiceInterface{
 	@Override
 	public void setDelta(String k) {
 	}
+	
+	public void saveRightOfUse(RightOfUse rou){
+		rightOfUseRepository.save(rou);
+	}
 }

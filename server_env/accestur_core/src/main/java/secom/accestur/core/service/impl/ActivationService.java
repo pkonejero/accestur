@@ -17,4 +17,11 @@ public class ActivationService implements ActivationServiceInterface{
 	public Activation getActivationByMCityPassSn(long sn){
 		return null;
 	}
+
+
+	public void activateCityPass(Activation activation) {
+		activationRepository.save(activation);
+	}
+	
+	
 }

@@ -14,7 +14,7 @@ public interface IssuerServiceInterface{
 
 	public String getPASS(String params);
 
-	public String[] verifyTicket(String[] params);
+	public String verifyTicket(String params);
 
 	public boolean arrayGeneration();
 
