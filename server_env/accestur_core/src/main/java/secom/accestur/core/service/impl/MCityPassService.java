@@ -40,6 +40,7 @@ public class MCityPassService implements MCityPassServiceInterface{
 	
 	public void initMCityPass(long sn){
 		mCityPass = getMCityPassBySn(sn);
+		System.out.println(mCityPass.toString());
 	}
 
 
@@ -54,6 +55,26 @@ public class MCityPassService implements MCityPassServiceInterface{
 		}
 		
 		return dateExp.after(now) && mCityPass.getActivation()==null;
+	}
+	
+	public boolean verifyDatesPass(){
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date dateExp = new Date();
+		Date datePur = new Date();
+		Date dateAct = new Date();
+		Date limDate = new Date();
+		Date now = new Date();
+		try{
+			dateExp = dateFormat.parse(mCityPass.getExpDate());
+			datePur = dateFormat.parse(mCityPass.getPurDate());
+			dateAct = dateFormat.parse(activationService.getActivationByMCityPassSn(mCityPass).getActDate());
+			limDate = new Date(dateAct.getTime() + Long.parseLong(mCityPass.getLifeTime()));
+			System.out.println(limDate.toString());
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return dateExp.after(now) && datePur.before(now) && dateAct.before(now) && limDate.after(now);
 	}
 
 	public MCityPass getMCityPass() {

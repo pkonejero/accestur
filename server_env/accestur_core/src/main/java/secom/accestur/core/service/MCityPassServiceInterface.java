@@ -16,4 +16,6 @@ public interface MCityPassServiceInterface{
 	public MCityPass getMCityPass();
 	
 	public boolean verifyMCityPass();
+	
+	public boolean verifyDatesPass();
 }

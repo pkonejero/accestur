@@ -32,10 +32,11 @@ public class HomePageController{
 
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model){
-		Init();
-		generateUser();
-		passPurchase();
-		passActivation();
+//		Init();
+//		generateUser();
+//		passPurchase();
+//		passActivation();
+		passVerification();
 		return "welcome";
 	}
 
@@ -83,8 +84,13 @@ public class HomePageController{
 	}
 	
 	private void passActivation(){
-		userService.getUser();
+		userService.initUser();
 		issuerService.createCertificate();
 		userService.getVerifyTicketConfirmation(issuerService.verifyTicket(userService.showPass(1)));
+	}
+	
+	private void passVerification(){
+		userService.initUser();
+		userService.getValidationConfirmation(providerService.verifyProof(userService.showProof(providerService.verifyPass2(userService.solveVerifyChallenge(providerService.verifyPass(userService.showTicket(1, 2)))))));
 	}
 }

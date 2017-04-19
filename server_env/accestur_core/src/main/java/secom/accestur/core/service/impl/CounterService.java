@@ -8,13 +8,22 @@ import org.springframework.stereotype.Service;
 
 import secom.accestur.core.dao.CounterRepository;
 import secom.accestur.core.model.Counter;
+import secom.accestur.core.model.MCityPass;
+import secom.accestur.core.model.ServiceAgent;
 import secom.accestur.core.service.CounterServiceInterface;
 
 @Service("counterService")
 public class CounterService implements CounterServiceInterface{	
+	
 	@Autowired
 	@Qualifier("counterRepository")
 	private CounterRepository counterRepository;
+	
+	private Counter counter;
+	
+	public void initCounter(MCityPass mCityPass, ServiceAgent service){
+		counter = counterRepository.findByMCityPassAndService(mCityPass, service);
+	}
 
 	public List<Counter> getCountersByMCityPass(long sn){
 		return null;
@@ -24,15 +33,25 @@ public class CounterService implements CounterServiceInterface{
 		return null;
 	}
 	
-	public Counter getCounter(long mCityPass, long service){
-		return null;
+	public Counter getCounter(){
+		return counter;
+	}
+	
+	public Counter getCounter(MCityPass mCityPass, ServiceAgent service){
+		return counterRepository.findByMCityPassAndService(mCityPass, service);
 	}
 	
 	public void saveCounter(Counter counter){
 		counterRepository.save(counter);
 	}
 	
-	public void savaCounters(List<Counter> counters){
+	public void saveCounters(List<Counter> counters){
 		counterRepository.save(counters);
+	}
+
+	
+	public void updateCounter() {
+		counter.setCounter(counter.getCounter()+1);
+		saveCounter(counter);
 	}
 }

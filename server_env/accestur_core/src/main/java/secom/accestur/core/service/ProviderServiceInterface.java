@@ -15,7 +15,7 @@ public interface ProviderServiceInterface{
 	
 	public ServiceAgent[] authenticateProvider(String[] serviceName, int[] counters, String providerName);
 	
-	public String[] verifyPass(String[] params);
+	public String verifyPass(String params);
 	
 	public void createCertificate();
 }

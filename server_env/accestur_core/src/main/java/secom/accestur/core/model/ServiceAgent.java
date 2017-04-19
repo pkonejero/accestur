@@ -80,4 +80,8 @@ public class ServiceAgent extends DomainObjectModel{
 	public void setIndexHash(String indexHash){
 		this.indexHash = indexHash;
 	}
+
+	public Long getId() {
+		return id;
+	}
 }

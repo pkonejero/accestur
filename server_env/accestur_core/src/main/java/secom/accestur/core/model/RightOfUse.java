@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Column;
 
 @Entity
 @Table(name = "rightOfUseEntity")
@@ -19,8 +20,10 @@ public class RightOfUse extends DomainObjectModel{
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="MCITYPASS_ID")
 	private MCityPass mCityPass;
-
+	
+	@Column(length = 40000)
 	private String k;
+	@Column(length = 40000)
 	private String signature;
 
 	public RightOfUse(){}

@@ -26,6 +26,16 @@ public class User extends DomainObjectModel{
 	@Column(length = 40000)
 	private String schnorr;
 	
+	private String RU;
+	
+	public String getRU() {
+		return RU;
+	}
+
+	public void setRU(String rU) {
+		RU = rU;
+	}
+
 	public User(){}
 	
 	public String getSchnorr() {
