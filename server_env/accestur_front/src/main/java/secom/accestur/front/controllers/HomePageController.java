@@ -36,8 +36,10 @@ public class HomePageController{
 		generateUser();
 		passPurchase();
 		passActivation();
-	//	passVerification();
-//		mpassVerification();
+		passVerification();
+		infinitePassVerification();
+		mpassVerification();
+		
 		return "welcome";
 	}
 
@@ -98,5 +100,10 @@ public class HomePageController{
 	private void mpassVerification(){
 		userService.initUser();
 		userService.getVerifyMTicketConfirmation(providerService.verifyMProof(userService.showMProof(providerService.verifyMPass2(userService.solveMVerifyChallenge(providerService.verifyMPass(userService.showMTicket(1, 3)))))));
+	}
+	
+	private void infinitePassVerification(){
+		userService.initUser();
+		userService.getInfiniteValidationConfirmation(providerService.verifyInfiniteProof(userService.showInfiniteProof(providerService.verifyInfinitePass2(userService.solveInfiniteVerifyChallenge(providerService.verifyInfinitePass(userService.showInfinitePass(1, 1)))))));
 	}
 }

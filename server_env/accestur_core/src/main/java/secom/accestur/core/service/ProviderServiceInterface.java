@@ -27,5 +27,11 @@ public interface ProviderServiceInterface{
 	
 	public String verifyMProof(String params);
 	
+	public String verifyInfiniteProof(String params);
+	
+	public String verifyInfinitePass2(String params);
+	
+	public String verifyInfinitePass(String params);
+	
 	public void createCertificate();
 }

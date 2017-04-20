@@ -52,6 +52,7 @@ public class CounterService implements CounterServiceInterface{
 	
 	public void updateCounter() {
 		counter.setCounter(counter.getCounter()-1);
+		counter.setLastHash("Already used");
 		saveCounter(counter);
 	}
 	
@@ -60,4 +61,16 @@ public class CounterService implements CounterServiceInterface{
 		counter.setCounter(counter.getCounter()-1);
 		saveCounter(counter);
 	}
+	
+	public void updateInfiniteCounter() {
+		if(counter.getCounter()==-1){
+			counter.setCounter(1);
+		} else {
+			counter.setCounter(counter.getCounter()+1);
+		}
+		counter.setLastHash("Infinite uses");
+		saveCounter(counter);
+	}
+	
+	
 }

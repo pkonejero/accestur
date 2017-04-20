@@ -43,4 +43,13 @@ public interface UserServiceInterface{
 	
 	public String solveMVerifyChallenge(String params);
 	
+	public boolean getInfiniteValidationConfirmation(String params);
+	
+	public String showInfiniteProof(String params);
+	
+	public String solveInfiniteVerifyChallenge(String params);
+	
+	public String showInfinitePass(long CityPassId, long serviceId);
+	
+	
 }

@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.JsonObject;
+
 import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.schnorr.Schnorr;
 import secom.accestur.core.dao.ProviderRepository;
@@ -112,8 +114,20 @@ public class ProviderService implements ProviderServiceInterface {
 	///////////////////////////////////////////////////////////////////////
 
 	public String verifyPass(String params) {
-		crypto.initPrivateKey("cert/TTP/private_TTP.der");
-		JSONObject json = new JSONObject(params);
+		System.out.println("Verify Pass");
+		crypto.initPublicKey("cert/user/public_USER.der");
+		crypto.initPrivateKey("cert/ttp/private_TTP.der");
+		JSONObject message = new JSONObject(params);
+		JSONObject json = new JSONObject(message.getString("m1"));
+		//System.out.println(message.getString("Signature"));
+		if(!validateSignature(message.getString("m1"), message.getString("Signature"))){
+			System.out.println("Signature not valid");
+			json = new JSONObject();
+			json.put("PASS", -1);
+			return json.toString();
+		}
+//		JSONObject json = new JSONObject(params);
+//		validateSignature(json.toString(),message.getString("Signature"));
 		mCityPassService.initMCityPass(json.getLong("PASS"));
 		serviceAgentService.initService(json.getLong("SERVICE"));
 		counterService.initCounter(mCityPassService.getMCityPass(), serviceAgentService.getServiceAgent());
@@ -134,15 +148,18 @@ public class ProviderService implements ProviderServiceInterface {
 		json.put("c", schnorr.getC().toString());
 		timestamp1 = System.currentTimeMillis();
 		json.put("Timestamp", timestamp1);
-		json.put("Signature", crypto.getSignature(json.toString()));
-		return json.toString();
+		String signature = crypto.getSignature(json.toString());
+		message = new JSONObject();
+		message.put("Challenge", json.toString());
+		message.put("Signature", signature);
+		System.out.println(message.toString());
+		return message.toString();
 	}
 
 	public String verifyPass2(String params) {
-		crypto.initPublicKey("cert/user/public_USER.der");
-		crypto.initPrivateKey("cert/ttp/private_TTP.der");
+		System.out.println("Verify Pass 2");
 		JSONObject json = new JSONObject(params);
-		schnorr.setW3(new BigInteger(json.getString("w3")));
+		schnorr.setW3(new BigInteger(crypto.decryptWithPrivateKey(json.getString("w3"))));
 		if (!schnorr.verifyChallenge(Hu_C)) {
 			System.out.println("Verification failed");
 			json = new JSONObject();
@@ -160,14 +177,24 @@ public class ProviderService implements ProviderServiceInterface {
 		json.put("PASS", mCityPassService.getMCityPass().getId());
 		json.put("Timestamp", timestamp1);
 		json.put("SERVICE", serviceAgentService.getServiceAgent().getIndexHash());
-		json.put("Signature", crypto.getSignature(json.toString()));
-		// BigInteger Ap = RI.xor(new BigInteger(random));
-		// System.out.println(Ap.toString());
-		return json.toString();
+		String signature = crypto.getSignature(json.toString());
+		JSONObject message = new JSONObject();
+		message.put("Vsucc", json.toString());
+		message.put("Signature", signature);
+		return message.toString();
 	}
 
 	public String verifyProof(String params) {
-		JSONObject json = new JSONObject(params);
+		System.out.println("Verify Proof");
+		JSONObject message = new JSONObject(params);
+		JSONObject json = new JSONObject(message.getString("m3"));
+		//System.out.println(message.getString("Signature"));
+		if(!validateSignature(message.getString("m3"), message.getString("Signature"))){
+			System.out.println("Signature not valid");
+			json = new JSONObject();
+			json.put("PASS", -1);
+			return json.toString();
+		}
 		BigInteger Au = new BigInteger(json.getString("Au"));
 		BigInteger PRNG = schnorr.getPower(new BigInteger(kandRI[0].getBytes()));
 		System.out.println("PRNG: " + PRNG.toString());
@@ -186,19 +213,32 @@ public class ProviderService implements ProviderServiceInterface {
 		json.put("Ap", Ap.toString());
 		json.put("PASS", mCityPassService.getMCityPass().getId());
 		json.put("Timestamp", timestamp2);
-		json.put("Signature", crypto.getSignature(json.toString()));
 		counterService.updateCounter();
-		return json.toString();
+			
+		String signature = crypto.getSignature(json.toString());
+		message = new JSONObject();
+		message.put("R", json.toString());
+		message.put("Signature", signature);
+		return message.toString();
 	}
 
 	///////////////////////////////////////////////////////////////////////
-	/////////////// PASS Verification M-times///////////////////////////////
+	/////////////// PASS Verification M-times//////////////////////////////
 	///////////////////////////////////////////////////////////////////////
 
 	public String verifyMPass(String params) {
+		System.out.println("Verify Pass");
 		crypto.initPublicKey("cert/user/public_USER.der");
 		crypto.initPrivateKey("cert/ttp/private_TTP.der");
-		JSONObject json = new JSONObject(params);
+		JSONObject message = new JSONObject(params);
+		JSONObject json = new JSONObject(message.getString("m1"));
+		//System.out.println(message.getString("Signature"));
+		if(!validateSignature(message.getString("m1"), message.getString("Signature"))){
+			System.out.println("Signature not valid");
+			json = new JSONObject();
+			json.put("PASS", -1);
+			return json.toString();
+		}
 		mCityPassService.initMCityPass(json.getLong("PASS"));
 		serviceAgentService.initService(json.getLong("SERVICE"));
 		counterService.initCounter(mCityPassService.getMCityPass(), serviceAgentService.getServiceAgent());
@@ -222,18 +262,21 @@ public class ProviderService implements ProviderServiceInterface {
 		System.out.println("Provider c:" + schnorr.getC().toString());
 		timestamp1 = System.currentTimeMillis();
 		json.put("Timestamp", timestamp1);
-		json.put("Signature", crypto.getSignature(json.toString()));
-
-		return json.toString();
+	
+		String signature = crypto.getSignature(json.toString());
+		message = new JSONObject();
+		message.put("Challenge", json.toString());
+		message.put("Signature", signature);
+		System.out.println(message.toString());
+		return message.toString();
 	}
 
 	public String verifyMPass2(String params) {
+		System.out.println("Verify Pass 2");
 		JSONObject json = new JSONObject(params);
-		schnorr.setW3(new BigInteger(json.getString("w3")));
-		System.out.println("Provider w3: " + schnorr.getW3());
-
+		schnorr.setW3(new BigInteger(crypto.decryptWithPrivateKey(json.getString("w3"))));
 		if (!schnorr.verifyChallenge(Hu_C)) {
-			System.out.println("Schnorr Verification failed");
+			System.out.println("Verification failed");
 			json = new JSONObject();
 			json.put("PASS", -1);
 			return json.toString();
@@ -255,14 +298,24 @@ public class ProviderService implements ProviderServiceInterface {
 			json.put("lastHASH", counterService.getCounter().getLastHash());
 		}
 
-		json.put("Signature", crypto.getSignature(json.toString()));
-		// BigInteger Ap = RI.xor(new BigInteger(random));
-		// System.out.println(Ap.toString());
-		return json.toString();
+		String signature = crypto.getSignature(json.toString());
+		JSONObject message = new JSONObject();
+		message.put("Vsucc", json.toString());
+		message.put("Signature", signature);
+		return message.toString();
 	}
 
 	public String verifyMProof(String params) {
-		JSONObject json = new JSONObject(params);
+		System.out.println("Verify Proof");
+		JSONObject message = new JSONObject(params);
+		JSONObject json = new JSONObject(message.getString("m3"));
+		//System.out.println(message.getString("Signature"));
+		if(!validateSignature(message.getString("m3"), message.getString("Signature"))){
+			System.out.println("Signature not valid");
+			json = new JSONObject();
+			json.put("PASS", -1);
+			return json.toString();
+		}
 		// BigInteger Au = new BigInteger(json.getString("Au"));
 		BigInteger PRNG = schnorr.getPower(new BigInteger(kandRI[0].getBytes()));
 
@@ -296,9 +349,13 @@ public class ProviderService implements ProviderServiceInterface {
 		json.put("Ap", Ap.toString());
 		json.put("PASS", mCityPassService.getMCityPass().getId());
 		json.put("Timestamp", timestamp2);
-		json.put("Signature", crypto.getSignature(json.toString()));
+
 		counterService.updateCounter(check);
-		return json.toString();
+		String signature = crypto.getSignature(json.toString());
+		message = new JSONObject();
+		message.put("R", json.toString());
+		message.put("Signature", signature);
+		return message.toString();
 	}
 
 	private String getOriginal(String A, String PRNG) {
@@ -318,6 +375,144 @@ public class ProviderService implements ProviderServiceInterface {
 		}
 		return new String(Base64.getEncoder().encode(xor));
 	}
+	
+	
+	
+	///////////////////////////////////////////////////////////////////////
+	/////////////// PASS Verification inf-times////////////////////////////
+	///////////////////////////////////////////////////////////////////////
+	public String verifyInfinitePass(String params){
+		System.out.println("Verify Pass");
+		crypto.initPublicKey("cert/user/public_USER.der");
+		crypto.initPrivateKey("cert/ttp/private_TTP.der");
+		JSONObject message = new JSONObject(params);
+		JSONObject json = new JSONObject(message.getString("m1"));
+		//System.out.println(message.getString("Signature"));
+		if(!validateSignature(message.getString("m1"), message.getString("Signature"))){
+			System.out.println("Signature not valid");
+			json = new JSONObject();
+			json.put("PASS", -1);
+			return json.toString();
+		}
+		mCityPassService.initMCityPass(json.getLong("PASS"));
+		serviceAgentService.initService(json.getLong("SERVICE"));
+		counterService.initCounter(mCityPassService.getMCityPass(), serviceAgentService.getServiceAgent());
+		activationService.initActivate(json.getLong("ACT"));
+		schnorr = Schnorr.fromCertificate(json.getString("CERT"));
+		schnorr.setA_3(new BigInteger(json.getString("A3")));
+		System.out.println("Provider A3:" + schnorr.getA_3());
+		if (!mCityPassService.verifyDatesPass() || serviceAgentService.getServiceAgent().getM() != -1) {
+			System.out.println("Ticket not valid");
+			json = new JSONObject();
+			json.put("PASS", -1);
+			return json.toString();
+		}
+		json = new JSONObject();
+		schnorr.sendChallenge();
+		BigInteger Hu = new BigInteger(mCityPassService.getMCityPass().getHu());
+		Hu_C = Hu.modPow(schnorr.getC(), schnorr.getP());
+		json.put("PASS", mCityPassService.getMCityPass().getId());
+		json.put("c", schnorr.getC().toString());
+		timestamp1 = System.currentTimeMillis();
+		json.put("Timestamp", timestamp1);
+
+		String signature = crypto.getSignature(json.toString());
+		message = new JSONObject();
+		message.put("Challenge", json.toString());
+		message.put("Signature", signature);
+		System.out.println(message.toString());
+		return message.toString();
+	}
+	
+	public String verifyInfinitePass2(String params) {
+		System.out.println("Verify Pass 2");
+		JSONObject json = new JSONObject(params);
+		schnorr.setW3(new BigInteger(crypto.decryptWithPrivateKey(json.getString("w3"))));
+		if (!schnorr.verifyChallenge(Hu_C)) {
+			System.out.println("Verification failed");
+			json = new JSONObject();
+			json.put("PASS", -1);
+			return json.toString();
+		}
+
+
+		kandRI = getKandRI();
+		BigInteger hk = new BigInteger(Cryptography.hash(kandRI[0]).getBytes());
+		BigInteger RI = new BigInteger(kandRI[1]);
+		Ap = RI.xor(schnorr.getPower(hk));
+
+		json = new JSONObject();
+		json.put("Ap", crypto.encryptWithPublicKey(Ap.toString()));
+		json.put("PASS", mCityPassService.getMCityPass().getId());
+		json.put("Timestamp", timestamp1);
+		json.put("SERVICE", serviceAgentService.getServiceAgent().getIndexHash());
+		String signature = crypto.getSignature(json.toString());
+		JSONObject message = new JSONObject();
+		message.put("Vsucc", json.toString());
+		message.put("Signature", signature);
+		return message.toString();
+	}
+	
+	public String verifyInfiniteProof(String params) {
+		System.out.println("Verify Proof");
+		JSONObject message = new JSONObject(params);
+		JSONObject json = new JSONObject(message.getString("m3"));
+		//System.out.println(message.getString("Signature"));
+		if(!validateSignature(message.getString("m3"), message.getString("Signature"))){
+			System.out.println("Signature not valid");
+			json = new JSONObject();
+			json.put("PASS", -1);
+			return json.toString();
+		}
+		BigInteger Au = new BigInteger(json.getString("Au"));
+		BigInteger PRNG = schnorr.getPower(new BigInteger(kandRI[0].getBytes()));
+		System.out.println("PRNG: " + PRNG.toString());
+		System.out.println("Au: " + Au.toString());
+		String check = Au.xor(PRNG).toString();
+		System.out.println("PSI:" + check);
+		if (!Cryptography.hash(check).equals(counterService.getCounter().getPsi())) {
+			System.out.println("CheckFalse");
+			json = new JSONObject();
+			json.put("PASS", -1);
+			return json.toString();
+		}
+
+		timestamp2 = System.currentTimeMillis();
+		json = new JSONObject();
+		json.put("Ap", Ap.toString());
+		json.put("PASS", mCityPassService.getMCityPass().getId());
+		json.put("Timestamp", timestamp2);
+		counterService.updateInfiniteCounter();
+		
+		String signature = crypto.getSignature(json.toString());
+		message = new JSONObject();
+		message.put("R", json.toString());
+		message.put("Signature", signature);
+		return message.toString();
+	}
+	
+	////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////
+	
+	private boolean validateSignature(String param, String signature){
+		boolean verify = crypto.getValidation(param, signature);
+		System.out.println("Validating signature: " + verify);
+		
+		return verify;
+	}
+	
+	private boolean validateSignature(String param){
+		JSONObject json = new JSONObject(param);
+		String signature = json.getString("Signature");
+		json.remove("Signature");
+		boolean verify = crypto.getValidation(json.toString(), signature);
+		System.out.println("Validating signature: " + verify);
+		
+		return verify;	
+	}
+	
+	
 
 	public String[] authenticateProvider(String[] params) {
 		return null;

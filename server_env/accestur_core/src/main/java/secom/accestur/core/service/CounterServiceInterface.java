@@ -22,6 +22,8 @@ public interface CounterServiceInterface{
 	
 	public void updateCounter(String hash);
 	
+	public void updateInfiniteCounter();
+	
 	public void saveCounter(Counter counter);
 	
 }
