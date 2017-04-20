@@ -1,7 +1,9 @@
 package secom.accestur.core.service.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.List;
 
 import org.json.*;
@@ -21,31 +23,31 @@ import secom.accestur.core.service.ProviderServiceInterface;
 import secom.accestur.core.utils.Constants;
 
 @Service("providerService")
-public class ProviderService implements ProviderServiceInterface{
+public class ProviderService implements ProviderServiceInterface {
 	@Autowired
 	@Qualifier("providerRepository")
 	private ProviderRepository providerRepository;
-	
+
 	@Autowired
 	@Qualifier("mCityPassService")
 	private MCityPassService mCityPassService;
-	
+
 	@Autowired
 	@Qualifier("activationService")
 	private ActivationService activationService;
-	
+
 	@Autowired
 	@Qualifier("rightOfUseService")
 	private RightOfUseService rightOfUseService;
-	
+
 	@Autowired
 	@Qualifier("counterService")
 	private CounterService counterService;
-	
+
 	@Autowired
 	@Qualifier("serviceAgentService")
 	private ServiceAgentService serviceAgentService;
-	
+
 	@Autowired
 	@Qualifier("schnorr")
 	private Schnorr schnorr;
@@ -53,35 +55,33 @@ public class ProviderService implements ProviderServiceInterface{
 	@Autowired
 	@Qualifier("cryptography")
 	private Cryptography crypto;
-	
-	
-	
-	BigInteger Hu_C ;
+
+	BigInteger Hu_C;
 	String[] kandRI;
 	long timestamp1;
 	long timestamp2;
 	BigInteger Ap;
-		
-	public Provider getProviderByName(String name){
+
+	public Provider getProviderByName(String name) {
 		return providerRepository.findByNameIgnoreCase(name);
 	}
-	
-	public List<Provider> getProvidersByIssuer(Issuer issuer){
+
+	public List<Provider> getProvidersByIssuer(Issuer issuer) {
 		return providerRepository.findByIssuer(issuer);
 	}
-	
-	public void createCertificate(){
+
+	public void createCertificate() {
 		crypto.initPrivateKey("private_ISSUER.der");
-		crypto.initPublicKey("public_ISSUER.der");		
+		crypto.initPublicKey("public_ISSUER.der");
 	}
-	
+
 	///////////////////////////////////////////////////////////////////////
-	///////////////////PROVIDER AFFILIATION////////////////////////////////
+	/////////////////// PROVIDER AFFILIATION////////////////////////////////
 	///////////////////////////////////////////////////////////////////////
-	
-	public void newProvider(String name, Issuer issuer){
+
+	public void newProvider(String name, Issuer issuer) {
 		Provider p = getProviderByName(name);
-		if(p == null){
+		if (p == null) {
 			Provider provider = new Provider();
 			provider.setName(name);
 			provider.setIssuer(issuer);
@@ -90,12 +90,12 @@ public class ProviderService implements ProviderServiceInterface{
 		} else {
 			System.out.println("This provider already exisits, it will be initialized to the existing values");
 		}
-		
+
 	}
-	
-	public ServiceAgent[] authenticateProvider(String[] names, int[] counters, String providerName){
+
+	public ServiceAgent[] authenticateProvider(String[] names, int[] counters, String providerName) {
 		ServiceAgent[] service = new ServiceAgent[names.length];
-		for (int i = 0; i< names.length; i++){
+		for (int i = 0; i < names.length; i++) {
 			SecureRandom sr = new SecureRandom();
 			BigInteger bg = new BigInteger(Constants.PRIME_BITS, Constants.PRIME_CERTAINTY, sr);
 			service[i] = new ServiceAgent();
@@ -103,16 +103,16 @@ public class ProviderService implements ProviderServiceInterface{
 			service[i].setM(counters[i]);
 			service[i].setName(names[i]);
 			service[i].setProvider(getProviderByName(providerName));
-		}	
+		}
 		return service;
-	}	
-	
-	
+	}
+
 	///////////////////////////////////////////////////////////////////////
-	///////////////////PASS VERIFICATION///////////////////////////////////
+	/////////////////// PASS VERIFICATION///////////////////////////////////
 	///////////////////////////////////////////////////////////////////////
 
-	public String verifyPass(String params){
+	public String verifyPass(String params) {
+		crypto.initPrivateKey("cert/TTP/private_TTP.der");
 		JSONObject json = new JSONObject(params);
 		mCityPassService.initMCityPass(json.getLong("PASS"));
 		serviceAgentService.initService(json.getLong("SERVICE"));
@@ -120,11 +120,12 @@ public class ProviderService implements ProviderServiceInterface{
 		activationService.initActivate(json.getLong("ACT"));
 		schnorr = Schnorr.fromCertificate(json.getString("CERT"));
 		schnorr.setA_3(new BigInteger(json.getString("A3")));
-		if(!mCityPassService.verifyDatesPass()){
+		if (!mCityPassService.verifyDatesPass() || counterService.getCounter().getCounter() == 0) {
+			System.out.println("Ticket not valid");
 			json = new JSONObject();
 			json.put("PASS", -1);
 			return json.toString();
-		} 
+		}
 		json = new JSONObject();
 		schnorr.sendChallenge();
 		BigInteger Hu = new BigInteger(mCityPassService.getMCityPass().getHu());
@@ -133,52 +134,53 @@ public class ProviderService implements ProviderServiceInterface{
 		json.put("c", schnorr.getC().toString());
 		timestamp1 = System.currentTimeMillis();
 		json.put("Timestamp", timestamp1);
+		json.put("Signature", crypto.getSignature(json.toString()));
 		return json.toString();
 	}
-	
-	public String verifyPass2(String params){
+
+	public String verifyPass2(String params) {
 		crypto.initPublicKey("cert/user/public_USER.der");
 		crypto.initPrivateKey("cert/ttp/private_TTP.der");
 		JSONObject json = new JSONObject(params);
 		schnorr.setW3(new BigInteger(json.getString("w3")));
-		if(!schnorr.verifyChallenge(Hu_C)){
+		if (!schnorr.verifyChallenge(Hu_C)) {
 			System.out.println("Verification failed");
 			json = new JSONObject();
 			json.put("PASS", -1);
 			return json.toString();
 		}
-		
+
 		kandRI = getKandRI();
 		BigInteger hk = new BigInteger(Cryptography.hash(kandRI[0]).getBytes());
 		BigInteger RI = new BigInteger(kandRI[1]);
-		 Ap = RI.xor(schnorr.getPower(hk));
-		
+		Ap = RI.xor(schnorr.getPower(hk));
+
 		json = new JSONObject();
 		json.put("Ap", crypto.encryptWithPublicKey(Ap.toString()));
 		json.put("PASS", mCityPassService.getMCityPass().getId());
 		json.put("Timestamp", timestamp1);
 		json.put("SERVICE", serviceAgentService.getServiceAgent().getIndexHash());
 		json.put("Signature", crypto.getSignature(json.toString()));
-//		BigInteger Ap = RI.xor(new BigInteger(random));
-//		System.out.println(Ap.toString());
+		// BigInteger Ap = RI.xor(new BigInteger(random));
+		// System.out.println(Ap.toString());
 		return json.toString();
 	}
-	
-	public String verifyProof(String params){
+
+	public String verifyProof(String params) {
 		JSONObject json = new JSONObject(params);
 		BigInteger Au = new BigInteger(json.getString("Au"));
-		BigInteger  PRNG = schnorr.getPower(new BigInteger(kandRI[0].getBytes()));
+		BigInteger PRNG = schnorr.getPower(new BigInteger(kandRI[0].getBytes()));
 		System.out.println("PRNG: " + PRNG.toString());
-		System.out.println("Au: "+ Au.toString()) ;
+		System.out.println("Au: " + Au.toString());
 		String check = Au.xor(PRNG).toString();
 		System.out.println("PSI:" + check);
-		if(!Cryptography.hash(check).equals(counterService.getCounter().getPsi())){
+		if (!Cryptography.hash(check).equals(counterService.getCounter().getPsi())) {
 			System.out.println("CheckFalse");
 			json = new JSONObject();
 			json.put("PASS", -1);
 			return json.toString();
-		} 
-		
+		}
+
 		timestamp2 = System.currentTimeMillis();
 		json = new JSONObject();
 		json.put("Ap", Ap.toString());
@@ -188,31 +190,152 @@ public class ProviderService implements ProviderServiceInterface{
 		counterService.updateCounter();
 		return json.toString();
 	}
-	
-	
-	
-	
-	
 
-	public String[] authenticateProvider(String[] params){
+	///////////////////////////////////////////////////////////////////////
+	/////////////// PASS Verification M-times///////////////////////////////
+	///////////////////////////////////////////////////////////////////////
+
+	public String verifyMPass(String params) {
+		crypto.initPublicKey("cert/user/public_USER.der");
+		crypto.initPrivateKey("cert/ttp/private_TTP.der");
+		JSONObject json = new JSONObject(params);
+		mCityPassService.initMCityPass(json.getLong("PASS"));
+		serviceAgentService.initService(json.getLong("SERVICE"));
+		counterService.initCounter(mCityPassService.getMCityPass(), serviceAgentService.getServiceAgent());
+		activationService.initActivate(json.getLong("ACT"));
+		schnorr = Schnorr.fromCertificate(json.getString("CERT"));
+		schnorr.setA_3(new BigInteger(json.getString("A3")));
+		System.out.println("Provider A3:" + schnorr.getA_3());
+		if (!mCityPassService.verifyDatesPass() || !(counterService.getCounter().getCounter() >= 1)) {
+			System.out.println("Ticket not valid");
+			json = new JSONObject();
+			json.put("PASS", -1);
+			return json.toString();
+		}
+
+		json = new JSONObject();
+		schnorr.sendChallenge();
+		BigInteger Hu = new BigInteger(mCityPassService.getMCityPass().getHu());
+		Hu_C = Hu.modPow(schnorr.getC(), schnorr.getP());
+		json.put("PASS", mCityPassService.getMCityPass().getId());
+		json.put("c", schnorr.getC().toString());
+		System.out.println("Provider c:" + schnorr.getC().toString());
+		timestamp1 = System.currentTimeMillis();
+		json.put("Timestamp", timestamp1);
+		json.put("Signature", crypto.getSignature(json.toString()));
+
+		return json.toString();
+	}
+
+	public String verifyMPass2(String params) {
+		JSONObject json = new JSONObject(params);
+		schnorr.setW3(new BigInteger(json.getString("w3")));
+		System.out.println("Provider w3: " + schnorr.getW3());
+
+		if (!schnorr.verifyChallenge(Hu_C)) {
+			System.out.println("Schnorr Verification failed");
+			json = new JSONObject();
+			json.put("PASS", -1);
+			return json.toString();
+		}
+
+		kandRI = getKandRI();
+		BigInteger hk = new BigInteger(Cryptography.hash(kandRI[0]).getBytes());
+		BigInteger RI = new BigInteger(kandRI[1]);
+		Ap = RI.xor(schnorr.getPower(hk));
+
+		json = new JSONObject();
+		json.put("Ap", crypto.encryptWithPublicKey(Ap.toString()));
+		json.put("PASS", mCityPassService.getMCityPass().getId());
+		json.put("Timestamp", timestamp1);
+		json.put("SERVICE", serviceAgentService.getServiceAgent().getIndexHash());
+		if (counterService.getCounter().getLastHash().equals(Constants.NOTUSED)) {
+			json.put("lastHASH", counterService.getCounter().getPsi());
+		} else {
+			json.put("lastHASH", counterService.getCounter().getLastHash());
+		}
+
+		json.put("Signature", crypto.getSignature(json.toString()));
+		// BigInteger Ap = RI.xor(new BigInteger(random));
+		// System.out.println(Ap.toString());
+		return json.toString();
+	}
+
+	public String verifyMProof(String params) {
+		JSONObject json = new JSONObject(params);
+		// BigInteger Au = new BigInteger(json.getString("Au"));
+		BigInteger PRNG = schnorr.getPower(new BigInteger(kandRI[0].getBytes()));
+
+		// System.out.println("PRNG: " + PRNG.toString());
+		System.out.println("Au: " + json.getString("Au"));
+		// String value = Au.xor(PRNG);
+		String check = getOriginal(json.getString("Au"), PRNG.toString());
+		System.out.println("Check: " + check);
+		// System.out.println("PSI:" + check);
+
+		if (counterService.getCounter().getLastHash().equals(Constants.NOTUSED)) {
+			if (!Cryptography.hash(check).equals(counterService.getCounter().getPsi())) {
+				System.out.println("CheckFalse for first time");
+				json = new JSONObject();
+				json.put("PASS", -1);
+				return json.toString();
+			}
+		} else {
+			if (!Cryptography.hash(check).equals(counterService.getCounter().getLastHash())) {
+				System.out.println("CheckFalse for other times");
+				System.out.println(Cryptography.hash(check));
+				System.out.println(counterService.getCounter().getLastHash());
+				json = new JSONObject();
+				json.put("PASS", -1);
+				return json.toString();
+			}
+		}
+
+		timestamp2 = System.currentTimeMillis();
+		json = new JSONObject();
+		json.put("Ap", Ap.toString());
+		json.put("PASS", mCityPassService.getMCityPass().getId());
+		json.put("Timestamp", timestamp2);
+		json.put("Signature", crypto.getSignature(json.toString()));
+		counterService.updateCounter(check);
+		return json.toString();
+	}
+
+	private String getOriginal(String A, String PRNG) {
+		String PRNG32 = Cryptography.hash(PRNG);
+		// String PRNG32 = Cryptography.hash("Text 1");
+		System.out.println("Privider PRNG: " + PRNG32);
+		System.out.println("Privider Au: " + A);
+		byte[] PRNGbytes = null;
+		byte[] Abytes = null;
+
+		PRNGbytes = Base64.getDecoder().decode(PRNG32.getBytes());
+		Abytes = Base64.getDecoder().decode(A.getBytes());
+
+		byte[] xor = new byte[PRNGbytes.length];
+		for (int i = 0; i < PRNGbytes.length; i++) {
+			xor[i] = (byte) (PRNGbytes[i] ^ Abytes[i]);
+		}
+		return new String(Base64.getEncoder().encode(xor));
+	}
+
+	public String[] authenticateProvider(String[] params) {
 		return null;
 	}
 
-	public String[] verifyPass(String[] params){
+	public String[] verifyPass(String[] params) {
 		return null;
 	}
-	
-	private String[] getKandRI(){
-		//crypto.initPrivateKey("cert/ttp/private_TTP.der");
+
+	private String[] getKandRI() {
+		// crypto.initPrivateKey("cert/ttp/private_TTP.der");
 		rightOfUseService.initRightOfUseByCityPass(mCityPassService.getMCityPass());
 		JSONObject json = new JSONObject(rightOfUseService.getRightOfUse().getK());
 		String[] params = new String[2];
 		params[0] = json.getString("K");
 		params[1] = json.getString("RI");
-		
+
 		return params;
 	}
-
-	
 
 }

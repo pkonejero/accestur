@@ -21,6 +21,8 @@ public interface UserServiceInterface{
 	
 	public void getVerifyTicketConfirmation(String s);
 	
+	public String solveVerifyChallenge(String params);
+	
 	public String[] showProof(String[] params);
 	
 	public boolean getValidationConfirmation(String params);
@@ -32,4 +34,13 @@ public interface UserServiceInterface{
 	public String sendPass();
 	
 	public void createCertificate();
+	
+	public String showMTicket(long CityPassId, long serviceId);
+	
+	public String getVerifyMTicketConfirmation(String params);
+	
+	public String showMProof(String params);
+	
+	public String solveMVerifyChallenge(String params);
+	
 }

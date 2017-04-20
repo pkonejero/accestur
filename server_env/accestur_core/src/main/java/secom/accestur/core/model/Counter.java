@@ -8,6 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import secom.accestur.core.utils.Constants;
+
 @Entity
 @Table(name="counterEntity")
 public class Counter extends DomainObjectModel{
@@ -24,6 +26,7 @@ public class Counter extends DomainObjectModel{
 	private ServiceAgent service;
 	
 	private String psi;
+	private String lastHash;
 	private int counter;
 
 	public Counter (){}
@@ -33,6 +36,7 @@ public class Counter extends DomainObjectModel{
 		this.counter = counter;
 		this.mCityPass = mCityPass;
 		this.service = service;
+		this.lastHash = Constants.NOTUSED;
 	}
 	
 	public Counter(int counter, MCityPass mCityPass, ServiceAgent service, String psi){
@@ -40,7 +44,10 @@ public class Counter extends DomainObjectModel{
 		this.mCityPass = mCityPass;
 		this.service = service;
 		this.psi = psi;
+		this.lastHash = Constants.NOTUSED;;
 	}
+	
+	
 
 	public MCityPass getmCityPass(){
 		return mCityPass;
@@ -73,6 +80,16 @@ public class Counter extends DomainObjectModel{
 	public void setPsi(String psi) {
 		this.psi = psi;
 	}
+
+	public String getLastHash() {
+		return lastHash;
+	}
+
+	public void setLastHash(String lastHash) {
+		this.lastHash = lastHash;
+	}
+	
+	
 	
 	
 }

@@ -20,6 +20,8 @@ public interface CounterServiceInterface{
 	
 	public void updateCounter();
 	
+	public void updateCounter(String hash);
+	
 	public void saveCounter(Counter counter);
 	
 }

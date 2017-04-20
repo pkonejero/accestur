@@ -57,5 +57,10 @@ public class ServiceAgentService implements ServiceAgentInterface{
 	}
 
 
+	public void initService(String service) {
+		serviceAgent  = getServiceByName(service);	
+	}
+
+
 
 }

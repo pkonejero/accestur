@@ -17,5 +17,15 @@ public interface ProviderServiceInterface{
 	
 	public String verifyPass(String params);
 	
+	public String verifyPass2(String params);
+	
+	public String verifyProof(String params);
+	
+	public String verifyMPass(String params);
+	
+	public String verifyMPass2(String params);
+	
+	public String verifyMProof(String params);
+	
 	public void createCertificate();
 }

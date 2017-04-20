@@ -51,7 +51,13 @@ public class CounterService implements CounterServiceInterface{
 
 	
 	public void updateCounter() {
-		counter.setCounter(counter.getCounter()+1);
+		counter.setCounter(counter.getCounter()-1);
+		saveCounter(counter);
+	}
+	
+	public void updateCounter(String hash) {
+		counter.setLastHash(hash);
+		counter.setCounter(counter.getCounter()-1);
 		saveCounter(counter);
 	}
 }

@@ -178,7 +178,8 @@ public class IssuerService implements IssuerServiceInterface{
 			mCityPass.setPurDate(paramsOfPass[9]);
 			List<Counter> counters = new ArrayList<Counter>();
 			for(int i = 0; i< services.length; i++ ){
-				counters.add(new Counter(0, mCityPass, serviceAgentService.getServiceByName(services[i]), psi[i]));
+				serviceAgentService.initService((services[i]));
+				counters.add(new Counter(serviceAgentService.getServiceAgent().getM(), mCityPass, serviceAgentService.getServiceAgent(), psi[i]));
 			}
 			mCityPass.setCounters(counters);
 			mCityPass.setSignature(crypto.getSignature(mCityPass.toString()));
