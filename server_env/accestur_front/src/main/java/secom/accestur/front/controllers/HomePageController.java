@@ -32,11 +32,11 @@ public class HomePageController{
 
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model){
-//		Init();
-//		generateUser();
-//		passPurchase();
-//		passActivation();
-		passVerification();
+		Init();
+		generateUser();
+		passPurchase();
+		passActivation();
+	//	passVerification();
 //		mpassVerification();
 		return "welcome";
 	}

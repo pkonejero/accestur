@@ -173,7 +173,11 @@ public class UserService implements UserServiceInterface {
 		psi = new String[services.length];
 		for (int i = 0; i < services.length; i++) {
 			ServiceAgent service = serviceAgentService.getServiceByName(services[i]);
-			if (service.getM() != -1) {
+			if (service.getM() == -1) {
+				psi[i] = "Infinite uses";
+			} else if(service.getM() == 1) {
+				psi[i] = Cryptography.hash(random.toString());
+			} else {
 				for (int j = 0; j <= service.getM(); j++) {
 					if (j == 0) {
 						psi[i] = Cryptography.hash(random.toString());
@@ -181,8 +185,6 @@ public class UserService implements UserServiceInterface {
 						psi[i] = Cryptography.hash(psi[i]);
 					}
 				}
-			} else {
-				psi[i] = "Infinite uses";
 			}
 		}
 		String[] ws = new String[2];
