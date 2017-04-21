@@ -26,4 +26,6 @@ public class Init {
 	public String getSchnorrPublicParameters() {
 		return schnorrService.getSchnorrPublicParameters();
 	}
+	
+	
 }

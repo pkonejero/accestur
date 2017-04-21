@@ -56,12 +56,12 @@ public class UserService implements UserServiceInterface {
 	// @Qualifier("counterService")
 	private CounterService counterService;
 
-	@Autowired
-	@Qualifier("schnorr")
+//	@Autowired
+//	@Qualifier("schnorr")
 	private Schnorr schnorr;
 
-	@Autowired
-	@Qualifier("cryptography")
+//	@Autowired
+//	@Qualifier("cryptography")
 	private Cryptography crypto;
 
 	private User user;
