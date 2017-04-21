@@ -10,6 +10,8 @@ public interface ServiceAgentInterface{
 	
 	public void initService(long id);
 	
+	public void initService(long id, boolean user);
+	
 	public void initService(String service);
 	
 	public ServiceAgent getServiceByName(String name);

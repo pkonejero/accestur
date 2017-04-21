@@ -29,6 +29,13 @@ public class ServiceAgent extends DomainObjectModel{
 	private String name;
 	private int m;
 	private String indexHash;
+	
+	public ServiceAgent(long id, String indexHash, int m, String name){
+		this.id = id;
+		this.indexHash = indexHash;
+		this.m = m;
+		this.name = name;
+	}
 
 	public ServiceAgent(String name, int m, String indexHash, Provider provider, List<Counter> counters){
 		super();

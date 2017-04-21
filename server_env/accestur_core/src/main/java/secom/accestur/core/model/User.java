@@ -38,6 +38,12 @@ public class User extends DomainObjectModel{
 
 	public User(){}
 	
+	public User(long id, String pseudonym, String schnorr){
+		this.id = id;
+		this.pseudonym = pseudonym;
+		this.schnorr = schnorr;
+	}
+	
 	public String getSchnorr() {
 		return schnorr;
 	}
