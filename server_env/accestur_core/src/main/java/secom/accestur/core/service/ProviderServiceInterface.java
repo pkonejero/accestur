@@ -15,7 +15,23 @@ public interface ProviderServiceInterface{
 	
 	public ServiceAgent[] authenticateProvider(String[] serviceName, int[] counters, String providerName);
 	
-	public String[] verifyPass(String[] params);
+	public String verifyPass(String params);
+	
+	public String verifyPass2(String params);
+	
+	public String verifyProof(String params);
+	
+	public String verifyMPass(String params);
+	
+	public String verifyMPass2(String params);
+	
+	public String verifyMProof(String params);
+	
+	public String verifyInfiniteProof(String params);
+	
+	public String verifyInfinitePass2(String params);
+	
+	public String verifyInfinitePass(String params);
 	
 	public void createCertificate();
 }

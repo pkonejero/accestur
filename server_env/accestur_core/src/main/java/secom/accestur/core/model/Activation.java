@@ -1,10 +1,5 @@
 package secom.accestur.core.model;
 
-import java.util.Date;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.json.JSONObject;
 
 @Entity
 @Table(name = "activationEntity")
@@ -33,8 +30,6 @@ public class Activation extends DomainObjectModel{
 	@Column(length = 40000)
 	private String signature;
 	
-	
-
 	public Activation(){}
 
 	public Activation(String actDate, MCityPass mCityPass, String state){
@@ -44,8 +39,6 @@ public class Activation extends DomainObjectModel{
 		this.state = state;
 	}
 	
-	
-
 	public Activation(MCityPass mCityPass, String actDate, String state, String signature) {
 		super();
 		this.mCityPass = mCityPass;
@@ -55,6 +48,10 @@ public class Activation extends DomainObjectModel{
 	}
 	
 	
+
+	public Long getId() {
+		return id;
+	}
 
 	public String getSignature() {
 		return signature;
