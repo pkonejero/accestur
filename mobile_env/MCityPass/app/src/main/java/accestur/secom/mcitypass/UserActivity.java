@@ -9,9 +9,12 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import accestur.secom.core.service.impl.UserService;
+
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -20,15 +23,24 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 
+import accestur.secom.core.api.ProviderAPI;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 import accestur.secom.core.crypto.Cryptography;
 import accestur.secom.core.crypto.Schnorr;
 import accestur.secom.core.test.Greeting;
 import accestur.secom.core.utils.Constants;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class UserActivity extends AppCompatActivity {
     private TextView mTextMessage1;
     private TextView mTextMessage2;
     private TextView mTextMessage3;
+
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -38,28 +50,9 @@ public class UserActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     cleanLayout();
-                    Cryptography crypto = new Cryptography();
-                    crypto.initPrivateKey(Constants.PATH_PRIVATE_KEY);
-                    crypto.initPublicKey(Constants.PATH_PUBLIC_KEY);
+                    NonReusableTask nonReusableTask = new NonReusableTask();
+                    nonReusableTask.execute();
 
-                    // METRICS
-                    try {
-                        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-                        SecureRandom random = new SecureRandom();
-                        byte bytes[] = new byte[512];
-                        random.nextBytes(bytes);
-                        keyGen.initialize(2046,random);
-                        KeyPair pair = keyGen.generateKeyPair();
-                        PrivateKey priv = pair.getPrivate();
-                        PublicKey pub = pair.getPublic();
-                    } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                    }
-
-                    Log.d("Crypt : ",crypto.encryptWithPublicKey("testing"));
-                    Log.d("DeCrypt : ",crypto.decryptWithPrivateKey(crypto.encryptWithPublicKey("testing")));
-                    Log.d("Sign : ",crypto.getSignature("testing"));
-                    Log.d("Verify : ",String.valueOf(crypto.getValidation("testing",crypto.getSignature("testing"))));
 
                     return true;
                 case R.id.navigation_dashboard:
