@@ -36,9 +36,9 @@ public class HomePageController{
 		generateUser();
 		passPurchase();
 		passActivation();
-		passVerification();
-		infinitePassVerification();
-		mpassVerification();
+		//passVerification();
+		//infinitePassVerification();
+		//mpassVerification();
 		
 		return "welcome";
 	}

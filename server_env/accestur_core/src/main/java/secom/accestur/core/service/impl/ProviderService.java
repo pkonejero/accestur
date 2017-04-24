@@ -3,7 +3,7 @@ package secom.accestur.core.service.impl;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.Base64;
+import secom.accestur.core.crypto.Crypto.Base64;
 import java.util.List;
 
 import org.json.*;
@@ -366,14 +366,14 @@ public class ProviderService implements ProviderServiceInterface {
 		byte[] PRNGbytes = null;
 		byte[] Abytes = null;
 
-		PRNGbytes = Base64.getDecoder().decode(PRNG32.getBytes());
-		Abytes = Base64.getDecoder().decode(A.getBytes());
+		PRNGbytes = Base64.decode(PRNG32,Base64.DEFAULT);
+		Abytes = Base64.decode(A,Base64.DEFAULT);
 
 		byte[] xor = new byte[PRNGbytes.length];
 		for (int i = 0; i < PRNGbytes.length; i++) {
 			xor[i] = (byte) (PRNGbytes[i] ^ Abytes[i]);
 		}
-		return new String(Base64.getEncoder().encode(xor));
+		return new String(Base64.encodeToString(xor,Base64.DEFAULT));
 	}
 	
 	

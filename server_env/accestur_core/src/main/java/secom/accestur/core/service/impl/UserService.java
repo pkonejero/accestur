@@ -5,7 +5,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Base64;
+import secom.accestur.core.crypto.Crypto.Base64;
 import java.util.Date;
 
 import org.json.JSONArray;
@@ -527,15 +527,15 @@ public class UserService implements UserServiceInterface {
 		byte[] PRNGbytes = null;
 		byte[] HASHbytes = null;
 
-		PRNGbytes = Base64.getDecoder().decode(PRNG32.getBytes());
-		HASHbytes = Base64.getDecoder().decode(hash.getBytes());
+		PRNGbytes = Base64.decode(PRNG32,Base64.DEFAULT);
+		HASHbytes = Base64.decode(hash,Base64.DEFAULT);
 
 		byte[] xor = new byte[PRNGbytes.length];
 		for (int i = 0; i < PRNGbytes.length; i++) {
 			xor[i] = (byte) (PRNGbytes[i] ^ HASHbytes[i]);
 		}
 
-		return new String(Base64.getEncoder().encode(xor));
+		return new String(Base64.encodeToString(xor,Base64.DEFAULT));
 	}
 	
 	///////////////////////////////////////////////////////////////////////
