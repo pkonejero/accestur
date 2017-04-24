@@ -31,6 +31,7 @@ public class NonReusableTask extends AsyncTask<String, Void, Void> {
 
         try {
             message = stringCall.execute().body();
+            System.out.println(message);
         } catch (IOException e) {
             e.printStackTrace();
         }
