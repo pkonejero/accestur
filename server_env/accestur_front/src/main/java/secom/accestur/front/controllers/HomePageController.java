@@ -34,9 +34,9 @@ public class HomePageController{
 
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model){
-//		passVerification();
+		passVerification();
 //		infinitePassVerification();
-		mpassVerification();
+	//	mpassVerification();
 		counter++;
 		
 		return "welcome";
