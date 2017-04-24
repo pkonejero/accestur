@@ -6,6 +6,7 @@ import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import android.os.Environment;
 import android.util.Base64;
 
 import java.util.Date;
@@ -79,6 +80,7 @@ public class UserService implements UserServiceInterface {
         secretValueService = new SecretValueService();
         schnorr = new Schnorr();
         crypto = new Cryptography();
+        initUser();
     }
 
 
@@ -99,6 +101,7 @@ public class UserService implements UserServiceInterface {
         user = new User(1, pseudonym, schnorr);
         user.setRU(
                 "12794049269479661747741922995769407597715574659446422944989680129048627175393339290248969736580625948742511551516917129928149840477131522749937199210210155");
+        System.out.println(user.getSchnorr());
     }
 
     @Override
@@ -127,9 +130,11 @@ public class UserService implements UserServiceInterface {
         // System.out.println(user.getPseudonym());
         // System.out.println(user.getSchnorr());
         System.out.println("Show Ticket");
-        crypto.initPrivateKey("cert/user/private_USER.der");
-        crypto.initPublicKey("cert/ttp/public_TTP.der");
+        crypto.initPrivateKey(Constants.PATH_PRIVATE_KEY);
+        crypto.initPublicKey(Constants.PATH_PROVIDER_KEY);
+        System.out.println(user.getSchnorr());
         schnorr = Schnorr.fromPrivateCertificate(user.getSchnorr());
+        schnorr.getP();
         JSONObject json;
         JSONObject message = null;
         try {
@@ -196,13 +201,13 @@ public class UserService implements UserServiceInterface {
 
     public String showProof(String params) {
         System.out.println("Show proof");
-        crypto.initPrivateKey("cert/user/private_USER.der");
+//        crypto.initPrivateKey("cert/user/private_USER.der");
         JSONObject message = null;
         JSONObject json = null;
         try {
             // System.out.println(message.getString("Signature"));
             message = new JSONObject(params);
-            json = new JSONObject(message.getString("Challenge"));
+            json = new JSONObject(message.getString("Vsucc"));
             if (!validateSignature(message.getString("Vsucc"), message.getString("Signature"))) {
                 System.out.println("Signature not valid");
                 json = new JSONObject();

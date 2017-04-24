@@ -3,8 +3,9 @@ package accestur.secom.core.utils;
 import android.os.Environment;
 
 public abstract class Constants{
-    public static final String PATH_PUBLIC_KEY =  Environment.getExternalStorageDirectory().toString() + "/DCIM/cert/public_USER.der";
-    public static final String PATH_PRIVATE_KEY =  Environment.getExternalStorageDirectory().toString() + "/DCIM/cert/private_USER.der";
+    public static final String PATH_PUBLIC_KEY =  Environment.getExternalStorageDirectory()+ "/DCIM/cert/public_USER.der";
+    public static final String PATH_PRIVATE_KEY =  Environment.getExternalStorageDirectory()+ "/DCIM/cert/private_USER.der";
+	public static final String PATH_PROVIDER_KEY = Environment.getExternalStorageDirectory()+ "/DCIM/cert/public_TTP.der";
 	public static final Integer PRIME_BITS = 512;
 	public static final Integer PRIME_CERTAINTY = 40;
 	public static final String LOREM = "Lorem ipsum dolor sit amet.";

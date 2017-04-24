@@ -402,7 +402,7 @@ public class Schnorr {
         JSONObject jsonObject;
         Schnorr schnorr = new Schnorr();
         try {
-            jsonObject = new JSONObject();
+            jsonObject = new JSONObject(json);
             schnorr.setP((new BigInteger(jsonObject.getString("p"))));
             schnorr.setG((new BigInteger(jsonObject.getString("g"))));
             schnorr.setQ((new BigInteger(jsonObject.getString("q"))));
