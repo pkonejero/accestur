@@ -1,10 +1,10 @@
-package secom.accestur.core.service;
+package accestur.secom.core.service;
 
 import java.util.List;
 
-import secom.accestur.core.model.Counter;
-import secom.accestur.core.model.MCityPass;
-import secom.accestur.core.model.ServiceAgent;
+import accestur.secom.core.model.Counter;
+import accestur.secom.core.model.MCityPass;
+import accestur.secom.core.model.ServiceAgent;
 
 public interface CounterServiceInterface{
 	

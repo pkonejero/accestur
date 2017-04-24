@@ -1,29 +1,15 @@
-package secom.accestur.core.model;
-
+package accestur.secom.core.model;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
-@Entity
-@Table(name="service")
 public class ServiceAgent extends DomainObjectModel{
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+
 	private Long id;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="PROVIDER_ID")
+
 	private Provider provider;
 
-	@OneToMany(mappedBy="service")
+
 	private List<Counter> counters;
 
 	private String name;

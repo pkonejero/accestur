@@ -35,7 +35,7 @@ public class IssuerService implements IssuerServiceInterface{
 	@Autowired
 	@Qualifier("userService")
 	private UserService userService;
-	
+//	
 	@Autowired
 	@Qualifier("mCityPassService")
 	private MCityPassService mCityPassService;
@@ -76,7 +76,9 @@ public class IssuerService implements IssuerServiceInterface{
 	public Issuer getIssuerByName(String name){
 		return issuerRepository.findByNameIgnoreCase(name);
 	}
-
+	
+	
+	
 	public String generateCertificate(ServiceAgent[] services){
 		serviceAgentService.storeServices(services);
 		arrayGeneration();
@@ -142,6 +144,7 @@ public class IssuerService implements IssuerServiceInterface{
 		JSONObject jsonObject = new JSONObject(json);
 		return jsonObject.getString("y");
 	}
+
 
 
 	public String getPASS(String params){
@@ -217,6 +220,11 @@ public class IssuerService implements IssuerServiceInterface{
 		}
 	}
 	
+	
+	
+	///////////////////////////////////////////////////////////////////////
+	/////////////// PASS Activation ///////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////
 	public String verifyTicket(String params){		
 		JSONObject json = new JSONObject(params);
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");

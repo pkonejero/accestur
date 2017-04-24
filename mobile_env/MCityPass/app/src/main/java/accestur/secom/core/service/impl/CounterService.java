@@ -1,23 +1,15 @@
-package secom.accestur.core.service.impl;
+package  accestur.secom.core.service.impl;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
 
-import secom.accestur.core.dao.CounterRepository;
-import secom.accestur.core.model.Counter;
-import secom.accestur.core.model.MCityPass;
-import secom.accestur.core.model.ServiceAgent;
-import secom.accestur.core.service.CounterServiceInterface;
+import  accestur.secom.core.model.Counter;
+import  accestur.secom.core.model.MCityPass;
+import  accestur.secom.core.model.ServiceAgent;
+import  accestur.secom.core.service.CounterServiceInterface;
 
-@Service("counterService")
-public class CounterService implements CounterServiceInterface{	
-	
-	@Autowired
-	@Qualifier("counterRepository")
-	private CounterRepository counterRepository;
+
+public class CounterService implements CounterServiceInterface{
 	
 	private Counter counter;
 	
@@ -25,9 +17,7 @@ public class CounterService implements CounterServiceInterface{
 	
 	public CounterService(){}
 	
-	public void initCounter(MCityPass mCityPass, ServiceAgent service){
-		counter = counterRepository.findByMCityPassAndService(mCityPass, service);
-	}
+
 	
 	public void initCounter(MCityPass mCityPass, ServiceAgent service, boolean user){
 		if(service.getId()==1){
@@ -49,23 +39,14 @@ public class CounterService implements CounterServiceInterface{
 	public List<Counter> getCountersByService(long sn){
 		return null;
 	}
-	
+
+	@Override
+	public Counter getCounter(MCityPass mCityPass, ServiceAgent service) {
+		return null;
+	}
+
 	public Counter getCounter(){
 		return counter;
-	}
-	
-	public Counter getCounter(MCityPass mCityPass, ServiceAgent service){
-		return counterRepository.findByMCityPassAndService(mCityPass, service);
-	}
-	
-	
-	public void saveCounter(Counter counter){
-		counterRepository.save(counter);
-	}
-	
-	public void saveCounters(List<Counter> counters){
-		counterRepository.save(counters);
-		this.counters = counters;
 	}
 	
 	public void setCounter(Counter counter){
@@ -115,9 +96,19 @@ public class CounterService implements CounterServiceInterface{
 		//saveCounter(counter);
 	}
 
+	@Override
+	public void saveCounter(Counter counter) {
+
+	}
+
+	@Override
+	public void initCounter(MCityPass mCityPass, ServiceAgent service) {
+
+	}
+
 	/* (non-Javadoc)
-	 * @see secom.accestur.core.service.CounterServiceInterface#initCounter(secom.accestur.core.model.MCityPass, secom.accestur.core.model.ServiceAgent, int, java.lang.String)
-	 */
+         * @see secom.accestur.core.service.CounterServiceInterface#initCounter(secom.accestur.core.model.MCityPass, secom.accestur.core.model.ServiceAgent, int, java.lang.String)
+         */
 	@Override
 	public void initCounter(MCityPass mCityPass, ServiceAgent service, int counter, String psi) {
 		// TODO Auto-generated method stub
@@ -133,7 +124,10 @@ public class CounterService implements CounterServiceInterface{
 		return null;
 	}
 
+	@Override
+	public void saveCounters(List<Counter> counters) {
 
-	
-	
+	}
+
+
 }

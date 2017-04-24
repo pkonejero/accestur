@@ -1,27 +1,20 @@
 /**
  * 
  */
-package secom.accestur.core.model;
+package accestur.secom.core.model;
 
 
-import javax.persistence.*;
 /**
  * @author Sebastià
  *
  */
-@Entity
-@Table(name="secretvalueEntity")
+
 public class SecretValue extends DomainObjectModel {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+
 	private Long id;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name = "PROVIDER_ID")
+
 	private Provider provider;
-	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="MCITYPASS_ID")
+
 	private MCityPass mCityPass;
 	
 	private String secret;

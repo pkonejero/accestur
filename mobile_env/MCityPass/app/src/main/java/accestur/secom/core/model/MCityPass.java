@@ -1,45 +1,25 @@
-package secom.accestur.core.model;
+package accestur.secom.core.model;
 
 import java.util.Date;
 import java.util.List;
 
 import org.json.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
-import secom.accestur.core.service.impl.UserService;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
-@Entity
-@Table(name="mcitypassEntity")
+
+
+
 public class MCityPass extends DomainObjectModel{
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+
 	private Long id;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name = "USER_ID")
 	private User user;
 
-	@OneToMany(mappedBy="mCityPass")
 	private List<Counter> counters;
 
-	@OneToOne(fetch=FetchType.LAZY, mappedBy="mCityPass")
 	private Activation activation;
 	
-	@OneToOne(fetch=FetchType.LAZY, mappedBy="mCityPass")
 	private SecretValue secretValue;
 
 	private String hRI;
@@ -51,14 +31,12 @@ public class MCityPass extends DomainObjectModel{
 	private String purDate;
 	private String expDate;
 	
-	@Column(length = 40000)
 	private String delta;
 	
 	private String hRU;
 	private String Hu;
 	
 	
-	@Column(length = 40000)
 	private String signature;
 	
 	
@@ -199,26 +177,31 @@ public class MCityPass extends DomainObjectModel{
 	@Override
 	public String toString(){
 		JSONObject json = new JSONObject();
-		json.put("Sn", id);
-		json.put("User", user.getPseudonym());
-		json.put("hRI", hRI);
-		json.put("hRU", hRU);
-		json.put("Hu", Hu);
-		json.put("expDate", expDate);
-		json.put("purDate", purDate);
-		json.put("Lifetime", lifeTime);
-		json.put("Category", category);
-		json.put("TermsAndConditions", termsAndConditions);
-		json.put("Signature", signature);
-		JSONArray jsonArray = new JSONArray();
-		JSONObject jsonObject;
-		for (int i = 0; i < counters.size(); i++){
-			jsonObject = new JSONObject();
-			jsonObject.put("Service", counters.get(i).getService().getName());
-			jsonObject.put("Psi", counters.get(i).getPsi());
-			jsonArray.put(jsonObject);
+		try{
+			json.put("Sn", id);
+			json.put("User", user.getPseudonym());
+			json.put("hRI", hRI);
+			json.put("hRU", hRU);
+			json.put("Hu", Hu);
+			json.put("expDate", expDate);
+			json.put("purDate", purDate);
+			json.put("Lifetime", lifeTime);
+			json.put("Category", category);
+			json.put("TermsAndConditions", termsAndConditions);
+			json.put("Signature", signature);
+			JSONArray jsonArray = new JSONArray();
+			JSONObject jsonObject;
+			for (int i = 0; i < counters.size(); i++){
+				jsonObject = new JSONObject();
+				jsonObject.put("Service", counters.get(i).getService().getName());
+				jsonObject.put("Psi", counters.get(i).getPsi());
+				jsonArray.put(jsonObject);
+			}
+			json.put("Services", jsonArray);
+		} catch (JSONException e){
+			e.printStackTrace();
 		}
-		json.put("Services", jsonArray);
+
 		
 		return json.toString();
 	}

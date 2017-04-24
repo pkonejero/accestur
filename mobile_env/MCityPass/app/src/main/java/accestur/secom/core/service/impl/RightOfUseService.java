@@ -1,20 +1,14 @@
-package secom.accestur.core.service.impl;
+package  accestur.secom.core.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
 
-import secom.accestur.core.crypto.Crypto.Cryptography;
-import secom.accestur.core.dao.RightOfUseRepository;
-import secom.accestur.core.model.MCityPass;
-import secom.accestur.core.model.RightOfUse;
-import secom.accestur.core.service.RightOfUseServiceInterface;
 
-@Service("rightOfUseService")
+import  accestur.secom.core.crypto.Cryptography;
+import  accestur.secom.core.model.MCityPass;
+import  accestur.secom.core.model.RightOfUse;
+import  accestur.secom.core.service.RightOfUseServiceInterface;
+
+
 public class RightOfUseService implements RightOfUseServiceInterface{
-	@Autowired
-	@Qualifier("rightOfUseRepository")
-	private RightOfUseRepository rightOfUseRepository;
 	
 //	@Autowired
 //	@Qualifier("cryptography")
@@ -38,13 +32,15 @@ public class RightOfUseService implements RightOfUseServiceInterface{
 	public RightOfUse getRightOfUse(){
 		return rightOfUse;
 	}
-	
-	public void saveRightOfUse(RightOfUse rou){
-		rightOfUseRepository.save(rou);
+
+	@Override
+	public void saveRightOfUse(RightOfUse rou) {
+
 	}
 
+	@Override
 	public RightOfUse getByMCityPass(MCityPass mCityPass) {
-		return rightOfUseRepository.findByMCityPass(mCityPass);
+		return null;
 	}
 
 

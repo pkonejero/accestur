@@ -1,7 +1,7 @@
-package secom.accestur.core.service;
+package accestur.secom.core.service;
 
-import secom.accestur.core.model.Activation;
-import secom.accestur.core.model.MCityPass;
+import accestur.secom.core.model.Activation;
+import accestur.secom.core.model.MCityPass;
 
 public interface ActivationServiceInterface{
 	public Activation getActivationByMCityPassSn(MCityPass mCityPass);

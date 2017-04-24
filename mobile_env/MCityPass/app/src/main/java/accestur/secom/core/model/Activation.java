@@ -1,33 +1,21 @@
-package secom.accestur.core.model;
+package accestur.secom.core.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
-@Entity
-@Table(name = "activationEntity")
+
 public class Activation extends DomainObjectModel{
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+
 	private Long id;
 
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="MCITYPASS_ID")
 	private MCityPass mCityPass;
 
 	private String actDate;
 
 	private String state;
-	
-	@Column(length = 40000)
+
 	private String signature;
 	
 	public Activation(){}
@@ -91,19 +79,28 @@ public class Activation extends DomainObjectModel{
 	
 	public String stringToSign(){
 		JSONObject json = new JSONObject();
-		json.put("PASS", mCityPass.getId());
-		json.put("ACTDate", actDate);
-		json.put("State", state);
+		try{
+			json.put("PASS", mCityPass.getId());
+			json.put("ACTDate", actDate);
+			json.put("State", state);
+		} catch (JSONException e){
+			e.printStackTrace();
+		}
+
 		return json.toString();
 	}
 	
 	@Override
 	public String toString(){
 		JSONObject json = new JSONObject();
+		try{
 		json.put("PASS", mCityPass.getId());
 		json.put("ACTDate", actDate);
 		json.put("State", state);
 		json.put("Signature", signature);
+		} catch (JSONException e){
+			e.printStackTrace();
+		}
 		return json.toString();
 	}
 }
