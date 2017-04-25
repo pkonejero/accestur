@@ -373,7 +373,7 @@ public class ProviderService implements ProviderServiceInterface {
 		for (int i = 0; i < PRNGbytes.length; i++) {
 			xor[i] = (byte) (PRNGbytes[i] ^ Abytes[i]);
 		}
-		return new String(Base64.getEncoder().encode(xor));
+		return new String(Base64.getEncoder().encode(xor)).replace("\n", "");
 	}
 	
 	
