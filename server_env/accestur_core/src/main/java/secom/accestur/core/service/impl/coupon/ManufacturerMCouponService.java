@@ -1,6 +1,9 @@
 package secom.accestur.core.service.impl.coupon;
 
 import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -42,14 +45,9 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 	private ManufacturerMCoupon manufacturer;
 	
 	
-	private String[] paramsOfPass;
-	private BigInteger yU_c;
-	private BigInteger Hu_c;
-
-	private String[] ws;
-	private String[] services;
-	private String[] psi;
-
+	private String[] paramsOfCoupon;
+	private BigInteger X0;
+	private BigInteger Y0;
 
 
 	public void createCertificate(){
@@ -89,6 +87,23 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		}
 		return message;
 	}
-
-
+	
+	public String initParamsMCoupon(Integer p, Integer q, Date EXD){
+		String[] params= new String [2];
+		params[0]=p.toString();
+		params[1]=q.toString();
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = EXD;
+		System.out.println("EXD:" + dateFormat.format(date));
+		params[2] = dateFormat.format(date);
+		return sendInitMCouponMessage(params);
+	}
+	
+	private String sendInitMCouponMessage(String[] params) {
+		JSONObject json = new JSONObject();
+		json.put("p", params[0]);
+		json.put("q", params[1]);
+		json.put("EXPDATE", params[2]);
+		return json.toString();
+	}
 }
