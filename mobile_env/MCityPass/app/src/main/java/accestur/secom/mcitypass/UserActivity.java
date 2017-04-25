@@ -9,37 +9,25 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import accestur.secom.core.service.impl.UserService;
-
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.SecureRandom;
+import accestur.secom.core.service.impl.UserService;
+import accestur.secom.mcitypass.tasks.InfiniteReusableTask;
+import accestur.secom.mcitypass.tasks.MTimesReusableTask;
+import accestur.secom.mcitypass.tasks.NonReusableTask;
 
-import accestur.secom.core.api.ProviderAPI;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-
-import accestur.secom.core.crypto.Cryptography;
 import accestur.secom.core.crypto.Schnorr;
 import accestur.secom.core.test.Greeting;
-import accestur.secom.core.utils.Constants;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class UserActivity extends AppCompatActivity {
     private TextView mTextMessage1;
     private TextView mTextMessage2;
     private TextView mTextMessage3;
 
+    public static UserService userService;
+
+    private int counter;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -53,18 +41,17 @@ public class UserActivity extends AppCompatActivity {
                     NonReusableTask nonReusableTask = new NonReusableTask();
                     nonReusableTask.execute();
 
-
                     return true;
                 case R.id.navigation_dashboard:
                     cleanLayout();
-                    Schnorr schnorr = new Schnorr();
-                    schnorr.Init();
-                    mTextMessage1.setText(schnorr.SecretKey().toString());
-                    mTextMessage2.setText(schnorr.PublicKey().toString());
+                    MTimesReusableTask mTimesReusableTask = new MTimesReusableTask();
+                    mTimesReusableTask.execute(counter);
+                    counter++;
                     return true;
                 case R.id.navigation_notifications:
                     cleanLayout();
-                    new HttpRequestTask().execute();
+                    InfiniteReusableTask infiniteReusableTask = new InfiniteReusableTask();
+                    infiniteReusableTask.execute();
                     return true;
             }
             return false;
@@ -81,6 +68,7 @@ public class UserActivity extends AppCompatActivity {
         mTextMessage1 = (TextView) findViewById(R.id.message1);
         mTextMessage2 = (TextView) findViewById(R.id.message2);
         mTextMessage3 = (TextView) findViewById(R.id.content_value);
+        counter = 0;
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }

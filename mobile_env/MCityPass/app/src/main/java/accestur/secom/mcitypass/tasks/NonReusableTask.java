@@ -1,4 +1,4 @@
-package accestur.secom.mcitypass;
+package accestur.secom.mcitypass.tasks;
 
 import android.os.AsyncTask;
 
@@ -10,16 +10,18 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
+import static accestur.secom.mcitypass.UserActivity.userService;
+
 /**
  * Created by Sebastià on 24/4/2017.
  */
 
-public class MTimesReusableTask extends AsyncTask<String, Void, Void> {
+public class NonReusableTask extends AsyncTask<String, Void, Void> {
     public static final String BASE_URL = "http://192.168.1.33:8080/";
     private String message;
     @Override
     protected Void doInBackground(String... params) {
-        UserService userService = new UserService();
+        userService = new UserService();
         //userService.initUser();
         ProviderAPI providerAPI = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -31,6 +33,7 @@ public class MTimesReusableTask extends AsyncTask<String, Void, Void> {
 
         try {
             message = stringCall.execute().body();
+            System.out.println(message);
         } catch (IOException e) {
             e.printStackTrace();
         }

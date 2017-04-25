@@ -1,4 +1,4 @@
-package accestur.secom.mcitypass;
+package accestur.secom.mcitypass.tasks;
 
 import android.os.AsyncTask;
 
@@ -10,16 +10,25 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
+import static accestur.secom.mcitypass.UserActivity.userService;
+
 /**
  * Created by Sebastià on 24/4/2017.
  */
 
-public class NonReusableTask extends AsyncTask<String, Void, Void> {
+public class MTimesReusableTask extends AsyncTask<Integer, Void, Void> {
     public static final String BASE_URL = "http://192.168.1.33:8080/";
     private String message;
+
     @Override
-    protected Void doInBackground(String... params) {
-        UserService userService = new UserService();
+    protected Void doInBackground(Integer ... params) {
+
+        if(params[0]==0){
+            userService = new UserService();
+            userService.initUser();
+            userService.initValues(1, 4);
+        }
+
         //userService.initUser();
         ProviderAPI providerAPI = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -27,30 +36,31 @@ public class NonReusableTask extends AsyncTask<String, Void, Void> {
                 .build()
                 .create(ProviderAPI.class);
 
-        Call<String> stringCall = providerAPI.verifyPass(userService.showTicket(1, 2));
+        Call<String> stringCall = providerAPI.verifyMPass(userService.showMTicket());
 
-        try {
-            message = stringCall.execute().body();
-            System.out.println(message);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        stringCall = providerAPI.verifyPass2(userService.solveVerifyChallenge(message));
         try {
             message = stringCall.execute().body();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        stringCall = providerAPI.verifyProof(userService.showProof(message));
+        stringCall = providerAPI.verifyMPass2(userService.solveMVerifyChallenge(message));
         try {
             message = stringCall.execute().body();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        System.out.println(userService.getValidationConfirmation(message));
+        stringCall = providerAPI.verifyMProof(userService.showMProof(message));
+        try {
+            message = stringCall.execute().body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(userService.getVerifyMTicketConfirmation(message));
         return null;
     }
+
+
 }

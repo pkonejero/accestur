@@ -241,7 +241,7 @@ public class Cryptography {
         try {
             digest = MessageDigest.getInstance("SHA-256");
             byte[] hashBytes = digest.digest(text.getBytes("UTF-8"));
-            hash = new String(Base64.encode(hashBytes,Base64.DEFAULT));
+            hash = new String(Base64.encode(hashBytes,Base64.DEFAULT)).replace("\n", "");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {

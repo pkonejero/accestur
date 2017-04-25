@@ -124,7 +124,8 @@ public class UserService implements UserServiceInterface {
 
     public void createCertificate() {
 
-        crypto.initPrivateKey("cert/user/private_USER.der");
+        crypto.initPrivateKey(Constants.PATH_PRIVATE_KEY);
+        crypto.initPublicKey(Constants.PATH_PROVIDER_KEY);
     }
 
 
@@ -132,8 +133,7 @@ public class UserService implements UserServiceInterface {
         // System.out.println(user.getPseudonym());
         // System.out.println(user.getSchnorr());
         System.out.println("Show Ticket");
-        crypto.initPrivateKey(Constants.PATH_PRIVATE_KEY);
-        crypto.initPublicKey(Constants.PATH_PROVIDER_KEY);
+        createCertificate();
         System.out.println(user.getSchnorr());
         schnorr = Schnorr.fromPrivateCertificate(user.getSchnorr());
         schnorr.getP();
@@ -275,9 +275,8 @@ public class UserService implements UserServiceInterface {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        } finally {
-            return false;
         }
+        return false;
     }
 
     @Override
@@ -306,8 +305,7 @@ public class UserService implements UserServiceInterface {
 
     public String showMTicket() {
         System.out.println("Show M Ticket");
-        crypto.initPrivateKey("cert/user/private_USER.der");
-        crypto.initPublicKey("cert/ttp/public_TTP.der");
+        createCertificate();
         schnorr = Schnorr.fromPrivateCertificate(user.getSchnorr());
         JSONObject json = null;
         JSONObject message = null;
@@ -388,7 +386,6 @@ public class UserService implements UserServiceInterface {
 
     public String showMProof(String params) {
         System.out.println("Show proof");
-        crypto.initPrivateKey("cert/user/private_USER.der");
         JSONObject message = null;
         JSONObject json = null;
         try {
@@ -459,9 +456,9 @@ public class UserService implements UserServiceInterface {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        } finally {
-            return "false";
         }
+        return "false";
+
     }
 
     private String getA(String PRNG) {
@@ -481,7 +478,7 @@ public class UserService implements UserServiceInterface {
             xor[i] = (byte) (PRNGbytes[i] ^ HASHbytes[i]);
         }
 
-        return new String(Base64.encodeToString(xor, Base64.DEFAULT));
+        return new String(Base64.encodeToString(xor, Base64.DEFAULT)).replace("\n", "");
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -490,8 +487,7 @@ public class UserService implements UserServiceInterface {
 
     public String showInfinitePass(long CityPassId, long serviceId) {
         System.out.println("Show Inf Ticket");
-        crypto.initPrivateKey("cert/user/private_USER.der");
-        crypto.initPublicKey("cert/ttp/public_TTP.der");
+        createCertificate();
         schnorr = Schnorr.fromPrivateCertificate(user.getSchnorr());
         JSONObject json = null;
         JSONObject message = null;
@@ -686,21 +682,21 @@ public class UserService implements UserServiceInterface {
             jsonObject = new JSONObject();
             jsonObject.put("y", y);
             jsonObject.put("signature", signature);
-         } catch (JSONException e){
-        e.printStackTrace();
-    }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return jsonObject.toString();
     }
 
     public static String getYu(String json) {
         JSONObject jsonObject = null;
-        try{
+        try {
             jsonObject = new JSONObject(json);
 
             return jsonObject.getString("y");
-        } catch (JSONException e){
-        e.printStackTrace();
-    }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return "Error";
     }
 
