@@ -17,10 +17,23 @@ public class ServiceAgentService implements ServiceAgentInterface{
 	@Autowired
 	@Qualifier("serviceAgentRepository")
 	private ServiceAgentRepository serviceAgentRepository;
+	
+	private ServiceAgent serviceAgent;
+	
+	public ServiceAgent getServiceAgent(){
+		return serviceAgent;
+	}
 
+	public ServiceAgent getServiceBySn(long id){
+		return serviceAgentRepository.findById(id);
+	}
 	
 	public ServiceAgent getServiceByName(String name){
 		return  serviceAgentRepository.findByNameIgnoreCase(name);
+	}
+	
+	public void initService(long id) {
+		serviceAgent  = getServiceBySn(id);
 	}
 	
 	public void storeServices(ServiceAgent[] services){
@@ -42,4 +55,12 @@ public class ServiceAgentService implements ServiceAgentInterface{
 	public List<ServiceAgent> getServicesByMCityPass(MCityPass mCityPass){
 		return null;
 	}
+
+
+	public void initService(String service) {
+		serviceAgent  = getServiceByName(service);	
+	}
+
+
+
 }
