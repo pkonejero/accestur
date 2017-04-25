@@ -38,6 +38,10 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 	private Cryptography crypto;
 
 	//Values necessary to create Coupons;
+	
+	private ManufacturerMCoupon manufacturer;
+	
+	
 	private String[] paramsOfPass;
 	private BigInteger yU_c;
 	private BigInteger Hu_c;
@@ -70,13 +74,15 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 	}
 	
 	public String[] generateUsername(String[] params){
-		String[] message = new String[3];
+		manufacturer = manufacturermcouponRepository.findAll().iterator().next();
+		String[] message = new String[4];
 		String username = crypto.decryptWithPrivateKey(params[1]);
 		String password = crypto.decryptWithPrivateKey(params[2]);
 		if (crypto.getValidation(username+password, params[0])){
 			message[0] = username;
 			message[1] = password;
 			message[2] = crypto.getSignature(username+password);
+			message[3] = manufacturer.getName();
 			
 		} else {
 			message[0] = "Error";

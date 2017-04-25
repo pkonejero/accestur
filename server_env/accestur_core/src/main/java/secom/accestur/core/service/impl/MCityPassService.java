@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import secom.accestur.core.dao.MCityPassRepository;
-import secom.accestur.core.model.Activation;
 import secom.accestur.core.model.MCityPass;
 import secom.accestur.core.service.MCityPassServiceInterface;
 

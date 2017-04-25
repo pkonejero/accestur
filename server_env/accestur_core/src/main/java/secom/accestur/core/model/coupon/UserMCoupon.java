@@ -62,6 +62,14 @@ public class UserMCoupon extends DomainObjectModelCoupon{
 	public void setPassword(String password){
 		this.password = password;
 	}
+	
+	public ManufacturerMCoupon getManufacturer(){
+		return manufacturer;
+	}
+
+	public void setManufacturerMCoupon(ManufacturerMCoupon manufacturer){
+		this.manufacturer = manufacturer;
+	}
 
 	@Override
 	public boolean equals(Object obj){

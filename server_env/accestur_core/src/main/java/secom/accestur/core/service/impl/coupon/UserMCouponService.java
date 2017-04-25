@@ -2,21 +2,15 @@ package secom.accestur.core.service.impl.coupon;
 
 import java.math.BigInteger;
 
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import secom.accestur.core.crypto.Crypto.Cryptography;
-import secom.accestur.core.crypto.schnorr.Schnorr;
 import secom.accestur.core.dao.coupon.UserMCouponRepository;
-import secom.accestur.core.model.ServiceAgent;
-import secom.accestur.core.model.User;
+import secom.accestur.core.model.coupon.ManufacturerMCoupon;
 import secom.accestur.core.model.coupon.UserMCoupon;
 import secom.accestur.core.service.coupon.UserMCouponServiceInterface;
-import secom.accestur.core.utils.Constants;
 
 @Service("usermcouponService")
 public class UserMCouponService implements UserMCouponServiceInterface{
@@ -27,7 +21,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 	@Autowired
 	@Qualifier("cryptography")
 	private Cryptography crypto;
-
+	
 	private String[] paramsOfPass;
 	private String[] psi;
 	private String K;
@@ -59,6 +53,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 			UserMCoupon user = new UserMCoupon();
 			user.setUsername(params[0]);
 			user.setPassword(params[1]);
+			//user.setManufacturerMCoupon(params[3]);
 			usermcouponRepository.save(user);
 		}
 

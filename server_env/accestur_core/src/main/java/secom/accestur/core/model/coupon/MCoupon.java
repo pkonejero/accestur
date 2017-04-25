@@ -47,7 +47,7 @@ public class MCoupon extends DomainObjectModelCoupon{
 	private Integer p;//Number of times to hash.
 	
 	//Serial Number
-	private Long serialNumber;
+	private Long sn;
 	
 	//Activation
 	@OneToOne(fetch=FetchType.LAZY, mappedBy="mCoupon")

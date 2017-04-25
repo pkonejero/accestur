@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.schnorr.Schnorr;
-import secom.accestur.core.dao.MCityPassRepository;
 import secom.accestur.core.dao.UserRepository;
 import secom.accestur.core.model.SecretValue;
 import secom.accestur.core.model.ServiceAgent;
