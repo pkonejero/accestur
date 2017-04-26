@@ -39,15 +39,15 @@ public class MCoupon extends DomainObjectModelCoupon{
 	private MerchantMCoupon merchant;
 	
 	//Share Hash
-	private String chain_Y;
+	private String Yo;
 	private Integer q; //Number of times to hash.
 	
 	//Own Hash
-	private String chain_X;
+	private String Xo;
 	private Integer p;//Number of times to hash.
 	
 	//Serial Number
-	private Long sn;
+	private Integer sn;  //Hauria de ser molt gran.
 	
 	//Activation
 	@OneToOne(fetch=FetchType.LAZY, mappedBy="mCoupon")
@@ -75,20 +75,20 @@ public class MCoupon extends DomainObjectModelCoupon{
 		this.user = user;
 	}
 
-	public String getChain_Y() {
-		return chain_Y;
+	public String getYo() {
+		return Yo;
 	}
 
-	public void setChain_Y(String chain_Y) {
-		this.chain_Y = chain_Y;
+	public void setYo(String Y0) {
+		this.Yo = Y0;
 	}
 
-	public String getChain_X() {
-		return chain_X;
+	public String getXo() {
+		return Xo;
 	}
 
-	public void setChain_X(String chain_X) {
-		this.chain_X = chain_X;
+	public void setXo(String X0) {
+		this.Xo = X0;
 	}
 
 	public Date getExpDate() {
@@ -105,6 +105,30 @@ public class MCoupon extends DomainObjectModelCoupon{
 
 	public void setGenDate(Date genDate) {
 		this.genDate = genDate;
+	}
+	
+	public Integer getSn() {
+		return sn;
+	}
+
+	public void setSn(Integer sN) {
+		this.sn = sN;
+	}
+	
+	public Integer getP() {
+		return p;
+	}
+
+	public void setP(Integer P) {
+		this.p = P;
+	}
+	
+	public Integer getQ() {
+		return q;
+	}
+
+	public void setQ(Integer Q) {
+		this.q = Q;
 	}
 	
 } 

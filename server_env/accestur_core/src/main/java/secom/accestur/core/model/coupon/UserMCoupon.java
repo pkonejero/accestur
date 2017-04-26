@@ -35,6 +35,9 @@ public class UserMCoupon extends DomainObjectModelCoupon{
 	@JoinColumn(name="MANUFACTURER_ID")
 	private ManufacturerMCoupon manufacturer;
 	
+	private String X;
+	
+	private String Y;
 	
 	public UserMCoupon(){}
 	
@@ -70,7 +73,23 @@ public class UserMCoupon extends DomainObjectModelCoupon{
 	public void setManufacturerMCoupon(ManufacturerMCoupon manufacturer){
 		this.manufacturer = manufacturer;
 	}
+	
+	public String getX() {
+		return X;
+	}
 
+	public void setX(String x) {
+		X = x;
+	}
+	
+	public String getY() {
+		return Y;
+	}
+
+	public void setY(String y) {
+		Y = y;
+	}
+	
 	@Override
 	public boolean equals(Object obj){
 		if (this == obj)
