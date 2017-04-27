@@ -125,6 +125,13 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		json.put("sn", params[6]);
 		return json.toString();
 	}
+	
+	//Purchase 5 Issuer recieves coupon generated information.
+public String getMCouponGeneratedByManufacturer(String json) {
+		//Missing Issuer Signature.
+		return json;
+	}
+	
 
 	@Override
 	public String getChallenge(String params) {

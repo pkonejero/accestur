@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.schnorr.Schnorr;
 import secom.accestur.core.dao.coupon.UserMCouponRepository;
+import secom.accestur.core.model.SecretValue;
 import secom.accestur.core.model.coupon.ManufacturerMCoupon;
 import secom.accestur.core.model.coupon.UserMCoupon;
 import secom.accestur.core.service.coupon.UserMCouponServiceInterface;
@@ -113,14 +115,6 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		
 		params[4] = q.toString();
 		
-		//DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		//Date date;
-		//try {
-		//	date = (Date) dateFormat.parse(paramsMCoupon[2]);
-		//} catch (ParseException e) {
-			// TODO Auto-generated catch block
-		//	e.printStackTrace();
-		//}
 		params[5]=paramsMCoupon[2];
 		
 		//params[6]=paramsMCoupon[3];
@@ -149,6 +143,15 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		json.put("q", params[4]);
 		json.put("EXPDATE", params[5]);
 		return json.toString();
+	}
+	//PURCHASE 6 COUPON Receiving Coupon from Issuer//
+	public String recieveMCoupon(String params) {
+		System.out.println(params);
+		JSONObject json = new JSONObject(params);
+		long sn = json.getLong("sn");
+		//secretValueService.saveSecretValue(new SecretValue(mCityPassService.getMCityPassBySn(id),
+		//		serviceAgentService.getServiceByName(service).getProvider(), random.toString()));
+		return "Everything OK";
 	}
 	
 	public UserMCoupon getUserMCoupon(){

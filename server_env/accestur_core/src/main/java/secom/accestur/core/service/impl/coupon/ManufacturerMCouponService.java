@@ -26,9 +26,9 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 	@Qualifier("manufacturermcouponRepository")
 	private ManufacturerMCouponRepository manufacturermcouponRepository;
 	
-	//@Autowired
-	//@Qualifier("mCouponService")
-	//private MCouponService mCouponService;
+	@Autowired
+	@Qualifier("mcouponService")
+	private MCouponService mCouponService;
 
 	@Autowired
 	@Qualifier("schnorr")
@@ -147,7 +147,7 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		
 		coupon.setSn(sn);
 		
-		//mCouponService.saveMCoupon(coupon);
+		mCouponService.saveMCoupon(coupon);
 		
 		return coupon.toString();
 	}
