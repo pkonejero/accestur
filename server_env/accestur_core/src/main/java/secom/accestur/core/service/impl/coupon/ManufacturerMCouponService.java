@@ -4,9 +4,7 @@ import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 
-import org.apache.catalina.authenticator.Constants;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,7 +16,6 @@ import secom.accestur.core.dao.coupon.ManufacturerMCouponRepository;
 import secom.accestur.core.model.coupon.MCoupon;
 import secom.accestur.core.model.coupon.ManufacturerMCoupon;
 import secom.accestur.core.service.coupon.ManufacturerMCouponServiceInterface;
-import secom.accestur.core.service.impl.MCityPassService;
 
 @Service("manufacturermcouponService")
 public class ManufacturerMCouponService implements ManufacturerMCouponServiceInterface{	
@@ -92,14 +89,16 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 	//PURCHASE 1 COUPON INIT PARAMS//
 	
 	public String initParamsMCoupon(Integer p, Integer q, Date EXD){
-		String[] params= new String [3];
+		createCertificate();
+		String[] params= new String [4];
 		params[0]=p.toString();
 		params[1]=q.toString();
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = EXD;
 		System.out.println("EXD:" + dateFormat.format(date));
 		params[2] = dateFormat.format(date);
-		//params[3] = sn.toString();
+		//Signature
+		params[3]=crypto.getSignature(p.toString()+q.toString());
 		return sendInitMCouponMessage(params);
 	}
 	
@@ -108,19 +107,22 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		json.put("p", params[0]);
 		json.put("q", params[1]);
 		json.put("EXPDATE", params[2]);
-		//json.put("SN", params[3]);
+		json.put("signature", params[3]);
 		return json.toString();
 	}
 	
 	//PURCHASE 4 COUPON Receiving from Issuer all info of the Coupon//
 	
 	public String getCoupon(String json) {
-		
+		createCertificate();
+		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
 		String[] paramsJson = solveIssuerMCouponParams(json);
 		
 		MCoupon coupon = new MCoupon();
 		
 		String[] params = new String[10];
+		
+		if (crypto.getValidation(paramsJson[3]+paramsJson[4], paramsJson[7])){
 		//coupon.setUser(paramsJson[0]); //Hauria de ser l'objecte User
 		
 		coupon.setXo(paramsJson[1]);
@@ -150,11 +152,14 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		mCouponService.saveMCoupon(coupon);
 		
 		return coupon.toString();
+		}else{
+			return "Failed Signature";
+		}
 	}
 
 	private String[] solveIssuerMCouponParams (String message){
 		JSONObject json = new JSONObject(message);
-		String[] params = new String[6];
+		String[] params = new String[8];
 		params[0] = json.getString("username");
 		params[1] = json.getString("Xo");
 		params[2] = json.getString("Yo");
@@ -162,8 +167,7 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		params[4] = json.getString("q");
 		params[5] = json.getString("EXPDATE");
 		params[6] = json.getString("sn");
+		params[7] = json.getString("signature");
 		return params;
-	}
-	
-	
+	}	
 }

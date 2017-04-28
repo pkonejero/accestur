@@ -51,7 +51,7 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		crypto.initPrivateKey("cert/issuer/private_ISSUER.der");
 		crypto.initPublicKey("cert/user/public_USER.der");	
 	}
-
+	
 	public void newIssuerMCoupon(String name){
 		IssuerMCoupon i = getIssuerMCouponByName(name);
 		if(i==null){
@@ -78,7 +78,7 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 	//Purchase 3 Issuer recieves information Coupon and sends to manufacturer, generating SN
 	
 	public String getInitMCouponMessage(String json) {
-		
+		createCertificate();
 		String[] paramsJson = solveUserMCouponParams(json);
 		
 		String[] params = new String[10];
@@ -96,21 +96,29 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		params[5]=paramsJson[5];
 		
 		//L'unica cosa que fa es afegir un SN
-		Random sn = new Random();
+		Integer sn = 123456789;
 		params[6]=sn.toString();
 		
+		if (crypto.getValidation(params[3]+params[4], paramsJson[6])){
+			
+			params[7]=crypto.getSignature(params[3]+params[4]);
+		
 		return sendIssuerToManufacturerPurchase(params);
+		}else{
+			return "Failed Signature";
+		}
 	}
 	
 	private String[] solveUserMCouponParams (String message){
 		JSONObject json = new JSONObject(message);
-		String[] params = new String[6];
+		String[] params = new String[7];
 		params[0] = json.getString("username");
 		params[1] = json.getString("Xo");
 		params[2] = json.getString("Yo");
 		params[3] = json.getString("p");
 		params[4] = json.getString("q");
 		params[5] = json.getString("EXPDATE");
+		params[6] = json.getString("signature");
 		return params;
 	}
 	
@@ -123,6 +131,7 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		json.put("q", params[4]);
 		json.put("EXPDATE", params[5]);
 		json.put("sn", params[6]);
+		json.put("signature", params[7]);
 		return json.toString();
 	}
 	

@@ -87,9 +87,10 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		String[] paramsMCoupon = solveMCouponParams(json);
 		Integer p = new Integer(paramsMCoupon[0]);
 		Integer q = new Integer(paramsMCoupon[1]);
-		
-		String[] Xo = new String[p];
-		String[] Yo = new String[q];
+		if (crypto.getValidation(paramsMCoupon[0]+paramsMCoupon[1], paramsMCoupon[3])){
+		createCertificate();
+		String[] Xo = new String[p+1];
+		String[] Yo = new String[q+1];
 		
 		user = usermcouponRepository.findAll().iterator().next();
 		String[] params = new String[10];
@@ -117,11 +118,17 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		
 		params[5]=paramsMCoupon[2];
 		
-		//params[6]=paramsMCoupon[3];
+		//Signature of the User
+		
+		params[6]=crypto.getSignature(params[3]+params[4]);
 		
 		usermcouponRepository.save(user);
 		
 		return sendUserToIssuerPurchase(params);
+		}
+		else{
+			return "Failed Signature";
+		}
 	}
 	
 	private String[] solveMCouponParams (String message){
@@ -130,7 +137,8 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		params[0] = json.getString("p");
 		params[1] = json.getString("q");
 		params[2] = json.getString("EXPDATE");
-		//params[3] = json.getString("SN");	
+		params[3] = json.getString("signature");
+		//System.out.println("AQUETS ES EL RESULTAT DEL JSON ARRIBAT"+" "+params[0]+params[1]+params[2]+params[3]);
 		return params;
 	}
 	
@@ -142,6 +150,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		json.put("p", params[3]);
 		json.put("q", params[4]);
 		json.put("EXPDATE", params[5]);
+		json.put("signature", params[6]);
 		return json.toString();
 	}
 	//PURCHASE 6 COUPON Receiving Coupon from Issuer//

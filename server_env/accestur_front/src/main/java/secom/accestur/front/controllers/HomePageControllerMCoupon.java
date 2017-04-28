@@ -1,5 +1,8 @@
 package secom.accestur.front.controllers;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,7 @@ public class HomePageControllerMCoupon{
 	public String welcome(Map<String, Object> model){
 		Init();
 		generateUser();
+		purchaseMCoupon();
 		//passPurchase();
 		return "mcoupon";
 	}
@@ -49,5 +53,14 @@ public class HomePageControllerMCoupon{
 		usermcouponService.createCertificate();
 		manufacturermcouponService.createCertificate();
 		System.out.println(usermcouponService.verifyUsername(manufacturermcouponService.generateUsername(usermcouponService.authenticateUsername("Toni","toni1992"))));
+	}
+	
+	private void purchaseMCoupon(){
+		usermcouponService.createCertificate();
+		manufacturermcouponService.createCertificate();
+		issuermcouponService.createCertificate();
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = new Date();
+		System.out.println(manufacturermcouponService.getCoupon(issuermcouponService.getInitMCouponMessage(usermcouponService.getInitMCouponMessage(manufacturermcouponService.initParamsMCoupon(5, 6, date)))));
 	}
 }
