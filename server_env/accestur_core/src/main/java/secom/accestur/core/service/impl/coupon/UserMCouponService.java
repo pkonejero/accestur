@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,6 +20,7 @@ import secom.accestur.core.model.SecretValue;
 import secom.accestur.core.model.coupon.ManufacturerMCoupon;
 import secom.accestur.core.model.coupon.UserMCoupon;
 import secom.accestur.core.service.coupon.UserMCouponServiceInterface;
+import secom.accestur.core.service.impl.MCityPassService;
 import secom.accestur.core.utils.Constants;
 
 @Service("usermcouponService")
@@ -34,6 +36,10 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 	@Autowired
 	@Qualifier("schnorr")
 	private Schnorr schnorr;
+	
+	@Autowired
+	@Qualifier("mcouponService")
+	private MCouponService mcouponService;
 	
 	private UserMCoupon user;
 	
@@ -163,6 +169,81 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		return "Everything OK";
 	}
 	
+///////////////////////////////////////////////////////////////////////
+/////////////////// REDEEM COUPON///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+	
+	//REDEEM 2 USER RECIEVES THE INFORMATION ABOUT THE MERCHANT
+	
+	public String initRedeemMCoupon(Integer sn,String username,Integer indexHash, String json){
+		crypto.initPublicKey("cert/user/public_ISSUER.der");
+		
+		String[] paramsJson = solveRedeemMCouponParams(json);
+		
+		if (crypto.getValidation(paramsJson[0]+paramsJson[1], paramsJson[3])){
+		mcouponService.initMCoupon(sn);
+		
+		String[] params= new String [10];
+		//ID Merchant
+		params[0]=paramsJson[0];
+		
+		//ID Customer
+		params[1]=username;
+		
+		//X0
+		params[2]=mcouponService.getMCoupon().getXo();
+		
+		//Xi
+		String X = getUserMCouponByUsername(username).getX();
+		Integer p = mcouponService.getMCoupon().getP();
+		String[] Xi = new String[p+1];
+		Xi[0]=X;
+		for (int i = 1; i<=indexHash;i++){
+			Xi[i]=Cryptography.hash(Xi[i-1]);
+		}
+		params[3]=Xi[indexHash];
+		
+		//R_id (Send)
+		params[4]=Cryptography.hash(params[0]+params[1]+params[2]+params[3]);
+		
+		//Label (Send)
+		params[5]=Cryptography.hash(paramsJson[0]+paramsJson[1]);
+		
+		//Encryption 
+		params[6]=crypto.encryptWithPublicKey(params[3]);
+		params[7]=crypto.encryptWithPublicKey(indexHash.toString());
+		params[8]=crypto.encryptWithPublicKey(sn.toString());
+		
+		//Signature
+		params[9]=crypto.getSignature(username);
+		
+		return sendUserToMerchantRedeem(params);
+		}else{
+			return "Failed Signature";
+		}
+	}
+	
+	private String[] solveRedeemMCouponParams (String message){
+		JSONObject json = new JSONObject(message);
+		String[] params = new String[4];
+		params[0] = json.getString("name");
+		params[1] = json.getString("namec");
+		params[2] = json.getString("signature");
+		//System.out.println("AQUETS ES EL RESULTAT DEL JSON ARRIBAT"+" "+params[0]+params[1]+params[2]+params[3]);
+		return params;
+	}
+	
+	private String sendUserToMerchantRedeem(String[] params) {
+		JSONObject json = new JSONObject();
+		json.put("rid", params[4]);
+		json.put("label", params[5]);
+		json.put("xi", params[6]);
+		json.put("indexhash", params[7]);
+		json.put("sn", params[8]);
+		json.put("signature", params[9]);
+		return json.toString();
+	}
+	
 	public UserMCoupon getUserMCoupon(){
 		return usermcouponRepository.findAll().iterator().next();
 	}
@@ -174,6 +255,6 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 
 	
 	public UserMCoupon getUserMCouponByUsername(String username){
-		return null;
+		return usermcouponRepository.findAll().iterator().next();
 	}
 }

@@ -37,8 +37,8 @@ public class HomePageControllerMCoupon{
 	@RequestMapping("/mcoupon")
 	public String welcome(Map<String, Object> model){
 		Init();
-		generateUser();
-		purchaseMCoupon();
+		//generateUser();
+		//purchaseMCoupon();
 		//passPurchase();
 		return "mcoupon";
 	}

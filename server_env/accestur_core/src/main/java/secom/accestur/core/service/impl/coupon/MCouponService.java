@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import secom.accestur.core.dao.coupon.MCouponRepository;
+import secom.accestur.core.model.MCityPass;
 import secom.accestur.core.model.coupon.MCoupon;
 import secom.accestur.core.service.coupon.MCouponServiceInterface;
 
@@ -30,7 +31,19 @@ public class MCouponService implements MCouponServiceInterface{
 	public void saveMCoupon(MCoupon mCoupon){
 		mcouponRepository.save(mCoupon);
 	}
-
+	
+	public void initMCoupon(Integer sn){
+		mCoupon = getMCouponBySn(sn);
+		System.out.println(mCoupon.toString());
+	}
+	
+	public MCoupon getMCouponBySn(Integer sn){
+		return mcouponRepository.findById(sn);
+	}
+	
+	public MCoupon getMCoupon() {
+		return mCoupon;
+	}
 }
 
 
