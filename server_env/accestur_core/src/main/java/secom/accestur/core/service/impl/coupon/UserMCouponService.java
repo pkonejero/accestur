@@ -183,7 +183,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		if (crypto.getValidation(paramsJson[0]+paramsJson[1], paramsJson[3])){
 		mcouponService.initMCoupon(sn);
 		
-		String[] params= new String [10];
+		String[] params= new String [15];
 		//ID Merchant
 		params[0]=paramsJson[0];
 		
@@ -217,6 +217,9 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		//Signature
 		params[9]=crypto.getSignature(username);
 		
+		//namec
+		params[10]= paramsJson[1];
+		
 		return sendUserToMerchantRedeem(params);
 		}else{
 			return "Failed Signature";
@@ -235,6 +238,9 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 	
 	private String sendUserToMerchantRedeem(String[] params) {
 		JSONObject json = new JSONObject();
+		json.put("idmerchant", params[0]);
+		json.put("username", params[1]);
+		json.put("namec", params[10]);
 		json.put("rid", params[4]);
 		json.put("label", params[5]);
 		json.put("xi", params[6]);
@@ -243,6 +249,39 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		json.put("signature", params[9]);
 		return json.toString();
 	}
+	
+	//REDEEM 6 USER RECIEVES THE CONFIRMATION OF THE ISSUER AND MERCHANT.
+	
+public String confirmationMCouponRedeem(String json) {
+		
+		crypto.initPublicKey("cert/user/public_ISSUER.der");
+		
+		String[] paramsJson = solveConfirmationRedeemMCoupon(json);
+		//Validate Signature of the Merchant
+		if (crypto.getValidation(paramsJson[1], paramsJson[2])){
+		//Validate Signature of the ISSUER
+		if(crypto.getValidation(paramsJson[0], paramsJson[3])){
+			
+		return "REDEEM COMPLETED";
+		}else{
+			return "Failed Signature of the Merchant";
+		}
+		}else{
+			return "Failed Verification of the Issuer";
+		}
+	}
+
+	private String[] solveConfirmationRedeemMCoupon (String message){
+		JSONObject json = new JSONObject(message);
+		String[] params = new String[4];
+		params[0] = json.getString("nrid");
+		params[1] = json.getString("idmerchant");
+		params[2] = json.getString("signaturemerchant");
+		params[3] = json.getString("signatureissuer");
+		//System.out.println("AQUETS ES EL RESULTAT DEL JSON ARRIBAT"+" "+params[0]+params[1]+params[2]+params[3]);
+		return params;
+	}
+	
 	
 	public UserMCoupon getUserMCoupon(){
 		return usermcouponRepository.findAll().iterator().next();
