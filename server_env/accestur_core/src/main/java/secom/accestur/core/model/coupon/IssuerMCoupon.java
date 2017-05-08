@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import secom.accestur.core.model.Issuer;
+
 @Entity
 @Table(name="issuermcouponEntity")
 public class IssuerMCoupon extends DomainObjectModelCoupon{
@@ -35,6 +37,10 @@ public class IssuerMCoupon extends DomainObjectModelCoupon{
 		super();
 		this.name = name;
 		this.merchants = merchants;
+	}
+	
+	public void setManufacturerMCoupon(ManufacturerMCoupon manufacturer){
+		this.manufacturer = manufacturer;
 	}
 
 	public List<MerchantMCoupon> getMerchants(){

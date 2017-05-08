@@ -12,6 +12,7 @@ import secom.accestur.core.crypto.schnorr.Schnorr;
 import secom.accestur.core.dao.coupon.IssuerMCouponRepository;
 import secom.accestur.core.model.coupon.IssuerMCoupon;
 import secom.accestur.core.model.coupon.MCoupon;
+import secom.accestur.core.model.coupon.ManufacturerMCoupon;
 import secom.accestur.core.service.coupon.IssuerMCouponServiceInterface;
 
 @Service("issuermcouponService")
@@ -51,11 +52,12 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		crypto.initPublicKey("cert/user/public_USER.der");	
 	}
 	
-	public void newIssuerMCoupon(String name){
+	public void newIssuerMCoupon(String name, ManufacturerMCoupon manufacturer){
 		IssuerMCoupon i = getIssuerMCouponByName(name);
 		if(i==null){
 			IssuerMCoupon issuer = new IssuerMCoupon();
 			issuer.setName(name);
+			issuer.setManufacturerMCoupon(manufacturer);
 			System.out.println("Name: = " + issuer.getName());
 			issuermcouponRepository.save(issuer);		
 		} else {
@@ -101,6 +103,8 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		if (crypto.getValidation(params[3]+params[4], paramsJson[6])){
 			
 			params[7]=crypto.getSignature(params[3]+params[4]);
+			
+			params[8]=paramsJson[7];
 		
 		return sendIssuerToManufacturerPurchase(params);
 		}else{
@@ -110,7 +114,7 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 	
 	private String[] solveUserMCouponParams (String message){
 		JSONObject json = new JSONObject(message);
-		String[] params = new String[7];
+		String[] params = new String[8];
 		params[0] = json.getString("username");
 		params[1] = json.getString("Xo");
 		params[2] = json.getString("Yo");
@@ -118,6 +122,7 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		params[4] = json.getString("q");
 		params[5] = json.getString("EXPDATE");
 		params[6] = json.getString("signature");
+		params[7] = json.getString("merchant");
 		return params;
 	}
 	
@@ -131,6 +136,7 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		json.put("EXPDATE", params[5]);
 		json.put("sn", params[6]);
 		json.put("signature", params[7]);
+		json.put("merchant", params[8]);
 		return json.toString();
 	}
 	
@@ -147,7 +153,7 @@ public String getMCouponGeneratedByManufacturer(String json) {
 
 public String redeemingMCoupon(String json) {
 	
-	crypto.initPublicKey("cert/user/public_ISSUER.der");
+	crypto.initPublicKey("cert/issuer/public_ISSUER.der");
 	MCoupon coupon = new MCoupon();
 	String[] paramsJson = solveRedeemMCouponParams(json);
 	//Validate Signature of the merchant

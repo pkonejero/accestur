@@ -1,13 +1,7 @@
 package secom.accestur.core.service.impl.coupon;
 
 import java.math.BigInteger;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Random;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,19 +10,16 @@ import org.springframework.stereotype.Service;
 import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.schnorr.Schnorr;
 import secom.accestur.core.dao.coupon.UserMCouponRepository;
-import secom.accestur.core.model.SecretValue;
-import secom.accestur.core.model.coupon.ManufacturerMCoupon;
+import secom.accestur.core.model.coupon.MCoupon;
 import secom.accestur.core.model.coupon.UserMCoupon;
 import secom.accestur.core.service.coupon.UserMCouponServiceInterface;
-import secom.accestur.core.service.impl.MCityPassService;
-import secom.accestur.core.utils.Constants;
 
 @Service("usermcouponService")
 public class UserMCouponService implements UserMCouponServiceInterface{
 	@Autowired
 	@Qualifier("usermcouponRepository")
 	private UserMCouponRepository usermcouponRepository;
-
+	
 	@Autowired
 	@Qualifier("cryptography")
 	private Cryptography crypto;
@@ -40,6 +31,10 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 	@Autowired
 	@Qualifier("mcouponService")
 	private MCouponService mcouponService;
+	
+	@Autowired
+	@Qualifier("manufacturermcouponService")
+	private ManufacturerMCouponService manufacturermcouponService;
 	
 	private UserMCoupon user;
 	
@@ -75,7 +70,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 			UserMCoupon user = new UserMCoupon();
 			user.setUsername(params[0]);
 			user.setPassword(params[1]);
-			//user.setManufacturerMCoupon(params[3]);
+			user.setManufacturerMCoupon(manufacturermcouponService.getManufacturerMCouponByName(params[3]));
 			usermcouponRepository.save(user);
 		}
 
@@ -128,6 +123,9 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		
 		params[6]=crypto.getSignature(params[3]+params[4]);
 		
+		//Merchant
+		params[7]=paramsMCoupon[4];
+		
 		usermcouponRepository.save(user);
 		
 		return sendUserToIssuerPurchase(params);
@@ -139,11 +137,12 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 	
 	private String[] solveMCouponParams (String message){
 		JSONObject json = new JSONObject(message);
-		String[] params = new String[4];
+		String[] params = new String[5];
 		params[0] = json.getString("p");
 		params[1] = json.getString("q");
 		params[2] = json.getString("EXPDATE");
 		params[3] = json.getString("signature");
+		params[4] = json.getString("merchant");
 		//System.out.println("AQUETS ES EL RESULTAT DEL JSON ARRIBAT"+" "+params[0]+params[1]+params[2]+params[3]);
 		return params;
 	}
@@ -157,6 +156,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		json.put("q", params[4]);
 		json.put("EXPDATE", params[5]);
 		json.put("signature", params[6]);
+		json.put("merchant", params[7]);
 		return json.toString();
 	}
 	//PURCHASE 6 COUPON Receiving Coupon from Issuer//
@@ -176,13 +176,16 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 	//REDEEM 2 USER RECIEVES THE INFORMATION ABOUT THE MERCHANT
 	
 	public String initRedeemMCoupon(Integer sn,String username,Integer indexHash, String json){
-		crypto.initPublicKey("cert/user/public_ISSUER.der");
+		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
 		
 		String[] paramsJson = solveRedeemMCouponParams(json);
 		
-		if (crypto.getValidation(paramsJson[0]+paramsJson[1], paramsJson[3])){
-		mcouponService.initMCoupon(sn);
+		if (crypto.getValidation(paramsJson[0]+paramsJson[1], paramsJson[2])){
+		MCoupon coupon = new MCoupon();
 		
+		coupon = mcouponService.getMCouponBySn(sn);
+		
+		System.out.println("AQUESTA ES XO DES COUPON REDEEM:"+coupon.getXo());
 		String[] params= new String [15];
 		//ID Merchant
 		params[0]=paramsJson[0];
@@ -191,11 +194,14 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		params[1]=username;
 		
 		//X0
-		params[2]=mcouponService.getMCoupon().getXo();
+		params[2]=coupon.getXo();
 		
 		//Xi
 		String X = getUserMCouponByUsername(username).getX();
-		Integer p = mcouponService.getMCoupon().getP();
+		
+		System.out.println("AQUESTA ES X DEL USER COUPON REDEEM:"+X);
+		
+		Integer p = coupon.getP();
 		String[] Xi = new String[p+1];
 		Xi[0]=X;
 		for (int i = 1; i<=indexHash;i++){
@@ -286,7 +292,10 @@ public String confirmationMCouponRedeem(String json) {
 	public UserMCoupon getUserMCoupon(){
 		return usermcouponRepository.findAll().iterator().next();
 	}
-
+	
+	public void initUserMCoupon() {
+		user = getUserMCoupon();
+	}
 
 	public void createCertificate(){
 		crypto.initPrivateKey("cert/user/private_USER.der");

@@ -1,7 +1,6 @@
 package secom.accestur.core.model.coupon;
 
 import java.sql.Date;
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,15 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import secom.accestur.core.model.Activation;
-import secom.accestur.core.model.Counter;
-import secom.accestur.core.model.DomainObjectModel;
-import secom.accestur.core.model.Provider;
-import secom.accestur.core.model.User;
 
 @Entity
 @Table(name="mcouponEntity")
@@ -74,6 +66,10 @@ public class MCoupon extends DomainObjectModelCoupon{
 	public void setUser(UserMCoupon user) {
 		this.user = user;
 	}
+	
+	public void setMerchant(MerchantMCoupon merchant) {
+		this.merchant = merchant;
+	}
 
 	public String getYo() {
 		return Yo;
@@ -95,8 +91,8 @@ public class MCoupon extends DomainObjectModelCoupon{
 		return expDate;
 	}
 
-	public void setExpDate(Date expDate) {
-		this.expDate = expDate;
+	public void setExpDate(Date date) {
+		this.expDate = date;
 	}
 
 	public Date getGenDate() {

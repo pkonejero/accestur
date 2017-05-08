@@ -48,6 +48,7 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		
 	}
 	
+
 ///////////////////////////////////////////////////////////////////////
 /////////////////// REDEEM COUPON///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
@@ -55,7 +56,7 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 	//REDEEM 1 MERCHANT INICIALIZES THE COMMUNICATION.
 	
 	public String initRedeemParamsMCoupon(String nameMerchant){
-		createCertificate();
+		crypto.initPrivateKey("cert/issuer/private_ISSUER.der");
 		String[] params= new String [4];
 		params[0]=nameMerchant;
 		
@@ -65,6 +66,8 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		
 		//Signature
 		params[2]=crypto.getSignature(params[0]+params[1]);
+		
+		System.out.println("FIRMA:"+params[2]);
 		return sendInitRedeemMCouponMessage(params);
 	}
 	
@@ -81,10 +84,17 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 	public String sendingMCouponRedeem(String json) {
 		crypto.initPublicKey("cert/user/public_USER.der");
 		String[] paramsJson = solveRedeemMCouponParams(json);
+		
+		//LABEL NOW
+		String label = Cryptography.hash(paramsJson[7]+paramsJson[8]);
+		System.out.println("LABEL NOW:"+label);
+		System.out.println("LABEL BEFORE:"+paramsJson[1]);
 		//Validate Signature of the user
-		if (crypto.getValidation(paramsJson[1], paramsJson[5])&&paramsJson[1]==Cryptography.hash(paramsJson[7]+paramsJson[8])){
+		if (crypto.getValidation(paramsJson[6], paramsJson[5])&&paramsJson[1].equals(label)){
 			
-		createCertificate();
+			//Falta comprovacio de hash:&&paramsJson[1]==Cryptography.hash(paramsJson[7]+paramsJson[8])
+			
+		crypto.initPrivateKey("cert/issuer/private_ISSUER.der");
 		
 		String[] params = new String[16];
 

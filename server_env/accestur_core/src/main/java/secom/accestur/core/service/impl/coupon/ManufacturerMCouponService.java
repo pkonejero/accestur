@@ -2,6 +2,7 @@ package secom.accestur.core.service.impl.coupon;
 
 import java.math.BigInteger;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -15,6 +16,7 @@ import secom.accestur.core.crypto.schnorr.Schnorr;
 import secom.accestur.core.dao.coupon.ManufacturerMCouponRepository;
 import secom.accestur.core.model.coupon.MCoupon;
 import secom.accestur.core.model.coupon.ManufacturerMCoupon;
+import secom.accestur.core.model.coupon.MerchantMCoupon;
 import secom.accestur.core.service.coupon.ManufacturerMCouponServiceInterface;
 
 @Service("manufacturermcouponService")
@@ -26,6 +28,14 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 	@Autowired
 	@Qualifier("mcouponService")
 	private MCouponService mCouponService;
+	
+	@Autowired
+	@Qualifier("usermcouponService")
+	private UserMCouponService usermcouponService;
+	
+	@Autowired
+	@Qualifier("merchantmcouponService")
+	private MerchantMCouponService merchantmcouponService;
 
 	@Autowired
 	@Qualifier("schnorr")
@@ -88,9 +98,9 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 	
 	//PURCHASE 1 COUPON INIT PARAMS//
 	
-	public String initParamsMCoupon(Integer p, Integer q, Date EXD){
+	public String initParamsMCoupon(Integer p, Integer q, Date EXD,MerchantMCoupon merchant){
 		createCertificate();
-		String[] params= new String [4];
+		String[] params= new String [5];
 		params[0]=p.toString();
 		params[1]=q.toString();
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -99,6 +109,8 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		params[2] = dateFormat.format(date);
 		//Signature
 		params[3]=crypto.getSignature(p.toString()+q.toString());
+		//Merchant
+		params[4]=merchant.getName();
 		return sendInitMCouponMessage(params);
 	}
 	
@@ -108,6 +120,7 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		json.put("q", params[1]);
 		json.put("EXPDATE", params[2]);
 		json.put("signature", params[3]);
+		json.put("merchant", params[4]);
 		return json.toString();
 	}
 	
@@ -123,7 +136,6 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		String[] params = new String[10];
 		
 		if (crypto.getValidation(paramsJson[3]+paramsJson[4], paramsJson[7])){
-		//coupon.setUser(paramsJson[0]); //Hauria de ser l'objecte User
 		
 		coupon.setXo(paramsJson[1]);
 		coupon.setYo(paramsJson[2]);
@@ -134,20 +146,25 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		coupon.setP(p);
 		coupon.setQ(q);
 		
-		//DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-				//Date date;
-				//try {
-				//	date = (Date) dateFormat.parse(paramsJson[5]);
-				//} catch (ParseException e) {
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+				Date date = new Date();
+				try {
+					date = (Date) dateFormat.parse(paramsJson[5]);
+				} catch (ParseException e) {
 					// TODO Auto-generated catch block
-				//	e.printStackTrace();
-				//}
+					e.printStackTrace();
+				}
 				
-		//coupon.setExpDate();
+		//coupon.setExpDate((java.sql.Date) date);
 		
 		Integer sn = new Integer(paramsJson[6]);
 		
 		coupon.setSn(sn);
+		
+		coupon.setUser(usermcouponService.getUserMCouponByUsername(params[0]));
+		
+		coupon.setMerchant(merchantmcouponService.getMerchantMCouponByName(paramsJson[8]));
+		
 		
 		mCouponService.saveMCoupon(coupon);
 		
@@ -159,7 +176,7 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 
 	private String[] solveIssuerMCouponParams (String message){
 		JSONObject json = new JSONObject(message);
-		String[] params = new String[8];
+		String[] params = new String[9];
 		params[0] = json.getString("username");
 		params[1] = json.getString("Xo");
 		params[2] = json.getString("Yo");
@@ -168,6 +185,7 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		params[5] = json.getString("EXPDATE");
 		params[6] = json.getString("sn");
 		params[7] = json.getString("signature");
+		params[8] = json.getString("merchant");
 		return params;
 	}	
 }
