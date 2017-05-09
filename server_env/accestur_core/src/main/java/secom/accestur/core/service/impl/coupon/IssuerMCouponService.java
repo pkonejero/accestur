@@ -158,7 +158,7 @@ public String redeemingMCoupon(String json) {
 	String[] paramsJson = solveRedeemMCouponParams(json);
 	//Validate Signature of the merchant
 	if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4]+paramsJson[5]+paramsJson[6], paramsJson[7])){
-		
+	System.out.println("NO ES SA PRIMERA CONDICIO");
 	createCertificate();
 	
 	String[] params = new String[16];
@@ -166,6 +166,8 @@ public String redeemingMCoupon(String json) {
 	params[0] = paramsJson[8];//Id Merchant
 	//Validate Signature of the User
 	if (crypto.getValidation(paramsJson[6], paramsJson[5])){
+	
+	System.out.println("NO ES SA SEGONA CONDICIO");
 		
 	params[1] = paramsJson[0];//Rid
 	
@@ -185,10 +187,10 @@ public String redeemingMCoupon(String json) {
 	
 	String nXo = coupon.getXo();
 	
-	String nRid = Cryptography.hash(nXo+params[3]+paramsJson[6]+params[0]);
+	String nRid = Cryptography.hash(params[0]+paramsJson[6]+nXo+params[3]);
 	
-	if (nRid==params[1]){
-	
+	if (nRid.equals(params[1])){
+
 	//Missing verification if the coupon was already redeemed
 		
 	params[6] = nRid; //New Rid (Validation Signature)
