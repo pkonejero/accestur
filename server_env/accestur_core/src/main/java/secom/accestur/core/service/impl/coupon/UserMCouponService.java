@@ -58,8 +58,8 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 	public String[] authenticateUsername(String username, String password){
 		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
 		String params[] = new String[3];
-		params[0] = crypto.getSignature(username+password);
-		params[1] = crypto.encryptWithPublicKey(username);
+		params[0] = crypto.getSignature(username+password);//Firma la faig damunt les dades que vull autenticar.
+		params[1] = crypto.encryptWithPublicKey(username); //No és necessari xifrar username.
 		params[2] = crypto.encryptWithPublicKey(password);
 		return params;
 	}
@@ -221,10 +221,10 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		params[8]=crypto.encryptWithPublicKey(sn.toString());
 		
 		//Signature
-		params[9]=crypto.getSignature(username);
+		params[9]=crypto.getSignature(username);//Firmar tot el missatge 2.
 		
 		//namec
-		params[10]= paramsJson[1];
+		params[10]= paramsJson[1];//PARAMETRE A ELIMINAR.
 		
 		return sendUserToMerchantRedeem(params);
 		}else{

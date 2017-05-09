@@ -83,9 +83,9 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		String password = crypto.decryptWithPrivateKey(params[2]);
 		if (crypto.getValidation(username+password, params[0])){
 			message[0] = username;
-			message[1] = password;
+			message[1] = password;//USERNAME I PASSWORD NO S'HAN ENVIAR.
 			message[2] = crypto.getSignature(username+password);
-			message[3] = manufacturer.getName();
+			message[3] = manufacturer.getName(); //S'HAURIA DE SABER.
 			
 		} else {
 			message[0] = "Error";
@@ -187,5 +187,61 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		params[7] = json.getString("signature");
 		params[8] = json.getString("merchant");
 		return params;
-	}	
+	}
+	
+///////////////////////////////////////////////////////////////////////
+/////////////////// CLEARING COUPON///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+	
+	//CLEARING 2 MANUFACTURER RECEIVES INFORMATION
+	
+public String ClearingManufacturer(String json) {
+		
+		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
+		
+		String[] paramsJson = solveMerchantClearingConfirmation(json);
+		
+		if (crypto.getValidation(paramsJson[0], paramsJson[1])){
+			
+		}else{
+			return "FAILED SIGNATURE ISSUER";
+		}
+		if (crypto.getValidation(paramsJson[0], paramsJson[2])){
+			
+			String[] params = new String[16];
+		
+			crypto.initPrivateKey("cert/issuer/private_ISSUER.der");
+		
+			params[0]=crypto.getSignature(paramsJson[0]); 
+			params[1]=paramsJson[0];//NO S'HAURIA D'ENVIAR(GUARDAR)
+		
+		return sendClearingToMerchant(params);
+		}else{
+			return "FAILED SIGNATURE MERCHANT";
+		}
+	}
+	
+	private String[] solveMerchantClearingConfirmation (String message){
+		JSONObject json = new JSONObject(message);
+		String[] params = new String[9];
+		params[0] = json.getString("rid");
+		params[1] = json.getString("signaturemerchant");
+		params[2] = json.getString("signatureissuer");
+		return params;
+	}
+	
+	private String sendClearingToMerchant(String[] params) {
+		JSONObject json = new JSONObject();
+		json.put("signaturemanufacturer", params[0]);
+		json.put("rid", params[1]);
+		return json.toString();
+		}
+	
+	
+	
+	
+	
+	
+	
 }
+

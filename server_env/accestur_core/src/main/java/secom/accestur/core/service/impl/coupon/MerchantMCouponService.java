@@ -90,7 +90,7 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		System.out.println("LABEL NOW:"+label);
 		System.out.println("LABEL BEFORE:"+paramsJson[1]);
 		//Validate Signature of the user
-		if (crypto.getValidation(paramsJson[6], paramsJson[5])&&paramsJson[1].equals(label)){
+		if (crypto.getValidation(paramsJson[6], paramsJson[5])&&paramsJson[1].equals(label)){ //PRIMER VERIFIACIó DE LA FIRMA i DESPRES EL LABEL
 			
 			//Falta comprovacio de hash:&&paramsJson[1]==Cryptography.hash(paramsJson[7]+paramsJson[8])
 			
@@ -114,7 +114,7 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 			
 		params[7]=crypto.getSignature(params[0]+params[1]+params[2]+params[3]+params[4]+params[5]+params[6]); //Signature of merchant
 		
-		params[8]=paramsJson[7];//Id Merchant
+		params[8]=paramsJson[7];//Id Merchant. MIRAR SI ES NECESSÀRI.
 		
 		return sendRedeemMCouponMessageToManufacturer(params);
 		}else{
@@ -156,13 +156,13 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 	//REDEEM 5 MERCHANT CONFIRMS THE REDEEM COUPON.
 	public String confirmationMCouponRedeem(String json) {
 		
-		crypto.initPublicKey("cert/user/public_ISSUER.der");
+		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
 		
 		String[] paramsJson = solveConfirmationMCouponRedeem(json);
 		//Validate Signature of the ISSUER
 		if (crypto.getValidation(paramsJson[0], paramsJson[1])){
 		//Verification of Old Rid and New Rid
-		if(paramsJson[0]==paramsJson[1]){
+		if(paramsJson[0].equals(paramsJson[2])){
 			
 		String[] params = new String[16];
 
@@ -202,6 +202,67 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		//System.out.println("AQUETS ES EL RESULTAT DEL JSON ARRIBAT"+" "+params[0]+params[1]+params[2]+params[3]);
 		return params;
 	}
+	
+///////////////////////////////////////////////////////////////////////
+/////////////////// CLEARING COUPON///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+	
+	//CLEARING 1 Sending clearing request to the manufacturer.
+	
+	public String initClearingMerchant(String json) {
+		
+		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
+		crypto.initPrivateKey("cert/issuer/private_ISSUER.der");
+		
+		String[] paramsJson = solveConfirmationMCouponRedeem(json);
+			
+		String[] params = new String[16];
+
+		params[0] = paramsJson[2];//Rid
+			
+		params[1]=crypto.getSignature(params[0]); //Signature of Merchant
+		
+		params[2]=paramsJson[0];//Signature of Rid of the Issuer
+		
+		//Epubm(Xi,i,SN) a nes final es necessàri?
+		return sendClearingToManufacturer(params);
+		
+	}
+
+	private String sendClearingToManufacturer(String[] params) {
+	JSONObject json = new JSONObject();
+	json.put("rid", params[0]);
+	json.put("signaturemerchant", params[1]);
+	json.put("signatureissuer", params[2]);
+	return json.toString();
+	}
+	
+	//CLEARING 3 END OF CLEARING PHASE
+	
+	public String ClearingMCoupon(String json) {
+		
+		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
+		
+		String[] paramsJson = solveConfirmationClearing(json);
+		
+		if (crypto.getValidation(paramsJson[1], paramsJson[0])){
+			
+		return "CLEARING COMPLETED";
+		
+		}else{
+			return "FAILED SIGNATURE";
+		}
+		
+	}
+	
+	private String[] solveConfirmationClearing (String message){
+		JSONObject json = new JSONObject(message);
+		String[] params = new String[9];
+		params[0] = json.getString("signaturemanufacturer");
+		params[1] = json.getString("rid");
+		return params;
+	}
+	
 	
 	public MerchantMCoupon getMerchantMCouponByName(String name){
 		return merchantmcouponRepository.findByNameIgnoreCase(name);

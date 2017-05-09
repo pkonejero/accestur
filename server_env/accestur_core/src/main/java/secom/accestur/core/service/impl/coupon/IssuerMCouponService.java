@@ -189,9 +189,11 @@ public String redeemingMCoupon(String json) {
 	
 	String nRid = Cryptography.hash(params[0]+paramsJson[6]+nXo+params[3]);
 	
+	//FALTA VERIFICACIÓ QUE P SIGUI CORRECTE AMB L'INDEXHASH ARRIBAT.
+	
 	if (nRid.equals(params[1])){
 
-	//Missing verification if the coupon was already redeemed
+	//Missing verification EXD.
 		
 	params[6] = nRid; //New Rid (Validation Signature)
 		
