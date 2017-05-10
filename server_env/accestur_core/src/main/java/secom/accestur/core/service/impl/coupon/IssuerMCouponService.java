@@ -1,6 +1,10 @@
 package secom.accestur.core.service.impl.coupon;
 
 import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +17,7 @@ import secom.accestur.core.dao.coupon.IssuerMCouponRepository;
 import secom.accestur.core.model.coupon.IssuerMCoupon;
 import secom.accestur.core.model.coupon.MCoupon;
 import secom.accestur.core.model.coupon.ManufacturerMCoupon;
+import secom.accestur.core.model.coupon.UserMCoupon;
 import secom.accestur.core.service.coupon.IssuerMCouponServiceInterface;
 
 @Service("issuermcouponService")
@@ -33,6 +38,14 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 	@Autowired
 	@Qualifier("mcouponService")
 	private MCouponService mcouponService;
+	
+	@Autowired
+	@Qualifier("usermcouponService")
+	private UserMCouponService usermcouponService;
+	
+	@Autowired
+	@Qualifier("merchantmcouponService")
+	private MerchantMCouponService merchantmcouponService;
 
 	//Values necessary to create Coupons;
 	private String[] paramsOfPass;
@@ -79,7 +92,7 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 	//Purchase 3 Issuer recieves information Coupon and sends to manufacturer, generating SN
 	
 	public String getInitMCouponMessage(String json) {
-		createCertificate();
+		createCertificate(); //INIT PUBLIC KEY USER FOR THE VALIDATION OF THE SIGNATURE AND INIT PRIVATE KEY OF ISSUER FOR MAKING THE SIGNATURE AGAIN.
 		String[] paramsJson = solveUserMCouponParams(json);
 		
 		String[] params = new String[10];
@@ -140,11 +153,88 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		return json.toString();
 	}
 	
-	//Purchase 5 Issuer recieves coupon generated information.
+	//Purchase 5 Issuer Stores MCoupon
 public String getMCouponGeneratedByManufacturer(String json) {
+	
+	crypto.initPublicKey("cert/issuer/public_ISSUER.der"); //SHOULD BE MANUFACTURER PUBLIC KEY
+	
+	String[] paramsJson = solveFinishPurchaseManufacturer(json);
+	
+	String[] params = new String[10];
+	
+	MCoupon coupon = new MCoupon();
+	
+	if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4]+paramsJson[5], paramsJson[6])){
+		
+	crypto.initPrivateKey("cert/issuer/private_ISSUER.der");
+		
+	coupon.setXo(paramsJson[0]);
+	coupon.setYo(paramsJson[1]);
+	
+	Integer p = new Integer(paramsJson[3]);
+	Integer q = new Integer(paramsJson[4]);
+	
+	coupon.setP(p);
+	coupon.setQ(q);
+	
+	Integer sn = new Integer(paramsJson[2]);
+	
+	coupon.setSn(sn);
+	
+	UserMCoupon user = usermcouponService.getUserMCouponByUsername(paramsJson[5]);
+	
+	coupon.setUser(user);
+	
+	coupon.setMerchant(merchantmcouponService.getMerchantMCouponByName(paramsJson[8]));
+	
+	params[0] = crypto.getSignature(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4]);
+	
+	params[1] = paramsJson[0];
+	
+	params[2] = paramsJson[1];
+	
+	params[3] = paramsJson[2];
+	
+	params[4] = paramsJson[3];
+	
+	params[5] = paramsJson[4];
+	
+	params[6] = paramsJson [5];
+	
+	mcouponService.saveMCoupon(coupon);
+	
 		//Missing Issuer Signature.
-		return json;
+		return sendIssuerToUserPurchase(params);
+	}else{
+		return "FAILED SIGNATURE";
 	}
+	}
+
+private String[] solveFinishPurchaseManufacturer (String message){
+	JSONObject json = new JSONObject(message);
+	String[] params = new String[10];
+	params[0] = json.getString("xo");
+	params[1] = json.getString("yo");
+	params[2] = json.getString("sn");
+	params[3] = json.getString("p");
+	params[4] = json.getString("q");
+	params[5] = json.getString("username");
+	params[6] = json.getString("signature");
+	params[7] = json.getString("merchant");
+	return params;
+}
+
+private String sendIssuerToUserPurchase(String[] params) {
+	JSONObject json = new JSONObject();
+	json.put("signature", params[0]);
+	json.put("xo", params[1]);
+	json.put("yo", params[2]);
+	json.put("sn", params[3]);
+	json.put("p", params[4]);
+	json.put("q", params[5]);
+	return json.toString();
+}
+
 ///////////////////////////////////////////////////////////////////////
 /////////////////// REDEEM COUPON///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
@@ -173,11 +263,11 @@ public String redeemingMCoupon(String json) {
 	
 	params[2] = paramsJson[1];//Label
 	
-	params[3] = crypto.decryptWithPrivateKey(paramsJson[2]); //Xi Decrypted
+	params[3] = crypto.decryptWithPrivateKey(paramsJson[2]); //Xi Decrypted //NEEDED FOR THE PHASE OF CLEARING,ENCRYPT WITH PUBLIC KEY OF THE MANUFACTURER
 	
-	params[4] = crypto.decryptWithPrivateKey(paramsJson[3]); //IndexHash Decrypted
+	params[4] = crypto.decryptWithPrivateKey(paramsJson[3]); //IndexHash Decrypted //NEEDED FOR THE PHASE OF CLEARING,ENCRYPT WITH PUBLIC KEY OF THE MANUFACTURER
 	
-	params[5] = crypto.decryptWithPrivateKey(paramsJson[4]); //Sn Decrypted
+	params[5] = crypto.decryptWithPrivateKey(paramsJson[4]); //Sn Decrypted //NEEDED FOR THE PHASE OF CLEARING,ENCRYPT WITH PUBLIC KEY OF THE MANUFACTURER
 	
 	Integer sn = new Integer(params[5]);
 	
@@ -199,6 +289,15 @@ public String redeemingMCoupon(String json) {
 		
 	params[7]=crypto.getSignature(nRid); //Signature of issuer
 	
+	//PARAMETERS NEEDED FOR THE CLEARING PHASE
+	crypto.initPublicKey("cert/issuer/public_ISSUER.der"); //IT SHOULD BE MANUFACTURER PUK
+	
+	params[8] = crypto.encryptWithPublicKey(params[3]);//Xi encrypted for the manufacturer on claring phase.
+	
+	params[9] = crypto.encryptWithPublicKey(params[4]);//IndexHash encrypted for the manufacturer on claring phase.
+	
+	params[10] = crypto.encryptWithPublicKey(params[5]);//SN encrypted for the manufacturer on claring phase.
+	
 	return sendIssuerToMerchantRedeem(params);
 	}else{
 		return "Failed Signature or Hash";
@@ -217,6 +316,9 @@ private String sendIssuerToMerchantRedeem(String[] params) {
 	json.put("signature", params[7]);
 	json.put("rid", params[1]);
 	json.put("idmerchant", params[0]);
+	json.put("xi", params[8]);
+	json.put("indexhash", params[9]);
+	json.put("sn", params[10]);
 	return json.toString();
 }
 

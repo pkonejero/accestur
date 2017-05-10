@@ -59,22 +59,18 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
 		String params[] = new String[3];
 		params[0] = crypto.getSignature(username+password);//Firma la faig damunt les dades que vull autenticar.
-		params[1] = crypto.encryptWithPublicKey(username); //No és necessari xifrar username.
+		params[1] = username; //username
 		params[2] = crypto.encryptWithPublicKey(password);
 		return params;
 	}
 	
-	public boolean verifyUsername(String[] params){
-		boolean verified = crypto.getValidation(params[0]+params[1], params[2]);
+	public String verifyUsername(String[] params){
+		boolean verified = crypto.getValidation(params[0], params[1]);
 		if (verified){
-			UserMCoupon user = new UserMCoupon();
-			user.setUsername(params[0]);
-			user.setPassword(params[1]);
-			user.setManufacturerMCoupon(manufacturermcouponService.getManufacturerMCouponByName(params[3]));
-			usermcouponRepository.save(user);
+			return "REGISTERED USER COMPLETED";
+		}else{
+			return "REGISTERED USER FAILED";
 		}
-
-		return verified;
 	}
 	
 ///////////////////////////////////////////////////////////////////////
@@ -89,7 +85,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		Integer p = new Integer(paramsMCoupon[0]);
 		Integer q = new Integer(paramsMCoupon[1]);
 		if (crypto.getValidation(paramsMCoupon[0]+paramsMCoupon[1], paramsMCoupon[3])){
-		createCertificate();
+			
 		String[] Xo = new String[p+1];
 		String[] Yo = new String[q+1];
 		
@@ -98,7 +94,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		params[0] = user.getUsername();
 
 		X = schnorr.getRandom();
-		user.setX(X.toString());
+		user.setX(X.toString()); //SAVING PRIVATE NUMBER OF THE USER
 		Xo[0]=X.toString();
 		for (int i = 1; i <= p; i++){
 			Xo[i] = Cryptography.hash(Xo[i-1].toString());
@@ -106,7 +102,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		params[1] = Xo[p];
 		
 		Y = schnorr.getRandom();
-		user.setY(Y.toString());
+		user.setY(Y.toString()); //SAVING PRIVATE NUMBER OF THE USER
 		Yo[0]=Y.toString();
 		for (int i = 1; i <= q; i++){
 			Yo[i] = Cryptography.hash(Yo[i-1].toString());
@@ -120,7 +116,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		params[5]=paramsMCoupon[2];
 		
 		//Signature of the User
-		
+		createCertificate(); //Init Private Key User
 		params[6]=crypto.getSignature(params[3]+params[4]);
 		
 		//Merchant
@@ -161,12 +157,30 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 	}
 	//PURCHASE 6 COUPON Receiving Coupon from Issuer//
 	public String recieveMCoupon(String params) {
-		System.out.println(params);
-		JSONObject json = new JSONObject(params);
-		long sn = json.getLong("sn");
-		//secretValueService.saveSecretValue(new SecretValue(mCityPassService.getMCityPassBySn(id),
-		//		serviceAgentService.getServiceByName(service).getProvider(), random.toString()));
-		return "Everything OK";
+		
+		String[] paramsJson = solveFinishMCouponIssue(params);
+		
+		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
+		
+		if (crypto.getValidation(paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4]+paramsJson[5], paramsJson[0])){
+		
+		return "ISSUING PHASE FINISHED CORRECTLY";
+		
+		}else{
+			return "FAILED SIGNATURE";
+		}
+	}
+	
+	private String[] solveFinishMCouponIssue (String message){
+		JSONObject json = new JSONObject(message);
+		String[] params = new String[15];
+		params[0] = json.getString("signature");
+		params[1] = json.getString("xo");
+		params[2] = json.getString("yo");
+		params[3] = json.getString("sn");
+		params[4] = json.getString("p");
+		params[5] = json.getString("q");
+		return params;
 	}
 	
 ///////////////////////////////////////////////////////////////////////
@@ -258,9 +272,9 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 	
 	//REDEEM 6 USER RECIEVES THE CONFIRMATION OF THE ISSUER AND MERCHANT.
 	
-public String confirmationMCouponRedeem(String json) {
+public String confirmationMCouponRedeem2(String json) {
 		
-		crypto.initPublicKey("cert/user/public_ISSUER.der");
+		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
 		
 		String[] paramsJson = solveConfirmationRedeemMCoupon(json);
 		//Validate Signature of the Merchant

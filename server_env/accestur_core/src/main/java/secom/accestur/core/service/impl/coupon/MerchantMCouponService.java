@@ -199,6 +199,9 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		params[1] = json.getString("signature");
 		params[2] = json.getString("rid");
 		params[3] = json.getString("idmerchant");
+		params[4] = json.getString("xi");
+		params[5] = json.getString("indexhash");
+		params[6] = json.getString("sn");
 		//System.out.println("AQUETS ES EL RESULTAT DEL JSON ARRIBAT"+" "+params[0]+params[1]+params[2]+params[3]);
 		return params;
 	}
@@ -222,18 +225,26 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 			
 		params[1]=crypto.getSignature(params[0]); //Signature of Merchant
 		
-		params[2]=paramsJson[0];//Signature of Rid of the Issuer
+		params[2]=paramsJson[1];//Signature of Rid of the Issuer
 		
-		//Epubm(Xi,i,SN) a nes final es necessàri?
+		params[3] = paramsJson[4]; // Xi encrypted for the manufacturer
+		
+		params[4] = paramsJson[5]; // IndexHash encrypted for the manufacturer
+		
+		params[5] = paramsJson[6]; // SN encrypted for the manufacturer
+		
 		return sendClearingToManufacturer(params);
 		
 	}
-
+	
 	private String sendClearingToManufacturer(String[] params) {
 	JSONObject json = new JSONObject();
 	json.put("rid", params[0]);
 	json.put("signaturemerchant", params[1]);
 	json.put("signatureissuer", params[2]);
+	json.put("xi", params[3]);
+	json.put("indexhash", params[4]);
+	json.put("sn", params[5]);
 	return json.toString();
 	}
 	

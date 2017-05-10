@@ -40,8 +40,7 @@ public class HomePageControllerMCoupon{
 		Init();
 		generateUser();
 		issuingMCoupon();
-		redeemMCoupon();
-		clearingMCoupon();
+		//redeemMCoupon();
 		return "mcoupon";
 	}
 
@@ -63,17 +62,16 @@ public class HomePageControllerMCoupon{
 		issuermcouponService.createCertificate();
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = new Date(26/07/1992);
-		System.out.println(manufacturermcouponService.getCoupon(issuermcouponService.getInitMCouponMessage(usermcouponService.getInitMCouponMessage(manufacturermcouponService.initParamsMCoupon(5, 6, date,merchantmcouponService.getMerchantMCouponByName("AccesturMerchant"))))));
+		System.out.println(usermcouponService.recieveMCoupon(issuermcouponService.getMCouponGeneratedByManufacturer(manufacturermcouponService.getCoupon(issuermcouponService.getInitMCouponMessage(usermcouponService.getInitMCouponMessage(manufacturermcouponService.initParamsMCoupon(5, 6, date,merchantmcouponService.getMerchantMCouponByName("AccesturMerchant"))))))));
 	}
 	
 	private void redeemMCoupon(){
 
 		usermcouponService.initUserMCoupon();
-
-		System.out.println(usermcouponService.confirmationMCouponRedeem(merchantmcouponService.confirmationMCouponRedeem(issuermcouponService.redeemingMCoupon(merchantmcouponService.sendingMCouponRedeem(usermcouponService.initRedeemMCoupon(1,"Toni",3,merchantmcouponService.initRedeemParamsMCoupon("AccesturMerchant")))))));
+		String clear = issuermcouponService.redeemingMCoupon(merchantmcouponService.sendingMCouponRedeem(usermcouponService.initRedeemMCoupon(1,"Toni",3,merchantmcouponService.initRedeemParamsMCoupon("AccesturMerchant"))));
+		System.out.println(usermcouponService.confirmationMCouponRedeem2( merchantmcouponService.confirmationMCouponRedeem(clear)));
+		//START CLEARING
+		System.out.println(merchantmcouponService.ClearingMCoupon(manufacturermcouponService.ClearingManufacturer(merchantmcouponService.initClearingMerchant(clear))));
 	}
 	
-	private void clearingMCoupon(){
-		
-	}
 }
