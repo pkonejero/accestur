@@ -189,7 +189,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 	
 	//REDEEM 2 USER RECIEVES THE INFORMATION ABOUT THE MERCHANT
 	
-	public String initRedeemMCoupon(Integer sn,String username,Integer indexHash, String json){
+	public String initRedeemMCoupon(Integer sn,UserMCoupon user,Integer indexHash, String json){
 		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
 		
 		String[] paramsJson = solveRedeemMCouponParams(json);
@@ -205,13 +205,13 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		params[0]=paramsJson[0];
 		
 		//ID Customer
-		params[1]=username;
+		params[1]=user.getUsername();
 		
 		//X0
 		params[2]=coupon.getXo();
 		
 		//Xi
-		String X = getUserMCouponByUsername(username).getX();
+		String X = getUserMCouponByUsername(user.getUsername()).getX();
 		
 		System.out.println("AQUESTA ES X DEL USER COUPON REDEEM:"+X);
 		
@@ -235,7 +235,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		params[8]=crypto.encryptWithPublicKey(sn.toString());
 		
 		//Signature
-		params[9]=crypto.getSignature(username);//Firmar tot el missatge 2.
+		params[9]=crypto.getSignature(user.getUsername());//Firmar tot el missatge 2.
 		
 		//namec
 		params[10]= paramsJson[1];//PARAMETRE A ELIMINAR.

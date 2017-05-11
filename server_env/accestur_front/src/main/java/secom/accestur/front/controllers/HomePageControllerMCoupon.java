@@ -68,7 +68,7 @@ public class HomePageControllerMCoupon{
 	private void redeemMCoupon(){
 
 		usermcouponService.initUserMCoupon();
-		String clear = issuermcouponService.redeemingMCoupon(merchantmcouponService.sendingMCouponRedeem(usermcouponService.initRedeemMCoupon(1,"Toni",3,merchantmcouponService.initRedeemParamsMCoupon("AccesturMerchant"))));
+		String clear = issuermcouponService.redeemingMCoupon(merchantmcouponService.sendingMCouponRedeem(usermcouponService.initRedeemMCoupon(1,usermcouponService.getUserMCouponByUsername("Toni"),3,merchantmcouponService.initRedeemParamsMCoupon("AccesturMerchant"))));
 		System.out.println(usermcouponService.confirmationMCouponRedeem2( merchantmcouponService.confirmationMCouponRedeem(clear)));
 		//START CLEARING
 		System.out.println(merchantmcouponService.ClearingMCoupon(manufacturermcouponService.ClearingManufacturer(merchantmcouponService.initClearingMerchant(clear))));

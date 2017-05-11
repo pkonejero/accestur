@@ -185,7 +185,7 @@ public String getMCouponGeneratedByManufacturer(String json) {
 	
 	coupon.setUser(user);
 	
-	coupon.setMerchant(merchantmcouponService.getMerchantMCouponByName(paramsJson[8]));
+	coupon.setMerchant(merchantmcouponService.getMerchantMCouponByName(paramsJson[7]));
 	
 	params[0] = crypto.getSignature(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4]);
 	
