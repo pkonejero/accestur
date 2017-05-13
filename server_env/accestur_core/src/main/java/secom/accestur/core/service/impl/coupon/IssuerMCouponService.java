@@ -1,10 +1,6 @@
 package secom.accestur.core.service.impl.coupon;
 
 import java.math.BigInteger;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +10,7 @@ import org.springframework.stereotype.Service;
 import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.schnorr.Schnorr;
 import secom.accestur.core.dao.coupon.IssuerMCouponRepository;
+import secom.accestur.core.model.coupon.CounterMCoupon;
 import secom.accestur.core.model.coupon.IssuerMCoupon;
 import secom.accestur.core.model.coupon.MCoupon;
 import secom.accestur.core.model.coupon.ManufacturerMCoupon;
@@ -42,6 +39,10 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 	@Autowired
 	@Qualifier("usermcouponService")
 	private UserMCouponService usermcouponService;
+	
+	@Autowired
+	@Qualifier("countermcouponService")
+	private CounterMCouponService countermcouponService;
 	
 	@Autowired
 	@Qualifier("merchantmcouponService")
@@ -164,6 +165,8 @@ public String getMCouponGeneratedByManufacturer(String json) {
 	
 	MCoupon coupon = new MCoupon();
 	
+	CounterMCoupon counter = new CounterMCoupon(0,coupon);
+	
 	if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4]+paramsJson[5], paramsJson[6])){
 		
 	crypto.initPrivateKey("cert/issuer/private_ISSUER.der");
@@ -202,6 +205,7 @@ public String getMCouponGeneratedByManufacturer(String json) {
 	params[6] = paramsJson [5];
 	
 	mcouponService.saveMCoupon(coupon);
+	countermcouponService.saveCounterMCoupon(counter);
 	
 		//Missing Issuer Signature.
 		return sendIssuerToUserPurchase(params);
@@ -280,6 +284,34 @@ public String redeemingMCoupon(String json) {
 	String nRid = Cryptography.hash(params[0]+paramsJson[6]+nXo+params[3]);
 	
 	//FALTA VERIFICACIÓ QUE P SIGUI CORRECTE AMB L'INDEXHASH ARRIBAT.
+	
+	String[] xVerification = new String[coupon.getP()+1];
+	
+	xVerification[0]=params[3];
+	
+	Integer indexHash = new Integer(params[4]);
+	
+	Integer number_hash = coupon.getP()-indexHash;
+	
+	for (int i =1; i <=number_hash;i++){
+		xVerification[i]=Cryptography.hash(xVerification[i-1]);
+	}
+	
+	CounterMCoupon counter = coupon.getCounter();
+	
+	Integer ncounter = counter.getCounterMCoupon();
+	
+	if (indexHash>ncounter&&indexHash<=coupon.getP()){
+		System.out.println("NUMBER OF THE COUNTER IS CORRECT");
+	}else{
+		System.out.println("NUMBER OF THE COUNTER IS INCORRECT");
+	}
+	
+	if(xVerification[number_hash].equals(nXo)){
+		System.out.println("THE HASH IS CORRECT");
+	}else{
+		System.out.println("THE HASH IS INCORRECT");
+	}
 	
 	if (nRid.equals(params[1])){
 

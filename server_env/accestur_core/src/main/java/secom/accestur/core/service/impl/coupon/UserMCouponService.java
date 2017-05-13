@@ -65,7 +65,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 	}
 	
 	public String verifyUsername(String[] params){
-		boolean verified = crypto.getValidation(params[0], params[1]);
+		boolean verified = crypto.getValidation(getUserMCoupon().getUsername(), params[0]);
 		if (verified){
 			return "REGISTERED USER COMPLETED";
 		}else{
@@ -223,6 +223,8 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		}
 		params[3]=Xi[indexHash];
 		
+		System.out.println("XI SENDED BY THE USER="+params[3]);
+		
 		//R_id (Send)
 		params[4]=Cryptography.hash(params[0]+params[1]+params[2]+params[3]);
 		
@@ -236,9 +238,6 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		
 		//Signature
 		params[9]=crypto.getSignature(user.getUsername());//Firmar tot el missatge 2.
-		
-		//namec
-		params[10]= paramsJson[1];//PARAMETRE A ELIMINAR.
 		
 		return sendUserToMerchantRedeem(params);
 		}else{
@@ -260,7 +259,6 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		JSONObject json = new JSONObject();
 		json.put("idmerchant", params[0]);
 		json.put("username", params[1]);
-		json.put("namec", params[10]);
 		json.put("rid", params[4]);
 		json.put("label", params[5]);
 		json.put("xi", params[6]);

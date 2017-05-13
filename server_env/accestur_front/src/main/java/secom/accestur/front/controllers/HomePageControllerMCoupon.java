@@ -39,7 +39,7 @@ public class HomePageControllerMCoupon{
 	public String welcome(Map<String, Object> model){
 		Init();
 		generateUser();
-		issuingMCoupon();
+		//issuingMCoupon();
 		//redeemMCoupon();
 		return "mcoupon";
 	}
@@ -66,9 +66,12 @@ public class HomePageControllerMCoupon{
 	}
 	
 	private void redeemMCoupon(){
-
+		usermcouponService.createCertificate();
+		manufacturermcouponService.createCertificate();
+		issuermcouponService.createCertificate();
+		
 		usermcouponService.initUserMCoupon();
-		String clear = issuermcouponService.redeemingMCoupon(merchantmcouponService.sendingMCouponRedeem(usermcouponService.initRedeemMCoupon(1,usermcouponService.getUserMCouponByUsername("Toni"),3,merchantmcouponService.initRedeemParamsMCoupon("AccesturMerchant"))));
+		String clear = issuermcouponService.redeemingMCoupon(merchantmcouponService.sendingMCouponRedeem(usermcouponService.initRedeemMCoupon(1,usermcouponService.getUserMCouponByUsername("Toni"),4,merchantmcouponService.initRedeemParamsMCoupon("AccesturMerchant"))));
 		System.out.println(usermcouponService.confirmationMCouponRedeem2( merchantmcouponService.confirmationMCouponRedeem(clear)));
 		//START CLEARING
 		System.out.println(merchantmcouponService.ClearingMCoupon(manufacturermcouponService.ClearingManufacturer(merchantmcouponService.initClearingMerchant(clear))));

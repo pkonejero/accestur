@@ -2,7 +2,6 @@ package secom.accestur.core.service.impl.coupon;
 
 import java.math.BigInteger;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -15,6 +14,7 @@ import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.schnorr.Schnorr;
 import secom.accestur.core.dao.coupon.ManufacturerMCouponRepository;
 import secom.accestur.core.dao.coupon.UserMCouponRepository;
+import secom.accestur.core.model.coupon.CounterMCoupon;
 import secom.accestur.core.model.coupon.MCoupon;
 import secom.accestur.core.model.coupon.ManufacturerMCoupon;
 import secom.accestur.core.model.coupon.MerchantMCoupon;
@@ -33,7 +33,7 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 	
 	@Autowired
 	@Qualifier("mcouponService")
-	private MCouponService mCouponService;
+	private MCouponService mcouponService;
 	
 	@Autowired
 	@Qualifier("usermcouponService")
@@ -42,6 +42,10 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 	@Autowired
 	@Qualifier("merchantmcouponService")
 	private MerchantMCouponService merchantmcouponService;
+	
+	@Autowired
+	@Qualifier("countermcouponService")
+	private CounterMCouponService countermcouponService;
 
 	@Autowired
 	@Qualifier("schnorr")
@@ -97,8 +101,7 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 			user.setManufacturerMCoupon(manufacturer);
 			
 			usermcouponRepository.save(user);
-			message[0] = username;
-			message[1] = crypto.getSignature(username);
+			message[0] = crypto.getSignature(username);
 		} else {
 			message[0] = "Error";
 		}
@@ -229,7 +232,16 @@ public String ClearingManufacturer(String json) {
 			params[3] = crypto.decryptWithPrivateKey(paramsJson[4]); // indexHash to clear
 			params[4] = crypto.decryptWithPrivateKey(paramsJson[5]); // sn to clear
 			
-			System.out.println("THE SERIAL NUMBER ON THE MANUFACTURER IS:"+params[4]);
+			Integer sn = new Integer(params[4]);
+			Integer indexHash = new Integer(params[3]);
+			
+			MCoupon coupon = mcouponService.getMCouponBySn(sn);
+			CounterMCoupon counter = coupon.getCounter();
+			counter.setCounterMCoupon(indexHash);
+			countermcouponService.saveCounterMCoupon(counter);
+			
+			System.out.println("THIS IS THE NEW COUNTER="+indexHash);
+			
 			
 		}else{
 			return "FAILED SIGNATURE ISSUER";

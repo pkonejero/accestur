@@ -33,6 +33,8 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 	private Cryptography crypto;
 	
 	private MerchantMCoupon merchant;
+	
+	private Integer namec;
 
 	public void newMerchantMCoupon(String name, IssuerMCoupon issuer){
 		MerchantMCoupon m = getMerchantMCouponByName(name);
@@ -61,7 +63,7 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		params[0]=nameMerchant;
 		
 		Random rand = new Random();
-		Integer namec = rand.nextInt(50) + 1;
+		namec = rand.nextInt(50) + 1;
 		params[1]=namec.toString();
 		
 		//Signature
@@ -86,7 +88,7 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		String[] paramsJson = solveRedeemMCouponParams(json);
 		
 		//LABEL NOW
-		String label = Cryptography.hash(paramsJson[7]+paramsJson[8]);
+		String label = Cryptography.hash(paramsJson[7]+namec);
 		System.out.println("LABEL NOW:"+label);
 		System.out.println("LABEL BEFORE:"+paramsJson[1]);
 		//Validate Signature of the user
@@ -148,7 +150,6 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		params[5] = json.getString("signature");
 		params[6] = json.getString("username");
 		params[7] = json.getString("idmerchant");
-		params[8] = json.getString("namec");
 		//System.out.println("AQUETS ES EL RESULTAT DEL JSON ARRIBAT"+" "+params[0]+params[1]+params[2]+params[3]);
 		return params;
 	}
