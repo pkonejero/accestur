@@ -38,10 +38,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 	
 	private UserMCoupon user;
 	
-	private String[] paramsOfPass;
-	private String[] psi;
-	private String K;
-	private BigInteger random;
+	private String MC;
 	private BigInteger X;
 	private BigInteger Y;
 
@@ -117,10 +114,12 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		
 		//Signature of the User
 		createCertificate(); //Init Private Key User
-		params[6]=crypto.getSignature(params[3]+params[4]);
+		params[6]=crypto.getSignature(params[0]+params[1]+params[2]+params[3]+params[4]+params[5]);
 		
 		//Merchant
 		params[7]=paramsMCoupon[4];
+		
+		MC=params[1]+params[2]+params[3]+params[4]+params[5];
 		
 		usermcouponRepository.save(user);
 		
@@ -162,7 +161,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		
 		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
 		
-		if (crypto.getValidation(paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4]+paramsJson[5], paramsJson[0])){
+		if (crypto.getValidation(MC+paramsJson[1], paramsJson[0])){
 		
 		return "ISSUING PHASE FINISHED CORRECTLY";
 		
@@ -175,11 +174,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		JSONObject json = new JSONObject(message);
 		String[] params = new String[15];
 		params[0] = json.getString("signature");
-		params[1] = json.getString("xo");
-		params[2] = json.getString("yo");
-		params[3] = json.getString("sn");
-		params[4] = json.getString("p");
-		params[5] = json.getString("q");
+		params[1] = json.getString("sn");
 		return params;
 	}
 	
@@ -237,7 +232,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		params[8]=crypto.encryptWithPublicKey(sn.toString());
 		
 		//Signature
-		params[9]=crypto.getSignature(user.getUsername());//Firmar tot el missatge 2.
+		params[9]=crypto.getSignature(user.getUsername());//Signing all the message 2.
 		
 		return sendUserToMerchantRedeem(params);
 		}else{

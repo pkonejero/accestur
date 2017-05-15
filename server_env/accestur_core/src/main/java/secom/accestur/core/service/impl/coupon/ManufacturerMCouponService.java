@@ -142,12 +142,14 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 	//PURCHASE 4 COUPON Receiving from Issuer all info of the Coupon//
 	
 	public String getCoupon(String json) {
-		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
+		crypto.initPublicKey("cert/user/public_USER.der");
 		String[] paramsJson = solveIssuerMCouponParams(json);
-		
 		String[] params = new String[10];
-		
-		if (crypto.getValidation(paramsJson[3]+paramsJson[4], paramsJson[7])){
+		//Validation of the User
+		if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4]+paramsJson[5], paramsJson[9])){
+			crypto.initPublicKey("cert/issuer/public_ISSUER.der");
+			//Validation of the Issuer
+		if (crypto.getValidation(paramsJson[6], paramsJson[7])){
 		
 		Integer p = new Integer(paramsJson[3]);
 		Integer q = new Integer(paramsJson[4]);
@@ -170,20 +172,24 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		
 		crypto.initPrivateKey("cert/issuer/private_ISSUER.der");
 		
-		params[6]=crypto.getSignature(params[0]+params[1]+params[2]+params[3]+params[4]+params[5]);
+		params[6]=crypto.getSignature(params[0]+params[1]+params[3]+params[4]+paramsJson[5]);
 		
 		params[7] = paramsJson[8];
+		
 		
 		return sendFinishMCouponPurchase(params);
 		
 		}else{
-			return "Failed Signature";
+			return "FAILED SIGNATURE ISSUER";
+		}
+		}else{
+			return "FAILED SIGNATURE USER";
 		}
 	}
 
 	private String[] solveIssuerMCouponParams (String message){
 		JSONObject json = new JSONObject(message);
-		String[] params = new String[9];
+		String[] params = new String[10];
 		params[0] = json.getString("username");
 		params[1] = json.getString("Xo");
 		params[2] = json.getString("Yo");
@@ -191,8 +197,9 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		params[4] = json.getString("q");
 		params[5] = json.getString("EXPDATE");
 		params[6] = json.getString("sn");
-		params[7] = json.getString("signature");
+		params[7] = json.getString("signatureIssuer");
 		params[8] = json.getString("merchant");
+		params[9] = json.getString("signatureUser");
 		return params;
 	}
 	

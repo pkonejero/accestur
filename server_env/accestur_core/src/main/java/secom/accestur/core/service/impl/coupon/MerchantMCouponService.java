@@ -94,8 +94,6 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		//Validate Signature of the user
 		if (crypto.getValidation(paramsJson[6], paramsJson[5])&&paramsJson[1].equals(label)){ //PRIMER VERIFIACIó DE LA FIRMA i DESPRES EL LABEL
 			
-			//Falta comprovacio de hash:&&paramsJson[1]==Cryptography.hash(paramsJson[7]+paramsJson[8])
-			
 		crypto.initPrivateKey("cert/issuer/private_ISSUER.der");
 		
 		String[] params = new String[16];

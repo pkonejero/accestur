@@ -39,7 +39,7 @@ public class HomePageControllerMCoupon{
 	public String welcome(Map<String, Object> model){
 		Init();
 		generateUser();
-		//issuingMCoupon();
+		issuingMCoupon();
 		//redeemMCoupon();
 		return "mcoupon";
 	}

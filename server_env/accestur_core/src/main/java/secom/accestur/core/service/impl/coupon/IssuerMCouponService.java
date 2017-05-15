@@ -49,13 +49,7 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 	private MerchantMCouponService merchantmcouponService;
 
 	//Values necessary to create Coupons;
-	private String[] paramsOfPass;
-	private BigInteger yU_c;
-	private BigInteger Hu_c;
-
-	private String[] ws;
-	private String[] services;
-	private String[] psi;
+	private String MC;
 
 	public IssuerMCoupon getIssuerMCouponByName(String name){
 		return issuermcouponRepository.findByNameIgnoreCase(name);
@@ -98,27 +92,31 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		
 		String[] params = new String[10];
 	
-		params[0] = paramsJson[0];
+		params[0] = paramsJson[0]; //Username
 
-		params[1] = paramsJson[1];
+		params[1] = paramsJson[1]; //Xo
 		
-		params[2] = paramsJson[2];
+		params[2] = paramsJson[2]; //Yo
 		
-		params[3] = paramsJson[3];
+		params[3] = paramsJson[3]; //P
 		
-		params[4] = paramsJson[4];
+		params[4] = paramsJson[4]; //Q
 		
-		params[5]=paramsJson[5];
+		params[5]=paramsJson[5]; //EXD
 		
-		//L'unica cosa que fa es afegir un SN
+		MC=params[1]+params[2]+params[3]+params[4]+params[5];
+		
+		//Creating SN
 		Integer sn = 123456789;
 		params[6]=sn.toString();
 		
-		if (crypto.getValidation(params[3]+params[4], paramsJson[6])){
+		if (crypto.getValidation(params[0]+params[1]+params[2]+params[3]+params[4]+params[5], paramsJson[6])){
 			
-			params[7]=crypto.getSignature(params[3]+params[4]);
+			params[7]=crypto.getSignature(params[6]);
 			
-			params[8]=paramsJson[7];
+			params[8]=paramsJson[7]; //ID Merchant
+			
+			params[9] = paramsJson[6]; //Signature of the User
 		
 		return sendIssuerToManufacturerPurchase(params);
 		}else{
@@ -149,8 +147,9 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		json.put("q", params[4]);
 		json.put("EXPDATE", params[5]);
 		json.put("sn", params[6]);
-		json.put("signature", params[7]);
+		json.put("signatureIssuer", params[7]);
 		json.put("merchant", params[8]);
+		json.put("signatureUser", params[9]);
 		return json.toString();
 	}
 	
@@ -167,7 +166,7 @@ public String getMCouponGeneratedByManufacturer(String json) {
 	
 	CounterMCoupon counter = new CounterMCoupon(0,coupon);
 	
-	if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4]+paramsJson[5], paramsJson[6])){
+	if (crypto.getValidation(MC, paramsJson[6])){
 		
 	crypto.initPrivateKey("cert/issuer/private_ISSUER.der");
 		
@@ -190,7 +189,7 @@ public String getMCouponGeneratedByManufacturer(String json) {
 	
 	coupon.setMerchant(merchantmcouponService.getMerchantMCouponByName(paramsJson[7]));
 	
-	params[0] = crypto.getSignature(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4]);
+	params[0] = crypto.getSignature(MC+sn.toString());
 	
 	params[1] = paramsJson[0];
 	
@@ -231,11 +230,7 @@ private String[] solveFinishPurchaseManufacturer (String message){
 private String sendIssuerToUserPurchase(String[] params) {
 	JSONObject json = new JSONObject();
 	json.put("signature", params[0]);
-	json.put("xo", params[1]);
-	json.put("yo", params[2]);
 	json.put("sn", params[3]);
-	json.put("p", params[4]);
-	json.put("q", params[5]);
 	return json.toString();
 }
 
@@ -283,7 +278,6 @@ public String redeemingMCoupon(String json) {
 	
 	String nRid = Cryptography.hash(params[0]+paramsJson[6]+nXo+params[3]);
 	
-	//FALTA VERIFICACIÓ QUE P SIGUI CORRECTE AMB L'INDEXHASH ARRIBAT.
 	
 	String[] xVerification = new String[coupon.getP()+1];
 	
