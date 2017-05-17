@@ -1,6 +1,9 @@
 package secom.accestur.core.service.impl.coupon;
 
 import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -187,6 +190,19 @@ public String getMCouponGeneratedByManufacturer(String json) {
 	
 	coupon.setUser(user);
 	
+	//DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	//try {
+	//java.util.Date date = dateFormat.parse(paramsJson[8]);
+	//} catch (ParseException e) {
+		// TODO Auto-generated catch block
+	//	e.printStackTrace();
+	//}
+	//System.out.println("DATE=="+ dateFormat.format(paramsJson[8]));
+	
+	//java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+	
+	//coupon.setExpDate(dateFormat.format(paramsJson[8]));
+	
 	coupon.setMerchant(merchantmcouponService.getMerchantMCouponByName(paramsJson[7]));
 	
 	params[0] = crypto.getSignature(MC+sn.toString());
@@ -224,6 +240,7 @@ private String[] solveFinishPurchaseManufacturer (String message){
 	params[5] = json.getString("username");
 	params[6] = json.getString("signature");
 	params[7] = json.getString("merchant");
+	params[8] = json.getString("EXD");
 	return params;
 }
 
@@ -246,15 +263,18 @@ public String redeemingMCoupon(String json) {
 	MCoupon coupon = new MCoupon();
 	String[] paramsJson = solveRedeemMCouponParams(json);
 	//Validate Signature of the merchant
-	if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4]+paramsJson[5]+paramsJson[6], paramsJson[7])){
+	
+	if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4]+paramsJson[5], paramsJson[7])){
+		
 	System.out.println("NO ES SA PRIMERA CONDICIO");
 	createCertificate();
 	
 	String[] params = new String[16];
 
 	params[0] = paramsJson[8];//Id Merchant
+	
 	//Validate Signature of the User
-	if (crypto.getValidation(paramsJson[6], paramsJson[5])){
+	if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4], paramsJson[5])){
 	
 	System.out.println("NO ES SA SEGONA CONDICIO");
 		
@@ -296,16 +316,16 @@ public String redeemingMCoupon(String json) {
 	Integer ncounter = counter.getCounterMCoupon();
 	
 	if (indexHash>ncounter&&indexHash<=coupon.getP()){
-		System.out.println("NUMBER OF THE COUNTER IS CORRECT");
-	}else{
-		System.out.println("NUMBER OF THE COUNTER IS INCORRECT");
-	}
+	System.out.println("NUMBER OF THE COUNTER IS CORRECT");
+	
+	System.out.println("XVERIFICATION="+xVerification[number_hash]);
+	
+	System.out.println("NXO="+nXo);
+	
 	
 	if(xVerification[number_hash].equals(nXo)){
 		System.out.println("THE HASH IS CORRECT");
-	}else{
-		System.out.println("THE HASH IS INCORRECT");
-	}
+	
 	
 	if (nRid.equals(params[1])){
 
@@ -326,22 +346,27 @@ public String redeemingMCoupon(String json) {
 	
 	return sendIssuerToMerchantRedeem(params);
 	}else{
-		return "Failed Signature or Hash";
+		return "THE HASH IS INCORRECT";
 	}
 	}else{
-		return "Failed Signature";
+		return "NUMBER OF THE COUNTER IS INCORRECT";
 	}
 	}else{
 		return "Failed Rid Verification";
 	}
+	}else{
+		return "Failed Signature USER";
+	}
+	}else{
+		return "Failed Signature MERCHANT";
+	}
+
 }
 
 private String sendIssuerToMerchantRedeem(String[] params) {
 	JSONObject json = new JSONObject();
-	json.put("nrid", params[6]);
 	json.put("signature", params[7]);
 	json.put("rid", params[1]);
-	json.put("idmerchant", params[0]);
 	json.put("xi", params[8]);
 	json.put("indexhash", params[9]);
 	json.put("sn", params[10]);
@@ -360,7 +385,6 @@ private String[] solveRedeemMCouponParams (String message){
 	params[6] = json.getString("username");
 	params[7] = json.getString("signaturemerchant");
 	params[8] = json.getString("idmerchant");
-	//System.out.println("AQUETS ES EL RESULTAT DEL JSON ARRIBAT"+" "+params[0]+params[1]+params[2]+params[3]);
 	return params;
 }
 	

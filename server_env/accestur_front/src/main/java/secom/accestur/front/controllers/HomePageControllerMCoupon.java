@@ -1,6 +1,7 @@
 package secom.accestur.front.controllers;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -37,8 +38,8 @@ public class HomePageControllerMCoupon{
 
 	@RequestMapping("/mcoupon")
 	public String welcome(Map<String, Object> model){
-		Init();
-		generateUser();
+		//Init();
+		//generateUser();
 		issuingMCoupon();
 		//redeemMCoupon();
 		return "mcoupon";
@@ -61,7 +62,15 @@ public class HomePageControllerMCoupon{
 		manufacturermcouponService.createCertificate();
 		issuermcouponService.createCertificate();
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		Date date = new Date(26/07/1992);
+		String data= "26/07/1992";
+		Date date = new Date();
+		try {
+			date = dateFormat.parse(data);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("DATE=="+ dateFormat.format(date));
 		System.out.println(usermcouponService.recieveMCoupon(issuermcouponService.getMCouponGeneratedByManufacturer(manufacturermcouponService.getCoupon(issuermcouponService.getInitMCouponMessage(usermcouponService.getInitMCouponMessage(manufacturermcouponService.initParamsMCoupon(5, 6, date,merchantmcouponService.getMerchantMCouponByName("AccesturMerchant"))))))));
 	}
 	
@@ -71,7 +80,7 @@ public class HomePageControllerMCoupon{
 		issuermcouponService.createCertificate();
 		
 		usermcouponService.initUserMCoupon();
-		String clear = issuermcouponService.redeemingMCoupon(merchantmcouponService.sendingMCouponRedeem(usermcouponService.initRedeemMCoupon(1,usermcouponService.getUserMCouponByUsername("Toni"),4,merchantmcouponService.initRedeemParamsMCoupon("AccesturMerchant"))));
+		String clear = issuermcouponService.redeemingMCoupon(merchantmcouponService.sendingMCouponRedeem(usermcouponService.initRedeemMCoupon(1,usermcouponService.getUserMCouponByUsername("Toni"),3,merchantmcouponService.initRedeemParamsMCoupon("AccesturMerchant"))));
 		System.out.println(usermcouponService.confirmationMCouponRedeem2( merchantmcouponService.confirmationMCouponRedeem(clear)));
 		//START CLEARING
 		System.out.println(merchantmcouponService.ClearingMCoupon(manufacturermcouponService.ClearingManufacturer(merchantmcouponService.initClearingMerchant(clear))));

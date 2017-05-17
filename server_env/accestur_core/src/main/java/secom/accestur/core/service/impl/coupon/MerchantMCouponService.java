@@ -35,6 +35,8 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 	private MerchantMCoupon merchant;
 	
 	private Integer namec;
+	private String idMerchant;
+	private String Rid;
 
 	public void newMerchantMCoupon(String name, IssuerMCoupon issuer){
 		MerchantMCoupon m = getMerchantMCouponByName(name);
@@ -62,6 +64,8 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		String[] params= new String [4];
 		params[0]=nameMerchant;
 		
+		idMerchant=nameMerchant;
+		
 		Random rand = new Random();
 		namec = rand.nextInt(50) + 1;
 		params[1]=namec.toString();
@@ -88,17 +92,21 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		String[] paramsJson = solveRedeemMCouponParams(json);
 		
 		//LABEL NOW
-		String label = Cryptography.hash(paramsJson[7]+namec);
+		String label = Cryptography.hash(idMerchant+namec);
 		System.out.println("LABEL NOW:"+label);
 		System.out.println("LABEL BEFORE:"+paramsJson[1]);
 		//Validate Signature of the user
-		if (crypto.getValidation(paramsJson[6], paramsJson[5])&&paramsJson[1].equals(label)){ //PRIMER VERIFIACIó DE LA FIRMA i DESPRES EL LABEL
-			
-		crypto.initPrivateKey("cert/issuer/private_ISSUER.der");
+		
+		if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4], paramsJson[5])){ //PRIMER VERIFIACIó DE LA FIRMA i DESPRES EL LABEL
+			if(paramsJson[1].equals(label)){
+				
+		crypto.initPrivateKey("cert/issuer/private_ISSUER.der"); // SHOULD BE MERCHANT PRIVATE KEY.
 		
 		String[] params = new String[16];
 
 		params[0] = paramsJson[0];//Rid
+		
+		Rid=params[0];
 		
 		params[1] = paramsJson[1];//Label
 		
@@ -112,13 +120,16 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		
 		params[6] = paramsJson[6]; //Username(Validation Signature)
 			
-		params[7]=crypto.getSignature(params[0]+params[1]+params[2]+params[3]+params[4]+params[5]+params[6]); //Signature of merchant
+		params[7]=crypto.getSignature(params[0]+params[1]+params[2]+params[3]+params[4]+params[5]); //Signature of merchant
 		
-		params[8]=paramsJson[7];//Id Merchant. MIRAR SI ES NECESSÀRI.
+		params[8]=idMerchant;//Id Merchant.
 		
 		return sendRedeemMCouponMessageToManufacturer(params);
 		}else{
-			return "Failed Signature or Hash";
+			return "Failed Label Confirmation";
+		}
+		}else{
+			return "Failed Signature Customer Validation";
 		}
 		
 	}
@@ -147,7 +158,7 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		params[4] = json.getString("sn");
 		params[5] = json.getString("signature");
 		params[6] = json.getString("username");
-		params[7] = json.getString("idmerchant");
+		//params[7] = json.getString("idmerchant");
 		//System.out.println("AQUETS ES EL RESULTAT DEL JSON ARRIBAT"+" "+params[0]+params[1]+params[2]+params[3]);
 		return params;
 	}
@@ -159,33 +170,29 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		
 		String[] paramsJson = solveConfirmationMCouponRedeem(json);
 		//Validate Signature of the ISSUER
-		if (crypto.getValidation(paramsJson[0], paramsJson[1])){
+		if (crypto.getValidation(Rid, paramsJson[1])){
 		//Verification of Old Rid and New Rid
-		if(paramsJson[0].equals(paramsJson[2])){
+		if(Rid.equals(paramsJson[2])){
+			
+		crypto.initPrivateKey("cert/issuer/private_ISSUER.der"); // SHOULD BE MERCHANT's PK
 			
 		String[] params = new String[16];
 
 		params[0] = paramsJson[1];//Proof of Signature of Issuer
 			
-		params[1]=crypto.getSignature(paramsJson[3]); //Signature of Merchant
-		
-		params[2]=paramsJson[3];//Id Merchant
-		
-		params[3]=paramsJson[0]; // New Rid for confirmation of the Signature of the Issuer.
+		params[1]=crypto.getSignature(Rid); //Signature of Merchant
 		
 		return sendRedeemMCouponConfirmationToManufacturer(params);
 		}else{
-			return "Failed Signature or Hash";
+			return "Failed Verification of Rid";
 		}
 		}else{
-			return "Failed Verification of Rid";
+			return "Failed Signature or Hash";
 		}
 	}
 	
 	private String sendRedeemMCouponConfirmationToManufacturer(String[] params) {
 		JSONObject json = new JSONObject();
-		json.put("nrid", params[3]);
-		json.put("idmerchant", params[2]);
 		json.put("signaturemerchant", params[1]);
 		json.put("signatureissuer", params[0]);
 		return json.toString();
@@ -194,14 +201,11 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 	private String[] solveConfirmationMCouponRedeem (String message){
 		JSONObject json = new JSONObject(message);
 		String[] params = new String[9];
-		params[0] = json.getString("nrid");
 		params[1] = json.getString("signature");
 		params[2] = json.getString("rid");
-		params[3] = json.getString("idmerchant");
 		params[4] = json.getString("xi");
 		params[5] = json.getString("indexhash");
 		params[6] = json.getString("sn");
-		//System.out.println("AQUETS ES EL RESULTAT DEL JSON ARRIBAT"+" "+params[0]+params[1]+params[2]+params[3]);
 		return params;
 	}
 	
@@ -255,7 +259,7 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		
 		String[] paramsJson = solveConfirmationClearing(json);
 		
-		if (crypto.getValidation(paramsJson[1], paramsJson[0])){
+		if (crypto.getValidation(Rid, paramsJson[0])){
 			
 		return "CLEARING COMPLETED";
 		
@@ -269,7 +273,6 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		JSONObject json = new JSONObject(message);
 		String[] params = new String[9];
 		params[0] = json.getString("signaturemanufacturer");
-		params[1] = json.getString("rid");
 		return params;
 	}
 	

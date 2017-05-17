@@ -41,6 +41,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 	private String MC;
 	private BigInteger X;
 	private BigInteger Y;
+	private String Rid;
 
 	public String getUserMCouponByUsername1(String username){
 		UserMCoupon user = usermcouponRepository.findAll().iterator().next();
@@ -194,7 +195,6 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		
 		coupon = mcouponService.getMCouponBySn(sn);
 		
-		System.out.println("AQUESTA ES XO DES COUPON REDEEM:"+coupon.getXo());
 		String[] params= new String [15];
 		//ID Merchant
 		params[0]=paramsJson[0];
@@ -223,6 +223,8 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		//R_id (Send)
 		params[4]=Cryptography.hash(params[0]+params[1]+params[2]+params[3]);
 		
+		Rid=params[4];
+		
 		//Label (Send)
 		params[5]=Cryptography.hash(paramsJson[0]+paramsJson[1]);
 		
@@ -231,8 +233,9 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		params[7]=crypto.encryptWithPublicKey(indexHash.toString());
 		params[8]=crypto.encryptWithPublicKey(sn.toString());
 		
+		crypto.initPrivateKey("cert/user/private_USER.der");
 		//Signature
-		params[9]=crypto.getSignature(user.getUsername());//Signing all the message 2.
+		params[9]=crypto.getSignature(params[4]+params[5]+params[6]+params[7]+params[8]);//Signing all the message 2.
 		
 		return sendUserToMerchantRedeem(params);
 		}else{
@@ -252,7 +255,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 	
 	private String sendUserToMerchantRedeem(String[] params) {
 		JSONObject json = new JSONObject();
-		json.put("idmerchant", params[0]);
+		//json.put("idmerchant", params[0]);
 		json.put("username", params[1]);
 		json.put("rid", params[4]);
 		json.put("label", params[5]);
@@ -271,9 +274,9 @@ public String confirmationMCouponRedeem2(String json) {
 		
 		String[] paramsJson = solveConfirmationRedeemMCoupon(json);
 		//Validate Signature of the Merchant
-		if (crypto.getValidation(paramsJson[1], paramsJson[2])){
+		if (crypto.getValidation(Rid, paramsJson[2])){
 		//Validate Signature of the ISSUER
-		if(crypto.getValidation(paramsJson[0], paramsJson[3])){
+		if(crypto.getValidation(Rid, paramsJson[3])){
 			
 		return "REDEEM COMPLETED";
 		}else{
@@ -287,11 +290,8 @@ public String confirmationMCouponRedeem2(String json) {
 	private String[] solveConfirmationRedeemMCoupon (String message){
 		JSONObject json = new JSONObject(message);
 		String[] params = new String[4];
-		params[0] = json.getString("nrid");
-		params[1] = json.getString("idmerchant");
 		params[2] = json.getString("signaturemerchant");
 		params[3] = json.getString("signatureissuer");
-		//System.out.println("AQUETS ES EL RESULTAT DEL JSON ARRIBAT"+" "+params[0]+params[1]+params[2]+params[3]);
 		return params;
 	}
 	

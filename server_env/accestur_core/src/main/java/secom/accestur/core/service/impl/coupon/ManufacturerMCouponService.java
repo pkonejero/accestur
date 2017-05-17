@@ -176,6 +176,8 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		
 		params[7] = paramsJson[8];
 		
+		params[8]=paramsJson[5];
+		
 		
 		return sendFinishMCouponPurchase(params);
 		
@@ -213,6 +215,7 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		json.put("username", params[5]);
 		json.put("signature", params[6]);
 		json.put("merchant", params[7]);
+		json.put("EXD",params[8]);
 		return json.toString();
 	}
 	
@@ -282,7 +285,6 @@ public String ClearingManufacturer(String json) {
 	private String sendClearingToMerchant(String[] params) {
 		JSONObject json = new JSONObject();
 		json.put("signaturemanufacturer", params[0]);
-		json.put("rid", params[1]);
 		return json.toString();
 		}
 	
