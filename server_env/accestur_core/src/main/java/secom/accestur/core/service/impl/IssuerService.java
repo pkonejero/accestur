@@ -80,7 +80,7 @@ public class IssuerService implements IssuerServiceInterface{
 	public String generateCertificate(ServiceAgent[] services){
 		serviceAgentService.storeServices(services);
 		arrayGeneration();
-		return "Services Generated";
+		return "Provider affiliated";
 	}
 
 	public String getChallenge(String json){

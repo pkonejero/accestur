@@ -324,6 +324,7 @@ public class ProviderService implements ProviderServiceInterface {
 		// String value = Au.xor(PRNG);
 		String check = getOriginal(json.getString("Au"), PRNG.toString());
 		System.out.println("Check: " + check);
+		System.out.println("PSI: " +  Cryptography.hash(counterService.getCounter().getPsi()));
 		// System.out.println("PSI:" + check);
 
 		if (counterService.getCounter().getLastHash().equals(Constants.NOTUSED)) {
@@ -366,16 +367,16 @@ public class ProviderService implements ProviderServiceInterface {
 		byte[] PRNGbytes = null;
 		byte[] Abytes = null;
 
-		PRNGbytes = Base64.decode(PRNG32,Base64.DEFAULT);
-		Abytes = Base64.decode(A,Base64.DEFAULT);
+		PRNGbytes = Base64.decode(PRNG32.getBytes(), Base64.DEFAULT);
+		Abytes = Base64.decode(A.getBytes(), Base64.DEFAULT);
+		
 
 		byte[] xor = new byte[PRNGbytes.length];
 		for (int i = 0; i < PRNGbytes.length; i++) {
 			xor[i] = (byte) (PRNGbytes[i] ^ Abytes[i]);
 		}
-		return new String(Base64.encodeToString(xor,Base64.DEFAULT));
+		return new String(Base64.encode(xor, Base64.DEFAULT)).replace("\n", "");
 	}
-	
 	
 	
 	///////////////////////////////////////////////////////////////////////

@@ -11,8 +11,14 @@
 	<div class="container">
 		<div class="starter-template">
 			<h1><span th:text="${message}"></span></h1>
-			<h2>Example Elgamal : <span th:text="${elgamal}"></span></h2>
-			<h2>Example RSA     : <span th:text="${rsa}"></span></h2>
+			<h2>Provider affiliation: <span th:text="${provider}"></span></h2>
+			<h2>Pseudonym generation: <span th:text="${pseudonym}"></span></h2>
+			<h2>PASS purchase: <span th:text="${purchase}"></span></h2>
+			<h2>PASS activation: <span th:text="${activation}"></span></h2>
+			<h2>PASS verification:</h2>
+			<h3>Non reusable ticket:  <span th:text="${nonreusable}"></span></h3>
+			<h3><emph>M</emph> reusable ticket:  <span th:text="${mreusable}"></span></h3>
+			<h3>Infinite times reusable ticket:  <span th:text="${infintereusable}"></span></h3>
 		</div>
 	</div>
 </body>

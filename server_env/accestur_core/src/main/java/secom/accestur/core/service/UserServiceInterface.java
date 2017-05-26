@@ -19,7 +19,7 @@ public interface UserServiceInterface{
 	
 	public String showPass(long sn);
 	
-	public void getVerifyTicketConfirmation(String s);
+	public String getVerifyTicketConfirmation(String s);
 	
 	public String solveVerifyChallenge(String params);
 	

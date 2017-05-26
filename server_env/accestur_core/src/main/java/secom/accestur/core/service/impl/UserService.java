@@ -203,7 +203,7 @@ public class UserService implements UserServiceInterface {
 		String service = serviceJSON.getString("Service");
 		secretValueService.saveSecretValue(new SecretValue(mCityPassService.getMCityPassBySn(id),
 				serviceAgentService.getServiceByName(service).getProvider(), random.toString()));
-		return "Everything OK";
+		return "PASS Purchased";
 	}
 
 	// MESSAGE PROCESSORS
@@ -254,8 +254,9 @@ public class UserService implements UserServiceInterface {
 		return json.toString();
 	}
 
-	public void getVerifyTicketConfirmation(String s) {
+	public String getVerifyTicketConfirmation(String s) {
 		System.out.println(s);
+		return "PASS Activated";
 	}
 
 	///////////////////////////////////////////////////////////////////////

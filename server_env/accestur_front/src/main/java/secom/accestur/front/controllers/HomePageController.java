@@ -13,7 +13,7 @@ import secom.accestur.core.service.impl.TrustedThirdPartyService;
 import secom.accestur.core.service.impl.UserService;
 
 @Controller
-public class HomePageController{
+public class HomePageController {
 	@Autowired
 	@Qualifier("userService")
 	UserService userService;
@@ -31,25 +31,26 @@ public class HomePageController{
 	TrustedThirdPartyService ttpService;
 
 	@RequestMapping("/")
-	public String welcome(Map<String, Object> model){
+	public String welcome(Map<String, Object> model) {
 		Init();
-		generateUser();
-		passPurchase();
-		passActivation();
-		//passVerification();
-		//infinitePassVerification();
-		//mpassVerification();
-		
+		model.put("provider", createServices("Accestur"));
+		model.put("pseudonym", generateUser());
+		model.put("purchase", passPurchase());
+		model.put("activation", passActivation());
+		model.put("nonreusable", passVerification());
+		model.put("mreusable", mpassVerification());
+		model.put("infintereusable", infinitePassVerification());
+
 		return "welcome";
 	}
 
-	private void Init(){
+	private void Init() {
 		issuerService.newIssuer("Accestur");
 		providerService.newProvider("TIB", issuerService.getIssuerByName("Accestur"));
-		createServices("Accestur");
+
 	}
 
-	private void createServices(String providerName){
+	private String createServices(String providerName) {
 		String[] serviceName = new String[4];
 		int[] counters = new int[4];
 
@@ -65,45 +66,58 @@ public class HomePageController{
 		serviceName[3] = "TenTimesReusable";
 		counters[3] = 10;
 
-		issuerService.generateCertificate(providerService.authenticateProvider(serviceName, counters, providerName));
+		return issuerService
+				.generateCertificate(providerService.authenticateProvider(serviceName, counters, providerName));
+
 	}
 
-	private void generateUser(){
+	private String generateUser() {
 		userService.createCertificate();
 		ttpService.createCertificate();
-		System.out.println(userService.verifyPseudonym(ttpService.generatePseudonym(userService.authenticateUser())));
+		if (userService.verifyPseudonym(ttpService.generatePseudonym(userService.authenticateUser()))) {
+			return "Pseudonym generated";
+		} else {
+			return "An error has ocurred";
+		}
 	}
 
-	private void passPurchase(){
+	private String passPurchase() {
 		userService.getUser();
-		//userService.createCertificate();
+		// userService.createCertificate();
 		issuerService.createCertificate();
 		String[] names = new String[4];
 		names[0] = "InfiniteReusable";
 		names[1] = "NoReusable";
 		names[2] = "TwoTimesReusable";
 		names[3] = "TenTimesReusable";
-		userService.receivePass(issuerService.getPASS(userService.solveChallenge(issuerService.getChallenge(userService.getService()), names)));
+		return "" + userService.receivePass(issuerService
+				.getPASS(userService.solveChallenge(issuerService.getChallenge(userService.getService()), names)));
 	}
-	
-	private void passActivation(){
+
+	private String passActivation() {
 		userService.initUser();
 		issuerService.createCertificate();
-		userService.getVerifyTicketConfirmation(issuerService.verifyTicket(userService.showPass(1)));
+		return "" + userService.getVerifyTicketConfirmation(issuerService.verifyTicket(userService.showPass(1)));
 	}
-	
-	private void passVerification(){
+
+	private String passVerification() {
 		userService.initUser();
-		userService.getValidationConfirmation(providerService.verifyProof(userService.showProof(providerService.verifyPass2(userService.solveVerifyChallenge(providerService.verifyPass(userService.showTicket(1, 2)))))));
+		return "" + userService.getValidationConfirmation(
+				providerService.verifyProof(userService.showProof(providerService.verifyPass2(
+						userService.solveVerifyChallenge(providerService.verifyPass(userService.showTicket(1, 2)))))));
 	}
-	
-	private void mpassVerification(){
+
+	private String mpassVerification() {
 		userService.initUser();
-		userService.getVerifyMTicketConfirmation(providerService.verifyMProof(userService.showMProof(providerService.verifyMPass2(userService.solveMVerifyChallenge(providerService.verifyMPass(userService.showMTicket(1, 3)))))));
+		return "" + userService.getVerifyMTicketConfirmation(
+				providerService.verifyMProof(userService.showMProof(providerService.verifyMPass2(userService
+						.solveMVerifyChallenge(providerService.verifyMPass(userService.showMTicket(1, 3)))))));
 	}
-	
-	private void infinitePassVerification(){
+
+	private String infinitePassVerification() {
 		userService.initUser();
-		userService.getInfiniteValidationConfirmation(providerService.verifyInfiniteProof(userService.showInfiniteProof(providerService.verifyInfinitePass2(userService.solveInfiniteVerifyChallenge(providerService.verifyInfinitePass(userService.showInfinitePass(1, 1)))))));
+		return "" + userService.getInfiniteValidationConfirmation(providerService.verifyInfiniteProof(userService
+				.showInfiniteProof(providerService.verifyInfinitePass2(userService.solveInfiniteVerifyChallenge(
+						providerService.verifyInfinitePass(userService.showInfinitePass(1, 1)))))));
 	}
 }
