@@ -11,7 +11,7 @@ public interface UserServiceInterface{
 
 	public String authenticateUser();
 	
-	public boolean verifyPseudonym(String[] params);
+	public boolean verifyPseudonym(String params);
 	
 	public String getService();
 	

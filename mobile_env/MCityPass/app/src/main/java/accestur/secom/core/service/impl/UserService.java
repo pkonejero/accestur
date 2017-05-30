@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.util.Base64;
 
 import java.util.Date;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -148,7 +149,7 @@ public class UserService implements UserServiceInterface {
                 User user = new User();
                 user.setPseudonym(generatePseudonym(params[0], params[1]));
                 user.setSchnorr(schnorr.getPrivateCertificate());
-                userRepository.save(user);
+              //  userRepository.save(user);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -180,7 +181,7 @@ public class UserService implements UserServiceInterface {
         params[6] = Constants.LIFETIME;
         params[7] = Constants.CATEGORY;
         params[8] = Constants.EXPDATE;
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
         Date date = new Date();
         System.out.println("PURDATE:" + dateFormat.format(date));
         params[9] = dateFormat.format(date);
@@ -189,7 +190,7 @@ public class UserService implements UserServiceInterface {
     }
 
     public String solveChallenge(String input, String[] services) {
-        String c;
+        String c = "";
         try {
             JSONObject json = new JSONObject(input);
             c = json.getString("c");
