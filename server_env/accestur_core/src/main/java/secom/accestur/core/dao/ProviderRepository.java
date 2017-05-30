@@ -12,5 +12,7 @@ import secom.accestur.core.model.Provider;
 public interface ProviderRepository extends PagingAndSortingRepository<Provider, Long>{
 	Provider findByNameIgnoreCase(String name);
 	
+	Provider findById(Long id);
+	
 	List<Provider> findByIssuer(Issuer issuerr);
 }

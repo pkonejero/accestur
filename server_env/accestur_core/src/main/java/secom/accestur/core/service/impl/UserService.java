@@ -125,7 +125,7 @@ public class UserService implements UserServiceInterface {
 	/////////////////////// PSEUDONYM///////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////
 
-	public String[] authenticateUser() {
+	public String authenticateUser() {
 		crypto.initPublicKey("cert/ttp/public_TTP.der");
 		// crypto.initPublicKey("cert/issuer/public_ISSUER.der");
 		schnorr.Init();
@@ -135,11 +135,19 @@ public class UserService implements UserServiceInterface {
 		BigInteger y = schnorr.getY();
 		params[0] = crypto.getSignature(y.toString());
 		params[1] = crypto.encryptWithPublicKey(y.toString());
+		
+		JSONObject json = new JSONObject();
+		json.put("signature", params[0]);
+		json.put("y", params[1]);
 
-		return params;
+		return json.toString();
 	}
 
-	public boolean verifyPseudonym(String[] params) {
+	public boolean verifyPseudonym(String input) {
+		JSONObject json = new JSONObject(input);
+		String[] params = new String[2] ;
+		params[0] = json.getString("y");
+		params[1] = json.getString("signature");
 		boolean verified = crypto.getValidation(params[0], params[1]);
 		if (verified) {
 			User user = new User();
@@ -181,7 +189,9 @@ public class UserService implements UserServiceInterface {
 		return getServiceMessage(params);
 	}
 
-	public String solveChallenge(String c, String[] services) {
+	public String solveChallenge(String input, String[] services) {
+		JSONObject json = new JSONObject(input);  
+		String c = json.getString("c");
 		schnorr.solveChallengeQuery(new BigInteger(c), RU);
 		K = Cryptography.hash(schnorr.getW2().toString());
 		random = schnorr.getRandom();

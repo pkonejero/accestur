@@ -16,4 +16,7 @@ public interface ServiceAgentRepository extends PagingAndSortingRepository<Servi
 	ServiceAgent findByNameIgnoreCase(String name);
 	
 	List<ServiceAgent> findByProvider(Provider provider);
+	
+	List<ServiceAgent> findAll();
+	
 }

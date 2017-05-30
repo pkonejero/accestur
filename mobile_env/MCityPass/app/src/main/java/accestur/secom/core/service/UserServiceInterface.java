@@ -9,7 +9,7 @@ public interface UserServiceInterface{
 	
 	public void initUser();
 
-	public String[] authenticateUser();
+	public String authenticateUser();
 	
 	public boolean verifyPseudonym(String[] params);
 	

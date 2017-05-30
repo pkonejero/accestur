@@ -1,5 +1,6 @@
 package secom.accestur.core.service.impl;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,12 @@ public class TrustedThirdPartyService implements TrustedThirdPartyServiceInterfa
 		return null;
 	}
 
-	public String[] generatePseudonym(String[] params){
+	public String generatePseudonym(String input){
+		JSONObject json = new JSONObject(input);
+		String[] params = new String[2];
+		params[0] = json.getString("signature");
+		params[1] = json.getString("y");
+		
 		String[] message = new String[2];
 		String yU = crypto.decryptWithPrivateKey(params[1]);
 		if (crypto.getValidation(yU, params[0])){
@@ -33,7 +39,10 @@ public class TrustedThirdPartyService implements TrustedThirdPartyServiceInterfa
 		} else {
 			message[0] = "Error";
 		}
-		return message;
+		json = new JSONObject();
+		json.put("y", message[0]);
+		json.put("signature", message[1]);
+		return json.toString();
 	}
 
 	public void createCertificate(){

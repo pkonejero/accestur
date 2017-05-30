@@ -70,6 +70,7 @@ public class UserService implements UserServiceInterface {
     private String[] kandRI;
 
     private String hash;
+    private String c;
 
     public UserService() {
         serviceAgentService = new ServiceAgentService();
@@ -106,19 +107,184 @@ public class UserService implements UserServiceInterface {
         System.out.println(user.getSchnorr());
     }
 
-    @Override
-    public String[] authenticateUser() {
-        return new String[0];
+    ///////////////////////////////////////////////////////////////////////
+    /////////////////////// PSEUDONYM///////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////
+
+    public String authenticateUser() {
+        crypto.initPublicKey("cert/ttp/public_TTP.der");
+        // crypto.initPublicKey("cert/issuer/public_ISSUER.der");
+        schnorr.Init();
+        schnorr.SecretKey();
+        schnorr.PublicKey();
+        String params[] = new String[3];
+        BigInteger y = schnorr.getY();
+        params[0] = crypto.getSignature(y.toString());
+        params[1] = crypto.encryptWithPublicKey(y.toString());
+
+        JSONObject json = new JSONObject();
+
+        try {
+            json.put("signature", params[0]);
+            json.put("y", params[1]);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return json.toString();
     }
 
-    @Override
-    public boolean verifyPseudonym(String[] params) {
-        return false;
+    public boolean verifyPseudonym(String input) {
+        JSONObject json = null;
+        boolean verified = false;
+        try {
+            json = new JSONObject(input);
+            String[] params = new String[2];
+            params[0] = json.getString("y");
+            params[1] = json.getString("signature");
+            verified = crypto.getValidation(params[0], params[1]);
+            if (verified) {
+                User user = new User();
+                user.setPseudonym(generatePseudonym(params[0], params[1]));
+                user.setSchnorr(schnorr.getPrivateCertificate());
+                userRepository.save(user);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return verified;
     }
 
-    @Override
+    ///////////////////////////////////////////////////////////////////////
+    /////////////////// PURCHASE PASS///////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////
+
     public String getService() {
-        return null;
+        // user = userRepository.findAll().iterator().next();
+        crypto.initPublicKey("cert/issuer/public_ISSUER.der");
+        schnorr = Schnorr.fromPrivateCertificate(user.getSchnorr());
+        String[] params = new String[10];
+        params[0] = user.getPseudonym();
+        params[1] = schnorr.getCertificate();
+        RU = schnorr.getRandom();
+        user.setRU(RU.toString());
+        params[2] = Cryptography.hash(RU.toString());
+        BigInteger Hu = schnorr.getPower(RU);
+        schnorr.getServiceQuery();
+        params[3] = Hu.toString();
+        params[4] = schnorr.getA_1().toString();
+        params[5] = schnorr.getA_2().toString();
+        params[6] = Constants.LIFETIME;
+        params[7] = Constants.CATEGORY;
+        params[8] = Constants.EXPDATE;
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+        System.out.println("PURDATE:" + dateFormat.format(date));
+        params[9] = dateFormat.format(date);
+        // userRepository.save(user);
+        return getServiceMessage(params);
+    }
+
+    public String solveChallenge(String input, String[] services) {
+        String c;
+        try {
+            JSONObject json = new JSONObject(input);
+            c = json.getString("c");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        schnorr.solveChallengeQuery(new BigInteger(c), RU);
+        K = Cryptography.hash(schnorr.getW2().toString());
+        random = schnorr.getRandom();
+
+        psi = new String[services.length];
+        for (int i = 0; i < services.length; i++) {
+            ServiceAgent service = serviceAgentService.getServiceByName(services[i]);
+            if (service.getM() == -1) {
+                psi[i] = Cryptography.hash(random.toString());
+            } else if (service.getM() == 1) {
+                psi[i] = Cryptography.hash(random.toString());
+            } else {
+                for (int j = 0; j <= service.getM(); j++) {
+                    if (j == 0) {
+                        psi[i] = Cryptography.hash(random.toString());
+                    } else {
+                        psi[i] = Cryptography.hash(psi[i]);
+                    }
+                }
+            }
+        }
+        String[] ws = new String[2];
+        ws[0] = schnorr.getW1().toString();
+        ws[1] = schnorr.getW2().toString();
+
+        return solveChallengeMessage(psi, services, ws);
+    }
+
+    public String receivePass(String params) {
+        System.out.println(params);
+        try{
+            JSONObject json = new JSONObject(params);
+            long id = json.getLong("Sn");
+            JSONArray jsonArray = json.getJSONArray("Services");
+            JSONObject serviceJSON = jsonArray.getJSONObject(0);
+            String service = serviceJSON.getString("Service");
+            secretValueService.saveSecretValue(new SecretValue(mCityPassService.getMCityPassBySn(id),
+                    serviceAgentService.getServiceByName(service).getProvider(), random.toString()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return "Everything OK";
+    }
+
+    // MESSAGE PROCESSORS
+
+    private String getServiceMessage(String[] params) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("user", params[0]);
+            json.put("certificate", params[1]);
+            json.put("hRU", params[2]);
+            json.put("Hu", params[3]);
+            json.put("A1", params[4]);
+            json.put("A2", params[5]);
+            json.put("Lifetime", params[6]);
+            json.put("Category", params[7]);
+            json.put("EXPDATE", params[8]);
+            json.put("PURDATE", params[9]);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json.toString();
+    }
+
+    private String solveChallengeMessage(String[] psi, String[] services, String[] ws) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("w1", crypto.encryptWithPublicKey(ws[0]));
+            json.put("w2", crypto.encryptWithPublicKey(ws[1]));
+            JSONArray jsonArray = new JSONArray();
+            JSONObject jsonObject;
+
+            for (int i = 0; i < psi.length; i++) {
+                jsonObject = new JSONObject();
+                jsonObject.put("service", services[i]);
+                jsonObject.put("psi", psi[i]);
+                String s = crypto.encryptWithPublicKey(jsonObject.toString());
+                jsonArray.put(i, s);
+            }
+
+            json.put("services", jsonArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String message = json.toString();
+
+        return message;
     }
 
 
@@ -277,16 +443,6 @@ public class UserService implements UserServiceInterface {
             e.printStackTrace();
         }
         return false;
-    }
-
-    @Override
-    public String solveChallenge(String c, String[] services) {
-        return null;
-    }
-
-    @Override
-    public String receivePass(String params) {
-        return null;
     }
 
     ///////////////////////////////////////////////////////////////////////
