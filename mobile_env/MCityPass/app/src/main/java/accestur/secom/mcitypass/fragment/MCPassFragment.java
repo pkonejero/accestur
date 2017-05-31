@@ -19,17 +19,17 @@ public class MCPassFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_mcpass, container, false);
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-       int counter=0;
-       NonReusableTask nonReusableTask = new NonReusableTask();
-       nonReusableTask.execute();
-
-       MTimesReusableTask mTimesReusableTask = new MTimesReusableTask();
-       mTimesReusableTask.execute(counter);
-
-       InfiniteReusableTask infiniteReusableTask = new InfiniteReusableTask();
-       infiniteReusableTask.execute();
-    }
+//    @Override
+//    public void onViewCreated(View view, Bundle savedInstanceState) {
+//       int counter=0;
+//       NonReusableTask nonReusableTask = new NonReusableTask();
+//       nonReusableTask.execute();
+//
+//       MTimesReusableTask mTimesReusableTask = new MTimesReusableTask();
+//       mTimesReusableTask.execute(counter);
+//
+//       InfiniteReusableTask infiniteReusableTask = new InfiniteReusableTask();
+//       infiniteReusableTask.execute();
+//    }
 
 }
