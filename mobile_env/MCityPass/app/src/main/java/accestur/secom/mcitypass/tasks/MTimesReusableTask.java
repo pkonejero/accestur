@@ -10,7 +10,7 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-import static accestur.secom.mcitypass.UserActivity.userService;
+import static accestur.secom.mcitypass.activity.MainActivity.userService;
 
 /**
  * Created by Sebastià on 24/4/2017.

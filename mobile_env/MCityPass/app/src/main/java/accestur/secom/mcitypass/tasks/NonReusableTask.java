@@ -10,11 +10,7 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-import static accestur.secom.mcitypass.UserActivity.userService;
-
-/**
- * Created by Sebastià on 24/4/2017.
- */
+import static accestur.secom.mcitypass.activity.MainActivity.userService;
 
 public class NonReusableTask extends AsyncTask<String, Void, Void> {
     public static final String BASE_URL = "http://192.168.1.33:8080/";
