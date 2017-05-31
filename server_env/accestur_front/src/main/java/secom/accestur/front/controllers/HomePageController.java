@@ -38,7 +38,7 @@ public class HomePageController{
 //		createServices("TIB");
 //		generateUser();
 //		passVerification();
-//		passPurchase();
+		passPurchase();
 //		passActivation();
 //		infinitePassVerification();
 		mpassVerification();

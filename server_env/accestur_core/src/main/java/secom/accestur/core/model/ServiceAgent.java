@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.json.JSONObject;
+
 @Entity
 @Table(name="service")
 public class ServiceAgent extends DomainObjectModel{
@@ -19,7 +21,7 @@ public class ServiceAgent extends DomainObjectModel{
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="PROVIDER_ID")
 	private Provider provider;
 
@@ -91,4 +93,6 @@ public class ServiceAgent extends DomainObjectModel{
 	public Long getId() {
 		return id;
 	}
+	
+	
 }

@@ -77,52 +77,10 @@ public class IssuerService implements IssuerServiceInterface{
 		return issuerRepository.findByNameIgnoreCase(name);
 	}
 	
-	
-	
-	public String generateCertificate(ServiceAgent[] services){
-		serviceAgentService.storeServices(services);
-		arrayGeneration();
-		return "Services Generated";
-	}
-
-	public String getChallenge(String json){
-		String[] params = solveChallengeMessage(json);
-		paramsOfPass = params;
-		schnorr = Schnorr.fromCertificate(params[1]);
-		schnorr.setA_1(new BigInteger(params[4]));
-		schnorr.setA_2(new BigInteger(params[5]));
-		BigInteger yU = new BigInteger(getYu(params[0]));
-		BigInteger Hu = new BigInteger(params[3]);
-		BigInteger c = schnorr.getRandom();
-		schnorr.setC(c);
-		System.out.println("Issuer sends:");
-		System.out.println("c: " +c.toString());
-		yU_c = yU.modPow(c, schnorr.getP());
-		Hu_c = Hu.modPow(c, schnorr.getP());
-		return c.toString();
-	}
-
-	private String[] solveChallengeMessage (String message){
-		JSONObject json = new JSONObject(message);
-		String[] params = new String[10];
-		params[0] = json.getString("user");
-		params[1] = json.getString("certificate");
-		params[2] = json.getString("hRU");
-		params[3] = json.getString("Hu");
-		params[4] = json.getString("A1");
-		params[5] = json.getString("A2");
-		params[6] = json.getString("Lifetime");
-		params[7] = json.getString("Category");
-		params[8] = json.getString("EXPDATE");
-		params[9] = json.getString("PURDATE");
-		return params;
-	}
-
-
 	public boolean arrayGeneration(){
 		return false;
 	}
-
+	
 	public void createCertificate(){
 		crypto.initPrivateKey("cert/issuer/private_ISSUER.der");
 		crypto.initPublicKey("cert/user/public_USER.der");	
@@ -139,14 +97,39 @@ public class IssuerService implements IssuerServiceInterface{
 			System.out.println("This issuer already exisits, it will be initialized to the existing values");
 		}
 	}
-
-	public static String getYu(String json){
-		JSONObject jsonObject = new JSONObject(json);
-		return jsonObject.getString("y");
+	///////////////////////////////////////////////////////////////////////
+	/////////////////// Affiliate Provider/////////////////////////////////
+	///////////////////////////////////////////////////////////////////////
+	public String generateCertificate(ServiceAgent[] services){
+		serviceAgentService.storeServices(services);
+		arrayGeneration();
+		return "Services Generated";
 	}
 
-
-
+	
+///////////////////////////////////////////////////////////////////////
+///////////////////PASS Purchase///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+	public String getChallenge(String input){
+		createCertificate();
+		String[] params = solveChallengeMessage(input);
+		paramsOfPass = params;
+		schnorr = Schnorr.fromCertificate(params[1]);
+		schnorr.setA_1(new BigInteger(params[4]));
+		schnorr.setA_2(new BigInteger(params[5]));
+		BigInteger yU = new BigInteger(getYu(params[0]));
+		BigInteger Hu = new BigInteger(params[3]);
+		BigInteger c = schnorr.getRandom();
+		schnorr.setC(c);
+		System.out.println("Issuer sends:");
+		System.out.println("c: " +c.toString());
+		yU_c = yU.modPow(c, schnorr.getP());
+		Hu_c = Hu.modPow(c, schnorr.getP());
+		JSONObject json = new JSONObject();
+		json.put("c", c.toString());
+		return json.toString();
+	}
+	
 	public String getPASS(String params){
 		getChallengeMessage(params);
 		schnorr.setW1(new BigInteger(ws[0]));
@@ -196,6 +179,25 @@ public class IssuerService implements IssuerServiceInterface{
 	return mCityPass.toString();
 	}
 	
+	
+	// MESSAGE PROCESSORS
+	
+	private String[] solveChallengeMessage (String message){
+		JSONObject json = new JSONObject(message);
+		String[] params = new String[10];
+		params[0] = json.getString("user");
+		params[1] = json.getString("certificate");
+		params[2] = json.getString("hRU");
+		params[3] = json.getString("Hu");
+		params[4] = json.getString("A1");
+		params[5] = json.getString("A2");
+		params[6] = json.getString("Lifetime");
+		params[7] = json.getString("Category");
+		params[8] = json.getString("EXPDATE");
+		params[9] = json.getString("PURDATE");
+		return params;
+	}
+
 	private void getChallengeMessage(String params){
 		//System.out.println(params);
 		JSONObject json = new JSONObject(params);
@@ -219,8 +221,14 @@ public class IssuerService implements IssuerServiceInterface{
 			services[i] = jsonObject.getString("service");
 		}
 	}
+
 	
-	
+
+	public static String getYu(String json){
+		JSONObject jsonObject = new JSONObject(json);
+		return jsonObject.getString("y");
+	}
+
 	
 	///////////////////////////////////////////////////////////////////////
 	/////////////// PASS Activation ///////////////////////////////////////

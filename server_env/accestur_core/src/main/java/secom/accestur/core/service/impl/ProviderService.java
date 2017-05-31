@@ -71,7 +71,10 @@ public class ProviderService implements ProviderServiceInterface {
 	public List<Provider> getProvidersByIssuer(Issuer issuer) {
 		return providerRepository.findByIssuer(issuer);
 	}
-
+	
+	public Provider getProviderById(Long id){
+		 return providerRepository.findById(id);
+	}
 	public void createCertificate() {
 		crypto.initPrivateKey("private_ISSUER.der");
 		crypto.initPublicKey("public_ISSUER.der");
