@@ -9,12 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import accestur.secom.mcitypass.R;
+import accestur.secom.mcitypass.content.MCPassItem;
 import accestur.secom.mcitypass.fragment.MCPassAddFragment;
+import accestur.secom.mcitypass.fragment.MCPassDetailFragment;
 import accestur.secom.mcitypass.fragment.MCPassListFragment;
 import accestur.secom.mcitypass.fragment.SettingsFragment;
 import accestur.secom.core.service.impl.UserService;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, MCPassListFragment.MCPassListener {
 
     public static UserService userService;
 
@@ -34,22 +36,36 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         Fragment fragment = null;
         switch (item.getItemId()) {
             case R.id.action_device:
-                fragment = new MCPassListFragment();
+                MCPassListFragment mcPassListFragment = new MCPassListFragment();
+                mcPassListFragment.setCorreosListener(this);
+                replaceFragment(mcPassListFragment);
                 break;
             case R.id.action_cloud:
                 fragment = new MCPassAddFragment();
+                replaceFragment(fragment);
                 break;
             case R.id.action_settings:
                 fragment = new SettingsFragment();
+                replaceFragment(fragment);
                 break;
         }
-        replaceFragment(fragment);
         return true;
+    }
+
+    @Override
+    public void onMCPassItemSeleccionado(MCPassItem c) {
+        MCPassDetailFragment fragment = new MCPassDetailFragment();
+        fragment.mostrarDetalle(c.getTexto());
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_fragment_placeholder, fragment);
+        fragmentTransaction.commit();
     }
 
     private void setInitialFragment() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.main_fragment_placeholder, new MCPassListFragment());
+        MCPassListFragment mcPassListFragment = new MCPassListFragment();
+        mcPassListFragment.setCorreosListener(this);
+        fragmentTransaction.add(R.id.main_fragment_placeholder, mcPassListFragment);
         fragmentTransaction.commit();
     }
 
