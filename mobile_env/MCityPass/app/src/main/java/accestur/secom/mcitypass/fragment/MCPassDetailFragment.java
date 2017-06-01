@@ -5,18 +5,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import accestur.secom.mcitypass.R;
-import accestur.secom.mcitypass.content.MCPassItem;
 
 public class MCPassDetailFragment extends Fragment {
 
+    private TextView txtDetail;
+    private String text;
+
     public MCPassDetailFragment() {}
-    TextView txtDetalle;
-    String text;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -30,10 +28,10 @@ public class MCPassDetailFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle state) {
         super.onActivityCreated(state);
-        txtDetalle = (TextView)getActivity().findViewById(R.id.TxtDetalle);
-        txtDetalle.setText(text);
+        txtDetail = (TextView)getActivity().findViewById(R.id.textDetail);
+        txtDetail.setText(text);
     }
-
+}
 
 //    @Override
 //    public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -47,5 +45,3 @@ public class MCPassDetailFragment extends Fragment {
 //       InfiniteReusableTask infiniteReusableTask = new InfiniteReusableTask();
 //       infiniteReusableTask.execute();
 //    }
-
-}

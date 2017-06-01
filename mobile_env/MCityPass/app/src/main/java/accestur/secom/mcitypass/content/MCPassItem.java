@@ -2,25 +2,25 @@ package accestur.secom.mcitypass.content;
 
 public class MCPassItem
 {
-	private String de;
-	private String asunto;
-	private String texto;
+	private String info_1;
+	private String info_2;
+	private String info_3;
 
 	public MCPassItem(String de, String asunto, String texto){
-		this.de = de;
-		this.asunto = asunto;
-		this.texto = texto;
+		this.info_1 = de;
+		this.info_2 = asunto;
+		this.info_3 = texto;
 	}
 	
 	public String getDe(){
-		return de;
+		return info_1;
 	}
 	
 	public String getAsunto(){
-		return asunto;
+		return info_2;
 	}
 	
 	public String getTexto(){
-		return texto;
+		return info_3;
 	}
 }

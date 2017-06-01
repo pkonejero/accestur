@@ -1,12 +1,15 @@
 package accestur.secom.mcitypass.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import accestur.secom.mcitypass.R;
 import accestur.secom.mcitypass.content.MCPassItem;
@@ -37,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         switch (item.getItemId()) {
             case R.id.action_device:
                 MCPassListFragment mcPassListFragment = new MCPassListFragment();
-                mcPassListFragment.setCorreosListener(this);
+                mcPassListFragment.setMCPassListListener(this);
                 replaceFragment(mcPassListFragment);
                 break;
             case R.id.action_cloud:
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private void setInitialFragment() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         MCPassListFragment mcPassListFragment = new MCPassListFragment();
-        mcPassListFragment.setCorreosListener(this);
+        mcPassListFragment.setMCPassListListener(this);
         fragmentTransaction.add(R.id.main_fragment_placeholder, mcPassListFragment);
         fragmentTransaction.commit();
     }
@@ -73,6 +76,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.main_fragment_placeholder, fragment);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        View view = bottomNavigationView.findViewById(R.id.action_device);
+        view.performClick();
+        MCPassListFragment mcPassListFragment = new MCPassListFragment();
+        mcPassListFragment.setMCPassListListener(this);
+        replaceFragment(mcPassListFragment);
     }
 
 }

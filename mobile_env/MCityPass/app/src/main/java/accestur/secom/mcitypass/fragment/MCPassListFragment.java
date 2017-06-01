@@ -1,8 +1,10 @@
 package accestur.secom.mcitypass.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +20,11 @@ public class MCPassListFragment extends Fragment {
 
     private MCPassItem[] datos =
             new MCPassItem[]{
-                    new MCPassItem("Persona 1", "Asunto del correo 1", "Texto del correo 1"),
-                    new MCPassItem("Persona 2", "Asunto del correo 2", "Texto del correo 2"),
-                    new MCPassItem("Persona 3", "Asunto del correo 3", "Texto del correo 3"),
-                    new MCPassItem("Persona 4", "Asunto del correo 4", "Texto del correo 4"),
-                    new MCPassItem("Persona 5", "Asunto del correo 5", "Texto del correo 5")};
+                    new MCPassItem("MCityPass 1", "Info 1", "Detail 1"),
+                    new MCPassItem("MCityPass 2", "Info 2", "Detail 2"),
+                    new MCPassItem("MCityPass 3", "Info 3", "Detail 3"),
+                    new MCPassItem("MCityPass 4", "Info 4", "Detail 4"),
+                    new MCPassItem("MCityPass 5", "Info 5", "Detail 5")};
     private ListView listView;
     private MCPassListener listener;
 
@@ -67,8 +69,8 @@ public class MCPassListFragment extends Fragment {
             TextView lblDe = (TextView)item.findViewById(R.id.LblDe);
             lblDe.setText(datos[position].getDe());
 
-            TextView lblAsunto = (TextView)item.findViewById(R.id.LblAsunto);
-            lblAsunto.setText(datos[position].getAsunto());
+            //TextView lblAsunto = (TextView)item.findViewById(R.id.LblAsunto);
+            //lblAsunto.setText(datos[position].getAsunto());
 
             return(item);
         }
@@ -78,7 +80,9 @@ public class MCPassListFragment extends Fragment {
         void onMCPassItemSeleccionado(MCPassItem c);
     }
 
-    public void setCorreosListener(MCPassListener listener) {
+    public void setMCPassListListener(MCPassListener listener) {
         this.listener=listener;
     }
+
+
 }

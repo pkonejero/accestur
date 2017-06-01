@@ -8,11 +8,8 @@
     tools:context="accestur.secom.mcitypass.fragment.SettingsFragment">
 
   <TextView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:gravity="center"
-      android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-      android:textStyle="bold"/>
+      android:id="@+id/textConfiguration"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content" />
 
 </LinearLayout>

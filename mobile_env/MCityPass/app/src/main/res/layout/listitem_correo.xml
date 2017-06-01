@@ -9,8 +9,11 @@
 		android:layout_width="match_parent" 
 		android:layout_height="wrap_content" 
 		android:textStyle="bold" 
-		android:textSize="20sp" />
-		
+		android:textSize="20sp"
+		android:padding="25dp"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		/>
+
 	<TextView android:id="@+id/LblAsunto" 
 		android:layout_width="match_parent" 
 		android:layout_height="wrap_content" 

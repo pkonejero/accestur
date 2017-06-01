@@ -9,7 +9,7 @@
     tools:context="accestur.secom.mcitypass.fragment.MCPassDetailFragment" >
 
   <TextView
-      android:id="@+id/TxtDetalle"
+      android:id="@+id/textDetail"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content" />
 
