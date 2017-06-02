@@ -1,11 +1,6 @@
 <resources>
     <string name="app_name">MCityPass</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="id_label">The ID is</string>
-    <string name="id_value">[id]</string>
-    <string name="content_label">The Content is</string>
-    <string name="content_value">[content]</string>
-    <string name="action_refresh">Refresh</string>
+    <string name="bottom_navigation_menu_device_text">Wallet</string>
+    <string name="bottom_navigation_menu_cloud_text">Add</string>
+    <string name="bottom_navigation_menu_settings_text">Settings</string>
 </resources>
