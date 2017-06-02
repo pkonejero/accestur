@@ -1,18 +1,46 @@
 package accestur.secom.core.model;
 
+
+
+
+
+/*import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;*/
+
+
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
+import accestur.secom.core.AppDatabase;
 import accestur.secom.core.utils.Constants;
 
 
-public class Counter extends DomainObjectModel{
+@Table( name = "counter")
+public class Counter extends Model {// extends BaseModel{
 
-	private Long id;
+   // @PrimaryKey
+	//@Column(index =true)
+	//private Long id;
 
+
+    //@ForeignKey
+	@Column(name = "mCityPass")
 	private MCityPass mCityPass;
 
+    //@ForeignKey
+	@Column(name = "service")
 	private ServiceAgent service;
-	
+
+	@Column
 	private String psi;
+
+	@Column
 	private String lastHash;
+
+	@Column
 	private int counter;
 
 	public Counter (){}
@@ -38,16 +66,22 @@ public class Counter extends DomainObjectModel{
 		this.mCityPass = mCityPass;
 		this.service = service;
 		this.psi = psi;
-		this.lastHash = Constants.NOTUSED;;
+		this.lastHash = Constants.NOTUSED;
 	}
-	
-	
 
-	public MCityPass getmCityPass(){
+  //  public Long getId() {
+    //    return id;
+    //}
+
+    //public void setId(Long id) {
+      //  this.id = id;
+    //}
+
+    public MCityPass getMCityPass(){
 		return mCityPass;
 	}
 
-	public void setmCityPass(MCityPass mCityPass){
+	public void setMCityPass(MCityPass mCityPass){
 		this.mCityPass = mCityPass;
 	}
 
@@ -57,7 +91,7 @@ public class Counter extends DomainObjectModel{
 
 	public void setService(ServiceAgent service){
 		this.service = service;
-	}	
+	}
 
 	public int getCounter(){
 		return counter;

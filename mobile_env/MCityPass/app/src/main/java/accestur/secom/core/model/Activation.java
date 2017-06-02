@@ -2,20 +2,47 @@ package accestur.secom.core.model;
 
 
 
+
+/*import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;*/
+
+/*
+ annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
+
+    compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
+    compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
+ */
+
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import accestur.secom.core.AppDatabase;
 
-public class Activation extends DomainObjectModel{
+//@Table( database = AppDatabase.class , allFields = true)
+@Table(name = "activation")
+public class Activation extends Model {//} extends BaseModel{
 
-	private Long id;
+	//@PrimaryKey
+	//private Long id;
 
+	//@ForeignKey(stubbedRelationship = true)
+    @Column
 	private MCityPass mCityPass;
 
+    @Column
 	private String actDate;
 
+    @Column
 	private String state;
 
+	@Column(length = 40000)
 	private String signature;
 	
 	public Activation(){}
@@ -37,13 +64,13 @@ public class Activation extends DomainObjectModel{
 	
 	
 
-	public Long getId() {
+	/*public Long getId() {
 		return id;
 	}
 	
 	public void setId(Long id) {
 		this.id = id;
-	}
+	}*/
 
 	public String getSignature() {
 		return signature;
@@ -53,11 +80,11 @@ public class Activation extends DomainObjectModel{
 		this.signature = signature;
 	}
 
-	public MCityPass getmCityPass(){
+	public MCityPass getMCityPass(){
 		return mCityPass;
 	}
 
-	public void setmCityPass(MCityPass mCityPass){
+	public void setMCityPass(MCityPass mCityPass){
 		this.mCityPass = mCityPass;
 	}
 

@@ -1,5 +1,7 @@
 package  accestur.secom.core.service.impl;
 
+import com.activeandroid.query.Select;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -41,13 +43,13 @@ public class MCityPassService implements MCityPassServiceInterface{
 
 	public void initMCityPass(){
 		mCityPass = new MCityPass();
-		mCityPass.setId(new Long(1));
+		//mCityPass.setId(new Long(1));
 		mCityPass.setHu("4228103472873156375544411390523624082868203727534051249333853717079942409671671511453170699872717389638804717693350326414639482762948883779536460372438517343");
 		mCityPass.setCategory("Adult");
 		mCityPass.setDelta("{\"signature\":\"v9ds2OPz5QoV6y3uY7mKnayhzUWsM80xEmzZp00PjKIaeMc06aY8eR+2J1cgvdJ6pjWKiSlSbt0/nLxiJ4t1qrRvgMBBvhh0l2edup2tcbZ0ezmeKncVfBznLsip/vXyJhaocQ5XcGnS9X1Cup292cGZFIndcricz5huMh1RXaeHMbDIxvJcsRouJv/p/iH6jDzYq0sTe8p3+wECZAV64/NPV4I4Tj8yOhOPPEDEM/iORTtkohUjMQh2qQPQqiP4+HlmKMFeT7IdM5HW7hZ3MkWS6CdLoLGfFZ99JWAzaDQ7yOKwHkWEeLQOpFTig/HoTMuslVhcR4bPXo2WxAv4Hw==\",\"k\":\"vegC0+/Fi4Q4OQgO/qlda8ica34nJghne/O31zrRarJeCOyYmGxTbUp5xvquT3JhvUbrQndk61rPXXxKb8zRzN9G7L0rXDuGavCcuc1caG4THQTV5qV92FStAsSKXHertxcGY3ohSsJm8TLPXCirfSwoPVtZjr76ZsBQGqP4q1DtMeHz9FGDZezlJi1njvlbj4HJRMkhj1SBhFKSt1SIAB/Sdpg2f5yNTMMkXT5NqR6XyC74wQ4EdcuuzJkSuTQX0I0fuBm/4muWtwM6dm+Gq3yh1HbalYn+/EKo0RLX3eARv77rtFsoQrXOYEfMdTkz+onDuLX5SXbOqqjorJBHTg==\"}");
 		mCityPass.setExpDate("08/06/2017");
-		mCityPass.sethRI("/cTIH828yrztrDQuGNINiivgBAiO0Ugy20xdimlTJHc=");
-		mCityPass.sethRU("95VNTtuAMvKu8yy0wAl7+CTrtsupTvbdfCZhk+zXC6k=");
+		mCityPass.setHRI("/cTIH828yrztrDQuGNINiivgBAiO0Ugy20xdimlTJHc=");
+		mCityPass.setHRU("95VNTtuAMvKu8yy0wAl7+CTrtsupTvbdfCZhk+zXC6k=");
 		mCityPass.setLifeTime("604800000");
 		mCityPass.setPurDate("24/04/2017");
 		mCityPass.setSignature("aoiiyTY++oCXzStN4uDHooQXLezTbgdMeYWiu4nCRrEDiHrPBaatJustK6eeKdRknjQCyzZNF3WwdkZCnZj524SDTG+hO1ixmWyy+B0VFIFbp9EheT2wohheNZf3jIc8Z7BfgeHPrQ7lLqcCh8OQQVLxWz9R1XwWySTFhD7ioYSp3N437OK0GoiaA4ei3uPDmt/joXu0jec+XkOg6MFBD6R7B/tn9wqfHEc7CCLjL2JOzkG+CzIwbB3Y9xZI1OWAnZV/FPC/IEHFbIkHzjrHMBZNFN0eumpaSZGD97q+FtPGkjuWJeqdnjJ1Je1B7dR9EsZxoDsEYHbYrtlUidPCHQ==");
@@ -96,5 +98,13 @@ public class MCityPassService implements MCityPassServiceInterface{
 		return mCityPass;
 	}
 
+
+	public MCityPass loadMcitypass(long id){
+		//MCityPass mPass =  new Select().from(MCityPass.class).orderBy("RANDOM()").executeSingle();
+		MCityPass mPass = MCityPass.load(MCityPass.class, id);
+		System.out.println("MCityPass: " + mPass.toString());
+		return mPass;
+
+	}
 
 }

@@ -18,7 +18,7 @@ public interface ServiceAgentInterface{
 	
 	public ServiceAgent getServiceBySn(long id);
 	
-	public List<ServiceAgent> getServicesByProvider(Provider provider);
+	public List<ServiceAgent> getServicesByProvider(String provider);
 	
 	public List<ServiceAgent> getServicesByMCityPass(MCityPass mCityPass);
 }

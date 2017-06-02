@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "accestur.secom.mcitypass"
-        minSdkVersion 22
+        minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -25,6 +25,9 @@ android {
     }
 }
 
+
+def dbflow_version = "4.0.2"
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -39,5 +42,9 @@ dependencies {
     compile 'commons-io:commons-io:2.4'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-scalars:2.1.0'
+
+
+    compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
+
 
 }

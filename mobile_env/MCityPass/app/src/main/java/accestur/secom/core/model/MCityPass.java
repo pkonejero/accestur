@@ -1,58 +1,96 @@
 package accestur.secom.core.model;
 
-import java.util.Date;
+
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
 import java.util.List;
 
 import org.json.*;
 
 
+/*
+import com.raizlabs.android.dbflow.annotation.*;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.BaseModel;*/
+
+import accestur.secom.core.AppDatabase;
 
 
+//@Table( database = AppDatabase.class , allFields = true)
+@Table(name = "mCityPass")
+public class MCityPass extends Model{// extends BaseModel{
+	//@PrimaryKey
+	@Column
+	private long sN;
 
-
-public class MCityPass extends DomainObjectModel{
-
-	private Long id;
-
+    //@ForeignKey(saveForeignKeyModel = false)
+	@Column
 	private User user;
 
-	private List<Counter> counters;
 
+	public List<Counter> counters (){
+        return getMany(Counter.class, "mCityPass");
+    }
+
+	//@OneToMany(methods = {OneToMany.Method.ALL}, variableName = "counters" )
+	/*public List<Counter> getCounters(){
+			if (counters == null || counters.isEmpty()) {
+			//	counters = SQLite.select().from(Counter.class).where(Counter_Table.mCityPass_id.eq(id)).queryList();
+			}
+			return counters;
+	}*/
+
+	//@ForeignKey(stubbedRelationship = true)
+	@Column
 	private Activation activation;
-	
+
+	//@ForeignKey(stubbedRelationship = true)
+	@Column
 	private SecretValue secretValue;
 
+	@Column
 	private String hRI;
-	
+
+	@Column
 	private String lifeTime;
+
+	@Column
 	private String category;
+
+	@Column
 	private String termsAndConditions;
 
+	@Column
 	private String purDate;
+
+	@Column
 	private String expDate;
-	
+
+	@Column(length = 40000)
 	private String delta;
-	
+
+	@Column
 	private String hRU;
+
+	@Column
 	private String Hu;
-	
-	
+
+
+//	@Column(length = 40000)
 	private String signature;
 	
 	
 	public MCityPass(){}
 
 	
-	public Long getId() {
-		return id;
+	public Long getsN() {
+		return sN;
 	}
 
-	
-
-
-
-	public void setId(Long id) {
-		this.id = id;
+	public void setsN(Long id) {
+		this.sN = id;
 	}
 
 
@@ -64,13 +102,13 @@ public class MCityPass extends DomainObjectModel{
 		this.user = user;
 	}
 
-	public List<Counter> getCounters(){
-		return counters;
-	}
+	//public List<Counter> getCounters(){
+	//	return counters;
+	//}
 
-	public void setCounters(List<Counter> counters){
-		this.counters = counters;
-	}
+	//public void setCounters(List<Counter> counters){
+	//	this.counters = counters;
+	//}
 
 	public Activation getActivation(){
 		return activation;
@@ -80,11 +118,11 @@ public class MCityPass extends DomainObjectModel{
 		this.activation = activation;
 	}
 
-	public String gethRI(){
+	public String getHRI(){
 		return hRI;
 	}
 
-	public void sethRI(String hRI){
+	public void setHRI(String hRI){
 		this.hRI = hRI;
 	}
 
@@ -128,11 +166,11 @@ public class MCityPass extends DomainObjectModel{
 		this.expDate = expDate;
 	}
 
-	public String gethRU(){
+	public String getHRU(){
 		return hRU;
 	}
 
-	public void sethRU(String hRU){
+	public void setHRU(String hRU){
 		this.hRU = hRU;
 	}
 
@@ -176,9 +214,12 @@ public class MCityPass extends DomainObjectModel{
 
 	@Override
 	public String toString(){
+		return "" + Hu;
+	}
+	public String toJSON(){
 		JSONObject json = new JSONObject();
 		try{
-			json.put("Sn", id);
+			json.put("Sn", sN);
 			json.put("User", user.getPseudonym());
 			json.put("hRI", hRI);
 			json.put("hRU", hRU);
@@ -191,10 +232,10 @@ public class MCityPass extends DomainObjectModel{
 			json.put("Signature", signature);
 			JSONArray jsonArray = new JSONArray();
 			JSONObject jsonObject;
-			for (int i = 0; i < counters.size(); i++){
+			for (int i = 0; i < counters().size(); i++){
 				jsonObject = new JSONObject();
-				jsonObject.put("Service", counters.get(i).getService().getName());
-				jsonObject.put("Psi", counters.get(i).getPsi());
+				jsonObject.put("Service", counters().get(i).getService().getName());
+				jsonObject.put("Psi", counters().get(i).getPsi());
 				jsonArray.put(jsonObject);
 			}
 			json.put("Services", jsonArray);

@@ -126,8 +126,16 @@ public class CounterService implements CounterServiceInterface{
 
 	@Override
 	public void saveCounters(List<Counter> counters) {
-
+		for(int i = 0; i < counters.size(); i++){
+            System.out.println(counters.get(i).getPsi());
+            System.out.println("Counter saved at: " + counters.get(i).save());
+		}
 	}
 
 
+    public Counter loadCounters(int i) {
+        Counter c = Counter.load(Counter.class, i);
+        System.out.println("Counter: " + counter.getPsi());
+        return c;
+    }
 }

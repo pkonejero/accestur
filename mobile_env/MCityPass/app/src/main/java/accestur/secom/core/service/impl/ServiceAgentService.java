@@ -1,5 +1,7 @@
 package  accestur.secom.core.service.impl;
 
+import com.activeandroid.query.Select;
+
 import java.util.List;
 
 
@@ -24,21 +26,40 @@ public class ServiceAgentService implements ServiceAgentInterface{
 
 	public void initService(long id, boolean user){
 		if(id == 1){
-			serviceAgent = new ServiceAgent(1,"11071517341259957021400102350374716943843216445567934842131423223624389226020862482132369792224170331987537244451641396126431797530031570316025873406659783",-1,"InfiniteReusable");
+			serviceAgent = new ServiceAgent("11071517341259957021400102350374716943843216445567934842131423223624389226020862482132369792224170331987537244451641396126431797530031570316025873406659783",-1,"InfiniteReusable");
 		} else if (id == 2){
-			serviceAgent  = new ServiceAgent(2, "10451944853989757415347339212599340338256628776040194990105299983846722323505994584277331974426523017142034761677659405953861573121656854047441972074374309",1,"NoReusable");
+			serviceAgent  = new ServiceAgent("10451944853989757415347339212599340338256628776040194990105299983846722323505994584277331974426523017142034761677659405953861573121656854047441972074374309",1,"NoReusable");
 		} else if (id == 3) {
-			serviceAgent = new ServiceAgent(3, "6872697559039177648737207692817225887047535462069465414807745696443168570422818945243679193891839190988514728109431401855857751123771201744562700729777507",2,"TwoTimesReusable");
+			serviceAgent = new ServiceAgent( "6872697559039177648737207692817225887047535462069465414807745696443168570422818945243679193891839190988514728109431401855857751123771201744562700729777507",2,"TwoTimesReusable");
 		} else {
-			serviceAgent = new ServiceAgent(4, "11392979547410824194480369401914165105210309527281143097757756290619102528318470598155402289947925149239927795442262168690569375491515431066768584688828929",10,"TenTimesReusable");
+			serviceAgent = new ServiceAgent( "11392979547410824194480369401914165105210309527281143097757756290619102528318470598155402289947925149239927795442262168690569375491515431066768584688828929",10,"TenTimesReusable");
 
 		}
 	}
 
+	public void saveServiceAgent(){
+		serviceAgent.save();
+	}
 
-	public List<ServiceAgent> getServicesByProvider(Provider provider){
+	public void loadServiceAgent(String name){
+       // serviceAgent = null;
+		serviceAgent = new Select().from(ServiceAgent.class).where("name = ?", name).executeSingle();
+        //System.out.println("ServiceAgent: " + serviceAgent.getName());
+        //serviceAgent =  new Select().from(ServiceAgent.class).orderBy("RANDOM()").executeSingle();
+	}
+
+	public List<ServiceAgent> getServicesByProvider(String provider){
+      //  ServiceAgent.load(Z)
+
 		return null;
 	}
+
+	public List<ServiceAgent> getServices(){
+        return new Select()
+                .from(ServiceAgent.class)
+                .orderBy("Name ASC")
+                .execute();
+    }
 
 
 	public List<ServiceAgent> getServicesByMCityPass(MCityPass mCityPass){
@@ -52,8 +73,15 @@ public class ServiceAgentService implements ServiceAgentInterface{
 
 	@Override
 	public ServiceAgent getServiceByName(String name) {
-		return null;
-	}
+		serviceAgent = new Select()
+                .from(ServiceAgent.class)
+                .where("name = ?", name)
+                .executeSingle();
+
+        System.out.println("ServiceAgent: " + serviceAgent.getName());
+
+        return serviceAgent;
+    }
 
 	@Override
 	public ServiceAgent getServiceBySn(long id) {
@@ -61,4 +89,8 @@ public class ServiceAgentService implements ServiceAgentInterface{
 	}
 
 
+    public void storeServiceAgent(ServiceAgent serviceAgent) {
+        this.serviceAgent = serviceAgent;
+        saveServiceAgent();
+    }
 }

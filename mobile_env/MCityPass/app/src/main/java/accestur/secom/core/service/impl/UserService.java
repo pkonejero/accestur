@@ -9,7 +9,11 @@ import java.text.SimpleDateFormat;
 import android.os.Environment;
 import android.util.Base64;
 
+import com.activeandroid.query.Select;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.json.JSONArray;
@@ -82,8 +86,10 @@ public class UserService implements UserServiceInterface {
         secretValueService = new SecretValueService();
         schnorr = new Schnorr();
         crypto = new Cryptography();
-        initUser();
+        // initUser();
     }
+
+
 
 
     @Override
@@ -108,12 +114,18 @@ public class UserService implements UserServiceInterface {
         System.out.println(user.getSchnorr());
     }
 
+
+    public void loadUser(int id){
+        user = new Select().from(User.class).where("id = ?", id).executeSingle();
+        System.out.println("User: " + user.getPseudonym());
+    }
     ///////////////////////////////////////////////////////////////////////
     /////////////////////// PSEUDONYM///////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
 
     public String authenticateUser() {
-        crypto.initPublicKey("cert/ttp/public_TTP.der");
+        crypto.initPublicKey(Constants.PATH_PROVIDER_KEY);
+        crypto.initPrivateKey(Constants.PATH_PRIVATE_KEY);
         // crypto.initPublicKey("cert/issuer/public_ISSUER.der");
         schnorr.Init();
         schnorr.SecretKey();
@@ -149,7 +161,7 @@ public class UserService implements UserServiceInterface {
                 User user = new User();
                 user.setPseudonym(generatePseudonym(params[0], params[1]));
                 user.setSchnorr(schnorr.getPrivateCertificate());
-              //  userRepository.save(user);
+                user.save();
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -165,7 +177,8 @@ public class UserService implements UserServiceInterface {
 
     public String getService() {
         // user = userRepository.findAll().iterator().next();
-        crypto.initPublicKey("cert/issuer/public_ISSUER.der");
+        user = User.load(User.class, 1);
+        crypto.initPublicKey(Constants.PATH_ISSUER_KEY);
         schnorr = Schnorr.fromPrivateCertificate(user.getSchnorr());
         String[] params = new String[10];
         params[0] = user.getPseudonym();
@@ -230,11 +243,47 @@ public class UserService implements UserServiceInterface {
         try{
             JSONObject json = new JSONObject(params);
             long id = json.getLong("Sn");
+            MCityPass mCityPass = new MCityPass();
+            mCityPass.setCategory(json.getString("Category"));
+            mCityPass.setHRI(json.getString("hRI"));
+            mCityPass.setHRU(json.getString("hRU"));
+            mCityPass.setHu(json.getString("Hu"));
+            mCityPass.setExpDate(json.getString("expDate"));
+            mCityPass.setPurDate(json.getString("purDate"));
+            mCityPass.setLifeTime(json.getString("Lifetime"));
+            mCityPass.setsN(id);
+            mCityPass.setTermsAndConditions("TermsAndConditions");
+            JSONArray jsonArray = json.getJSONArray("Services");
+
+            List<Counter> counterList = new ArrayList<Counter>();
+            String service = "";
+            for(int i = 0; i < jsonArray.length(); i++){
+                JSONObject jsonObject  = jsonArray.getJSONObject(i);
+                if(i == 0){
+                    service = jsonObject.getString("Service");
+                }
+                serviceAgentService.getServiceByName(jsonObject.getString("Service"));
+                counterList.add(new Counter(serviceAgentService.getServiceAgent().getM(), mCityPass, serviceAgentService.getServiceAgent(), jsonObject.getString("Psi")));
+            }
+            System.out.println("Saving counters");
+            counterService.saveCounters(counterList);
+
+            System.out.println("MCITYPASS PURCHASED: " +mCityPass.save());
+
+
+            /*
+            	List<Counter> counters = new ArrayList<Counter>();
+			for(int i = 0; i< services.length; i++ ){
+				serviceAgentService.initService((services[i]));
+				counters.add(new Counter(serviceAgentService.getServiceAgent().getM(), mCityPass, serviceAgentService.getServiceAgent(), psi[i]));
+			}
+             */
+            /*
             JSONArray jsonArray = json.getJSONArray("Services");
             JSONObject serviceJSON = jsonArray.getJSONObject(0);
-            String service = serviceJSON.getString("Service");
-            secretValueService.saveSecretValue(new SecretValue(mCityPassService.getMCityPassBySn(id),
-                    serviceAgentService.getServiceByName(service).getProvider(), random.toString()));
+            */
+            ServiceAgent serviceAgent = serviceAgentService.getServiceByName(service);
+            secretValueService.saveSecretValue(new SecretValue(mCityPass,serviceAgent.getProvider(), random.toString()));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -433,7 +482,7 @@ public class UserService implements UserServiceInterface {
             BigInteger Ap = new BigInteger(json.getString("Ap"));
             BigInteger PRNG = schnorr.getPower(new BigInteger(Cryptography.hash(kandRI[0]).getBytes()));
             BigInteger RI = Ap.xor(PRNG);
-            if (Cryptography.hash(RI.toString()).equals(mCityPassService.getMCityPass().gethRI())) {
+            if (Cryptography.hash(RI.toString()).equals(mCityPassService.getMCityPass().getHRI())) {
                 System.out.println("true");
                 return true;
             } else {
@@ -603,7 +652,7 @@ public class UserService implements UserServiceInterface {
             BigInteger Ap = new BigInteger(json.getString("Ap"));
             BigInteger PRNG = schnorr.getPower(new BigInteger(Cryptography.hash(kandRI[0]).getBytes()));
             BigInteger RI = Ap.xor(PRNG);
-            if (Cryptography.hash(RI.toString()).equals(mCityPassService.getMCityPass().gethRI())) {
+            if (Cryptography.hash(RI.toString()).equals(mCityPassService.getMCityPass().getHRI())) {
                 System.out.println("true");
                 counterService.updateCounter(hash, true);
                 return "true";
@@ -763,7 +812,7 @@ public class UserService implements UserServiceInterface {
             BigInteger Ap = new BigInteger(json.getString("Ap"));
             BigInteger PRNG = schnorr.getPower(new BigInteger(Cryptography.hash(kandRI[0]).getBytes()));
             BigInteger RI = Ap.xor(PRNG);
-            if (Cryptography.hash(RI.toString()).equals(mCityPassService.getMCityPass().gethRI())) {
+            if (Cryptography.hash(RI.toString()).equals(mCityPassService.getMCityPass().getHRI())) {
                 System.out.println("true");
                 return true;
             } else {

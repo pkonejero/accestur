@@ -33,7 +33,7 @@ public class SecretValueService implements SecretValueServiceInterface {
 
 	@Override
 	public void saveSecretValue(SecretValue secretValue) {
-
+		secretValue.save();
 	}
 
 	public void initSecretValue(MCityPass mCityPass) {

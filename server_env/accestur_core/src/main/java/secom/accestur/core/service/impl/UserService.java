@@ -102,6 +102,14 @@ public class UserService implements UserServiceInterface {
 	public User getUser() {
 		return userRepository.findAll().iterator().next();
 	}
+	
+	public void saveUser(String y, String signature){
+		User user = new User();
+		user.setPseudonym(generatePseudonym(y, signature));
+		userRepository.save(user);
+	}
+	
+	
 
 	public void initUser() {
 		// user = getUser();
@@ -114,6 +122,10 @@ public class UserService implements UserServiceInterface {
 
 	public User getUserByPseudonym(String pseudonym) {
 		return userRepository.findByPseudonym(pseudonym);
+	}
+	
+	public User getUserById(long id) {
+		return userRepository.findById(id);
 	}
 
 	public void createCertificate() {
@@ -742,7 +754,6 @@ public class UserService implements UserServiceInterface {
 
 	public static String getYu(String json) {
 		JSONObject jsonObject = new JSONObject(json);
-
 		return jsonObject.getString("y");
 	}
 

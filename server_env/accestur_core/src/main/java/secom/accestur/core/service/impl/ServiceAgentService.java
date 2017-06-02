@@ -36,7 +36,7 @@ public class ServiceAgentService implements ServiceAgentInterface{
 	}
 	
 	public ServiceAgent getServiceByName(String name){
-		return  serviceAgentRepository.findByNameIgnoreCase(name);
+		return  serviceAgentRepository.findByName(name);
 	}
 	
 	public void initService(long id) {
@@ -58,7 +58,7 @@ public class ServiceAgentService implements ServiceAgentInterface{
 	
 	public void storeServices(ServiceAgent[] services){
 		for (int i = 0; i < services.length; i++){
-			if(serviceAgentRepository.findByNameIgnoreCase(services[i].getName())==null){
+			if(serviceAgentRepository.findByName(services[i].getName())==null){
 				serviceAgentRepository.save(services[i]);
 			} else {
 				System.out.println("This service already exists");
@@ -88,7 +88,7 @@ public class ServiceAgentService implements ServiceAgentInterface{
 		for (int i  = 0; i < serviceAgentList.size(); i++){
 			json = new JSONObject();
 			json.put("id", serviceAgentList.get(i).getId());
-			json.put("name", serviceAgentList.get(i).getM());
+			json.put("name", serviceAgentList.get(i).getName());
 			json.put("provider", serviceAgentList.get(i).getProvider().getName());
 			json.put("m", serviceAgentList.get(i).getM());
 			message.put(json);

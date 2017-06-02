@@ -4,47 +4,73 @@
 package accestur.secom.core.model;
 
 
+
+/*import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;*/
+
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
+import accestur.secom.core.AppDatabase;
+
 /**
  * @author Sebastià
  *
  */
 
-public class SecretValue extends DomainObjectModel {
+//@Table( database = AppDatabase.class , allFields = true)
+	@Table(name = "secretValue")
+public class SecretValue extends Model {//extends BaseModel{
 
-	private Long id;
+//    @PrimaryKey
+	//private Long id;
 
-	private Provider provider;
+	@Column
+	private String provider;
 
+  //  @ForeignKey
+    @Column
 	private MCityPass mCityPass;
-	
+
+	@Column
 	private String secret;
 	
 	public SecretValue(){}
 
 	
-	public SecretValue(MCityPass mCityPass, Provider provider, String secret){
+	public SecretValue(MCityPass mCityPass, String provider, String secret){
 		this.mCityPass = mCityPass;
 		this.provider = provider;
 		this.secret = secret;
 	}
 
+    /*public Long getId() {
+        return id;
+    }
 
-	public Provider getProvider() {
+    public void setId(Long id) {
+        this.id = id;
+    }*/
+
+    public String getProvider() {
 		return provider;
 	}
 
 
-	public void setProvider(Provider provider) {
+	public void setProvider(String provider) {
 		this.provider = provider;
 	}
 
 
-	public MCityPass getmCityPass() {
+	public MCityPass getMCityPass() {
 		return mCityPass;
 	}
 
 
-	public void setmCityPass(MCityPass mCityPass) {
+	public void setMCityPass(MCityPass mCityPass) {
 		this.mCityPass = mCityPass;
 	}
 

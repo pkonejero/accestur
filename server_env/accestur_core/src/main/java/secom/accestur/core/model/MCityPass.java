@@ -198,9 +198,10 @@ public class MCityPass extends DomainObjectModel{
 
 	@Override
 	public String toString(){
+		//UserService userService = new UserService();
 		JSONObject json = new JSONObject();
 		json.put("Sn", id);
-		json.put("User", user.getPseudonym());
+		json.put("User", user);
 		json.put("hRI", hRI);
 		json.put("hRU", hRU);
 		json.put("Hu", Hu);

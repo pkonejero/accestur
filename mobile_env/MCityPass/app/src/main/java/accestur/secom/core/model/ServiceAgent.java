@@ -1,54 +1,88 @@
 package accestur.secom.core.model;
+
+
+/*import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.BaseModel;*/
+
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
 import java.util.List;
 
-
-public class ServiceAgent extends DomainObjectModel{
-
-	private Long id;
+import accestur.secom.core.AppDatabase;
 
 
-	private Provider provider;
+//@Table( database = AppDatabase.class , allFields = true)
+@Table(name = "serviceAgent")
+public class ServiceAgent extends Model {//  extends BaseModel{
+
+	//@PrimaryKey
+	//private Long id;
+
+	@Column
+	private String provider;
 
 
-	private List<Counter> counters;
+    public List<Counter> counters (){
+        return getMany(Counter.class, "service");
+    }
 
+
+	//@OneToMany(methods = {OneToMany.Method.ALL}, variableName = "counters")
+/*	public List<Counter> getCounters(){
+		if (counters == null || counters.isEmpty()) {
+			//counters = SQLite.select().from(Counter.class).where(Counter_Table.service_id.eq(id)).queryList();
+		}
+
+		return counters;
+	}*/
+
+	@Column
 	private String name;
+
+	@Column
 	private int m;
+
+	@Column
 	private String indexHash;
 	
-	public ServiceAgent(long id, String indexHash, int m, String name){
-		this.id = id;
+	public ServiceAgent( String indexHash, int m, String name){
+		//this.sN = sN;
 		this.indexHash = indexHash;
 		this.m = m;
 		this.name = name;
 	}
 
-	public ServiceAgent(String name, int m, String indexHash, Provider provider, List<Counter> counters){
+	public ServiceAgent(String name, int m, String indexHash, String provider){
 		super();
 		this.name = name;
 		this.m = m;
 		this.indexHash = indexHash;
 		this.provider = provider;
-		this.counters = counters;
+		//this.counters = counters;
 	}
 
 	public ServiceAgent(){}
 
-	public Provider getProvider(){
+	//public void setId(Long id) {
+	//	this.sN = id;
+	//}
+
+	public String getProvider(){
 		return provider;
 	}
 
-	public void setProvider(Provider provider){
+	public void setProvider(String provider){
 		this.provider = provider;
 	}
 
-	public List<Counter> getCounters(){
-		return counters;
-	}
-
-	public void setCounters(List<Counter> counters){
-		this.counters = counters;
-	}
+//	public void setCounters(List<Counter> counters){
+	//	this.counters = counters;
+	//}
 
 	public String getName(){
 		return name;
@@ -74,7 +108,7 @@ public class ServiceAgent extends DomainObjectModel{
 		this.indexHash = indexHash;
 	}
 
-	public Long getId() {
-		return id;
-	}
+	//public Long getId() {
+		//return id;
+	//}
 }

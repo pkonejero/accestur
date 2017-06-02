@@ -41,7 +41,7 @@ public class HomePageController{
 		passPurchase();
 //		passActivation();
 //		infinitePassVerification();
-		mpassVerification();
+//		mpassVerification();
 		counter++;
 		
 		return "welcome";

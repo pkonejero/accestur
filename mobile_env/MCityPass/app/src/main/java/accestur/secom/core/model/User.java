@@ -1,21 +1,47 @@
 package accestur.secom.core.model;
 
+
+
+/*import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.BaseModel;*/
+
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
 import java.util.List;
 
+import accestur.secom.core.AppDatabase;
 
 
-public class User extends DomainObjectModel{
+//@Table( database = AppDatabase.class , allFields = true)
+@Table(name = "user")
+public class User extends Model {//extends BaseModel{
 
-	private Long id;
+    //@PrimaryKey
+	//private Long id;
 
+	//@Column(length = 40000)
+	@Column
 	private String pseudonym;
 
-	private List<MCityPass> mCityPass;
 
+	private List<MCityPass> mCityPass(){
+        return getMany(MCityPass.class, "user");
+    }
+
+
+
+	@Column(length = 40000)
 	private String schnorr;
-	
+
+	@Column
 	private String RU;
-	
+
 	public String getRU() {
 		return RU;
 	}
@@ -27,12 +53,20 @@ public class User extends DomainObjectModel{
 	public User(){}
 	
 	public User(long id, String pseudonym, String schnorr){
-		this.id = id;
+		//this.id = id;
 		this.pseudonym = pseudonym;
 		this.schnorr = schnorr;
 	}
-	
-	public String getSchnorr() {
+
+ /*   public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }*/
+
+    public String getSchnorr() {
 		return schnorr;
 	}
 
@@ -40,13 +74,11 @@ public class User extends DomainObjectModel{
 		this.schnorr = schnorr;
 	}
 
-	public List<MCityPass> getmCityPass(){
-		return mCityPass;
-	}
 
-	public void setmCityPass(List<MCityPass> mCityPass){
-		this.mCityPass = mCityPass;
-	}
+
+	//public void setMCityPass(List<MCityPass> mCityPass){
+	//	this.mCityPass = mCityPass;
+	//}
 
 	public String getPseudonym(){
 		return pseudonym;
