@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import accestur.secom.core.crypto.Cryptography;
 import accestur.secom.core.crypto.Schnorr;
+import accestur.secom.core.model.Activation;
 import accestur.secom.core.model.Counter;
 import accestur.secom.core.model.MCityPass;
 import accestur.secom.core.model.SecretValue;
@@ -116,7 +117,7 @@ public class UserService implements UserServiceInterface {
 
 
     public void loadUser(int id){
-        user = new Select().from(User.class).where("id = ?", id).executeSingle();
+        user = User.load(User.class, id);
         System.out.println("User: " + user.getPseudonym());
     }
     ///////////////////////////////////////////////////////////////////////
@@ -159,7 +160,7 @@ public class UserService implements UserServiceInterface {
             verified = crypto.getValidation(params[0], params[1]);
             if (verified) {
                 User user = new User();
-                user.setPseudonym(generatePseudonym(params[0], params[1]));
+                user.setPseudonym(generatePseudonym(params[0], params[1], json.getInt("Sn")));
                 user.setSchnorr(schnorr.getPrivateCertificate());
                 user.save();
             }
@@ -184,7 +185,7 @@ public class UserService implements UserServiceInterface {
         params[0] = user.getPseudonym();
         params[1] = schnorr.getCertificate();
         RU = schnorr.getRandom();
-        user.setRU(RU.toString());
+        //user.setRU(RU.toString());
         params[2] = Cryptography.hash(RU.toString());
         BigInteger Hu = schnorr.getPower(RU);
         schnorr.getServiceQuery();
@@ -199,6 +200,7 @@ public class UserService implements UserServiceInterface {
         System.out.println("PURDATE:" + dateFormat.format(date));
         params[9] = dateFormat.format(date);
         // userRepository.save(user);
+        user.save();
         return getServiceMessage(params);
     }
 
@@ -255,6 +257,7 @@ public class UserService implements UserServiceInterface {
             mCityPass.setTermsAndConditions("TermsAndConditions");
             JSONArray jsonArray = json.getJSONArray("Services");
 
+            System.out.println("MCITYPASS PURCHASED: " +mCityPass.save());
             List<Counter> counterList = new ArrayList<Counter>();
             String service = "";
             for(int i = 0; i < jsonArray.length(); i++){
@@ -268,7 +271,8 @@ public class UserService implements UserServiceInterface {
             System.out.println("Saving counters");
             counterService.saveCounters(counterList);
 
-            System.out.println("MCITYPASS PURCHASED: " +mCityPass.save());
+            rightOfUseService.initRightOfUse(mCityPass, K, RU.toString());
+
 
 
             /*
@@ -344,6 +348,40 @@ public class UserService implements UserServiceInterface {
         crypto.initPublicKey(Constants.PATH_PROVIDER_KEY);
     }
 
+    ///////////////////////////////////////////////////////////////////////
+    /////////////////// ACTIVATE PASS///////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////
+    public String showPass(long sn) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("Sn", sn);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json.toString();
+    }
+
+
+    public void getVerifyTicketConfirmation(String s) {
+        System.out.println(s);
+        Activation activation = new Activation();
+        try {
+            JSONObject json = new JSONObject(s);
+            MCityPass mCityPass = new Select().from(MCityPass.class).where("Sn = ? ", json.getInt("PASS")).executeSingle();
+
+            activation.setMCityPass(mCityPass);
+            activation.setActDate(json.getString("ACTDate"));
+            activation.setState(json.getString("State"));
+            activation.setSignature(json.getString("Signature"));
+
+            System.out.println("Activation saved at: " + activation.save());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// PASS Verification///////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////
 
     public String showTicket(long CityPassId, long serviceId) {
         // System.out.println(user.getPseudonym());
@@ -358,22 +396,28 @@ public class UserService implements UserServiceInterface {
         try {
             json = new JSONObject();
             json.put("A3", schnorr.sendRequest());
-            mCityPassService.initMCityPass();
-            serviceAgentService.initService(serviceId, true);
-            counterService.initCounter(mCityPassService.getMCityPass(), serviceAgentService.getServiceAgent(), true);
+            mCityPassService.initMCityPass(CityPassId);
+            serviceAgentService.initService(serviceId);
+            counterService.initCounter(mCityPassService.getMCityPass(), serviceAgentService.getServiceAgent());
             // Necessary without database
             activationService.initActivation(mCityPassService.getMCityPass());
             //
-            System.out.println("Service: " + counterService.getCounter().getService().getName());
-            json.put("PASS", mCityPassService.getMCityPass().getId());
-            json.put("ACT", activationService.getActivation().getId());
-            json.put("CERT", schnorr.getCertificate());
-            json.put("SERVICE", counterService.getCounter().getService().getId());
-            // json.put("Signature", crypto.getSignature(json.toString()));
-            String signature = crypto.getSignature(json.toString());
-            message = new JSONObject();
-            message.put("m1", json.toString());
-            message.put("Signature", signature);
+            rightOfUseService.initRightOfUseByCityPass(mCityPassService.getMCityPass());
+            if(counterService.getCounter().getCounter()>0){
+                System.out.println("Service: " + counterService.getCounter().getService().getName());
+                json.put("PASS", mCityPassService.getMCityPass().getId());
+                json.put("ACT", activationService.getActivation().getId());
+                json.put("CERT", schnorr.getCertificate());
+                json.put("SERVICE", counterService.getCounter().getService().getId());
+                // json.put("Signature", crypto.getSignature(json.toString()));
+                String signature = crypto.getSignature(json.toString());
+                message = new JSONObject();
+                message.put("m1", json.toString());
+                message.put("Signature", signature);
+            } else {
+                System.out.println("This ticket has already been used");
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -381,15 +425,6 @@ public class UserService implements UserServiceInterface {
         return message.toString();
     }
 
-    @Override
-    public String showPass(long sn) {
-        return null;
-    }
-
-    @Override
-    public void getVerifyTicketConfirmation(String s) {
-
-    }
 
     public String solveVerifyChallenge(String params) {
         System.out.println("Solve Verify Challenge");
@@ -410,7 +445,7 @@ public class UserService implements UserServiceInterface {
                 System.exit(0);
             }
             schnorr.setC(new BigInteger(json.getString("c")));
-            json.put("w3", crypto.encryptWithPublicKey(schnorr.answerChallenge(new BigInteger(user.getRU())).toString()));
+            json.put("w3", crypto.encryptWithPublicKey(schnorr.answerChallenge(new BigInteger(rightOfUseService.getRightOfUse().getRU())).toString()));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -438,11 +473,12 @@ public class UserService implements UserServiceInterface {
             }
             indexHash = json.getString("SERVICE");
 
-            kandRI = getKandRI();
-            BigInteger K = new BigInteger(kandRI[0].getBytes());
+           // kandRI = getKandRI();
+            BigInteger K = new BigInteger(rightOfUseService.getRightOfUse().getK().getBytes());
+            System.out.println("K: " + K.toString());
             BigInteger PRNG = schnorr.getPower(K);
             System.out.println("PRNG" + PRNG.toString());
-            secretValueService.initSecretValue(mCityPassService.getMCityPass(), true);
+            secretValueService.initSecretValue(mCityPassService.getMCityPass());
             BigInteger secret = new BigInteger(secretValueService.getSecretValue().getSecret());
             System.out.println("Secret");
             json = new JSONObject();
@@ -480,10 +516,11 @@ public class UserService implements UserServiceInterface {
             }
 
             BigInteger Ap = new BigInteger(json.getString("Ap"));
-            BigInteger PRNG = schnorr.getPower(new BigInteger(Cryptography.hash(kandRI[0]).getBytes()));
+            BigInteger PRNG = schnorr.getPower(new BigInteger(Cryptography.hash(rightOfUseService.getRightOfUse().getK()).getBytes()));
             BigInteger RI = Ap.xor(PRNG);
             if (Cryptography.hash(RI.toString()).equals(mCityPassService.getMCityPass().getHRI())) {
                 System.out.println("true");
+                counterService.updateCounter();
                 return true;
             } else {
                 System.out.println("false");
@@ -500,13 +537,15 @@ public class UserService implements UserServiceInterface {
     ///////////////////////////////////////////////////////////////////////
 
     public void initValues(long CityPassId, long serviceId) {
-        mCityPassService.initMCityPass();
-        serviceAgentService.initService(serviceId, true);
-        counterService.initCounter(mCityPassService.getMCityPass(), serviceAgentService.getServiceAgent(), true);
-        secretValueService.initSecretValue(mCityPassService.getMCityPass(), true);
+        mCityPassService.initMCityPass(CityPassId);
+        serviceAgentService.initService(serviceId);
+        counterService.initCounter(mCityPassService.getMCityPass(), serviceAgentService.getServiceAgent());
+        secretValueService.initSecretValue(mCityPassService.getMCityPass());
         // Necessary without database
         activationService.initActivation(mCityPassService.getMCityPass());
         //
+        rightOfUseService.initRightOfUseByCityPass(mCityPassService.getMCityPass());
+
     }
 
     public String showMTicket() {
@@ -577,7 +616,7 @@ public class UserService implements UserServiceInterface {
                 System.exit(0);
             }
             schnorr.setC(new BigInteger(json.getString("c")));
-            json.put("w3", crypto.encryptWithPublicKey(schnorr.answerChallenge(new BigInteger(user.getRU())).toString()));
+            json.put("w3", crypto.encryptWithPublicKey(schnorr.answerChallenge(new BigInteger(rightOfUseService.getRightOfUse().getRU())).toString()));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -608,8 +647,8 @@ public class UserService implements UserServiceInterface {
                 return null;
             }
             indexHash = json.getString("SERVICE");
-            kandRI = getKandRI();
-            BigInteger K = new BigInteger(kandRI[0].getBytes());
+            //kandRI = getKandRI();
+            BigInteger K = new BigInteger(rightOfUseService.getRightOfUse().getK().getBytes());
             BigInteger PRNG = schnorr.getPower(K);
 
             // System.out.println("PRNG" + PRNG.toString());
@@ -650,11 +689,11 @@ public class UserService implements UserServiceInterface {
             }
 
             BigInteger Ap = new BigInteger(json.getString("Ap"));
-            BigInteger PRNG = schnorr.getPower(new BigInteger(Cryptography.hash(kandRI[0]).getBytes()));
+            BigInteger PRNG = schnorr.getPower(new BigInteger(Cryptography.hash(rightOfUseService.getRightOfUse().getK()).getBytes()));
             BigInteger RI = Ap.xor(PRNG);
             if (Cryptography.hash(RI.toString()).equals(mCityPassService.getMCityPass().getHRI())) {
                 System.out.println("true");
-                counterService.updateCounter(hash, true);
+                counterService.updateCounter(hash);
                 return "true";
             } else {
                 System.out.println("false");
@@ -699,12 +738,13 @@ public class UserService implements UserServiceInterface {
         JSONObject message = null;
         try {
             json = new JSONObject();
-            mCityPassService.initMCityPass();
-            serviceAgentService.initService(serviceId, true);
-            counterService.initCounter(mCityPassService.getMCityPass(), serviceAgentService.getServiceAgent(), true);
+            mCityPassService.initMCityPass(CityPassId);
+            serviceAgentService.initService(serviceId);
+            counterService.initCounter(mCityPassService.getMCityPass(), serviceAgentService.getServiceAgent());
             // Necessary without database
             activationService.initActivation(mCityPassService.getMCityPass());
             //
+            rightOfUseService.initRightOfUseByCityPass(mCityPassService.getMCityPass());
             System.out.println("Service: " + counterService.getCounter().getService().getName());
             json.put("A3", schnorr.sendRequest());
             json.put("PASS", mCityPassService.getMCityPass().getId());
@@ -741,7 +781,7 @@ public class UserService implements UserServiceInterface {
                 System.exit(0);
             }
             schnorr.setC(new BigInteger(json.getString("c")));
-            json.put("w3", crypto.encryptWithPublicKey(schnorr.answerChallenge(new BigInteger(user.getRU())).toString()));
+            json.put("w3", crypto.encryptWithPublicKey(schnorr.answerChallenge(new BigInteger(rightOfUseService.getRightOfUse().getRU())).toString()));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -768,11 +808,11 @@ public class UserService implements UserServiceInterface {
             }
             indexHash = json.getString("SERVICE");
 
-            kandRI = getKandRI();
-            BigInteger K = new BigInteger(kandRI[0].getBytes());
+            ///kandRI = getKandRI();
+            BigInteger K = new BigInteger(rightOfUseService.getRightOfUse().getK().getBytes());
             BigInteger PRNG = schnorr.getPower(K);
             System.out.println("PRNG" + PRNG.toString());
-            secretValueService.initSecretValue(mCityPassService.getMCityPass(), true);
+            secretValueService.initSecretValue(mCityPassService.getMCityPass());
             BigInteger secret = new BigInteger(secretValueService.getSecretValue().getSecret());
             System.out.println("Secret");
             json = new JSONObject();
@@ -810,10 +850,11 @@ public class UserService implements UserServiceInterface {
             }
 
             BigInteger Ap = new BigInteger(json.getString("Ap"));
-            BigInteger PRNG = schnorr.getPower(new BigInteger(Cryptography.hash(kandRI[0]).getBytes()));
+            BigInteger PRNG = schnorr.getPower(new BigInteger(Cryptography.hash(rightOfUseService.getRightOfUse().getK()).getBytes()));
             BigInteger RI = Ap.xor(PRNG);
             if (Cryptography.hash(RI.toString()).equals(mCityPassService.getMCityPass().getHRI())) {
                 System.out.println("true");
+                counterService.updateInfiniteCounter();
                 return true;
             } else {
                 System.out.println("false");
@@ -866,7 +907,7 @@ public class UserService implements UserServiceInterface {
 
     private String[] getKandRI() {
         // crypto.initPrivateKey("cert/ttp/private_TTP.{der");
-        rightOfUseService.initRightOfUse(mCityPassService.getMCityPass());
+        //rightOfUseService.initRightOfUse(mCityPassService.getMCityPass());
         JSONObject json = null;
         String[] params = null;
         try {
@@ -882,12 +923,12 @@ public class UserService implements UserServiceInterface {
     }
 
     ////////// STATIC METHODS///////////
-    private static String generatePseudonym(String y, String signature) {
-        JSONObject jsonObject = null;
+    private static String generatePseudonym(String y, String signature, long Id) {
+        JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject = new JSONObject();
             jsonObject.put("y", y);
             jsonObject.put("signature", signature);
+            jsonObject.put("Sn", Id);
         } catch (JSONException e) {
             e.printStackTrace();
         }

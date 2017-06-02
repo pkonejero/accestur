@@ -19,6 +19,7 @@ public class NonReusableTask extends AsyncTask<String, Void, Void> {
     @Override
     protected Void doInBackground(String... params) {
         userService = new UserService();
+        userService.loadUser(1);
         //userService.initUser();
         ProviderAPI providerAPI = new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
@@ -26,7 +27,7 @@ public class NonReusableTask extends AsyncTask<String, Void, Void> {
                 .build()
                 .create(ProviderAPI.class);
 
-        Call<String> stringCall = providerAPI.verifyPass(userService.showTicket(1, 2));
+        Call<String> stringCall = providerAPI.verifyPass(userService.showTicket(2, 2));
 
         try {
             message = stringCall.execute().body();

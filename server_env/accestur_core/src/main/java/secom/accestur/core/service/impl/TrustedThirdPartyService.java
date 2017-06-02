@@ -43,13 +43,14 @@ public class TrustedThirdPartyService implements TrustedThirdPartyServiceInterfa
 		if (crypto.getValidation(yU, params[0])){
 			message[0] = yU;
 			message[1] = crypto.getSignature(yU);
-			//userService.saveUser(message[0], message[1]);
+			userService.saveUser(message[0], message[1]);
 		} else {
 			message[0] = "Error";
 		}
 		json = new JSONObject();
 		json.put("y", message[0]);
 		json.put("signature", message[1]);
+		json.put("Sn", userService.getUser().getId());
 		
 		return json.toString();
 	}

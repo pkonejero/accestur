@@ -105,7 +105,8 @@ public class UserService implements UserServiceInterface {
 	
 	public void saveUser(String y, String signature){
 		User user = new User();
-		user.setPseudonym(generatePseudonym(y, signature));
+		userRepository.save(user);
+		user.setPseudonym(generatePseudonym(y, signature, user.getId()));
 		userRepository.save(user);
 	}
 	
@@ -121,11 +122,19 @@ public class UserService implements UserServiceInterface {
 	}
 
 	public User getUserByPseudonym(String pseudonym) {
-		return userRepository.findByPseudonym(pseudonym);
+		User u =  userRepository.findByPseudonym(pseudonym);
+		if(u ==  null) {
+			System.out.println("There isn't any User with this pseudonym");
+		}
+		return u;
 	}
 	
 	public User getUserById(long id) {
-		return userRepository.findById(id);
+		User u =  userRepository.findById(id);
+		if(u ==  null) {
+			System.out.println("There isn't any User with this pseudonym");
+		}
+		return u;
 	}
 
 	public void createCertificate() {
@@ -163,7 +172,7 @@ public class UserService implements UserServiceInterface {
 		boolean verified = crypto.getValidation(params[0], params[1]);
 		if (verified) {
 			User user = new User();
-			user.setPseudonym(generatePseudonym(params[0], params[1]));
+			user.setPseudonym(generatePseudonym(params[0], params[1], json.getLong("Sn")));
 			user.setSchnorr(schnorr.getPrivateCertificate());
 			userRepository.save(user);
 		}
@@ -744,11 +753,11 @@ public class UserService implements UserServiceInterface {
 	}
 
 	////////// STATIC METHODS///////////
-	private static String generatePseudonym(String y, String signature) {
+	private static String generatePseudonym(String y, String signature, long Id) {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("y", y);
 		jsonObject.put("signature", signature);
-
+		jsonObject.put("Sn", Id);
 		return jsonObject.toString();
 	}
 

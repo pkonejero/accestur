@@ -71,7 +71,7 @@ public class ServiceAgentService implements ServiceAgentInterface{
 		serviceAgent  = getServiceByName(service);
 	}
 
-	@Override
+
 	public ServiceAgent getServiceByName(String name) {
 		serviceAgent = new Select()
                 .from(ServiceAgent.class)
@@ -83,9 +83,9 @@ public class ServiceAgentService implements ServiceAgentInterface{
         return serviceAgent;
     }
 
-	@Override
+
 	public ServiceAgent getServiceBySn(long id) {
-		return null;
+		return ServiceAgent.load(ServiceAgent.class, id);
 	}
 
 

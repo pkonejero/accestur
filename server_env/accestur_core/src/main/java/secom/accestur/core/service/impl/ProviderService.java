@@ -65,7 +65,9 @@ public class ProviderService implements ProviderServiceInterface {
 	BigInteger Ap;
 
 	public Provider getProviderByName(String name) {
-		return providerRepository.findByNameIgnoreCase(name);
+		Provider p  = providerRepository.findByNameIgnoreCase(name);
+		if(p == null) System.out.println("No Provider with this name");
+		return p;
 	}
 
 	public List<Provider> getProvidersByIssuer(Issuer issuer) {
@@ -204,6 +206,7 @@ public class ProviderService implements ProviderServiceInterface {
 		System.out.println("Au: " + Au.toString());
 		String check = Au.xor(PRNG).toString();
 		System.out.println("PSI:" + check);
+		System.out.println("Hash:" + Cryptography.hash(check));
 		if (!Cryptography.hash(check).equals(counterService.getCounter().getPsi())) {
 			System.out.println("CheckFalse");
 			json = new JSONObject();

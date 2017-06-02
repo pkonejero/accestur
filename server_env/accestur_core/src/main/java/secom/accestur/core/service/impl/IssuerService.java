@@ -153,7 +153,7 @@ public class IssuerService implements IssuerServiceInterface{
 			String delta = rou.toString();
 			RightOfUse rightOfUse = new RightOfUse(json.toString(), k);
 			mCityPass.setHu(paramsOfPass[3]);
-			mCityPass.setUser(userService.getUserByPseudonym(paramsOfPass[0]));
+			mCityPass.setUser(userService.getUserById(getSn(paramsOfPass[0])));
 			mCityPass.setCategory(paramsOfPass[7]);
 			mCityPass.setLifeTime(paramsOfPass[6]);
 			mCityPass.sethRI(hRI);
@@ -228,12 +228,18 @@ public class IssuerService implements IssuerServiceInterface{
 		JSONObject jsonObject = new JSONObject(json);
 		return jsonObject.getString("y");
 	}
+	
+	public static long getSn(String json){
+		JSONObject jsonObject = new JSONObject(json);
+		return jsonObject.getLong("Sn");
+	}
 
 	
 	///////////////////////////////////////////////////////////////////////
 	/////////////// PASS Activation ///////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////
-	public String verifyTicket(String params){		
+	public String verifyTicket(String params){	
+		createCertificate();
 		JSONObject json = new JSONObject(params);
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date now = new Date();

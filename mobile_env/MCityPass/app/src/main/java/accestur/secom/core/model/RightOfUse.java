@@ -1,14 +1,18 @@
 package accestur.secom.core.model;
 
-public class RightOfUse extends DomainObjectModel{
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
 
-	private Long id;
+public class RightOfUse extends Model{
 
+	@Column(name = "mCityPass")
 	private MCityPass mCityPass;
 
+	@Column
 	private String k;
 
-	private String signature;
+	@Column
+	private String RU;
 
 	public RightOfUse(){}
 
@@ -18,9 +22,9 @@ public class RightOfUse extends DomainObjectModel{
 		this.mCityPass = mCityPass;
 	}
 
-	public RightOfUse(String k, String signature){
+	public RightOfUse(String k, String RU){
 		this.k = k;		
-		this.signature = signature;
+		this.RU = RU;
 	}
 
 	public MCityPass getmCityPass(){
@@ -39,12 +43,12 @@ public class RightOfUse extends DomainObjectModel{
 		this.k = k;
 	}
 
-	public String getSignature(){
-		return signature;
+	public String getRU(){
+		return RU;
 	}
 
-	public void setSignature(String signature){
-		this.signature = signature;
+	public void setRU(String signature){
+		this.RU = signature;
 	}
 
 	//	@ElementCollection

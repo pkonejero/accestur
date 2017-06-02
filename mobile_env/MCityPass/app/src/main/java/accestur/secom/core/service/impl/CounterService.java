@@ -1,5 +1,7 @@
 package  accestur.secom.core.service.impl;
 
+import com.activeandroid.query.Select;
+
 import java.util.List;
 
 
@@ -57,7 +59,7 @@ public class CounterService implements CounterServiceInterface{
 	public void updateCounter() {
 		counter.setCounter(counter.getCounter()-1);
 		counter.setLastHash("Already used");
-		saveCounter(counter);
+		counter.save();
 	}
 
 	public void updateCounter(boolean user){
@@ -68,7 +70,7 @@ public class CounterService implements CounterServiceInterface{
 	public void updateCounter(String hash) {
 		counter.setLastHash(hash);
 		counter.setCounter(counter.getCounter()-1);
-		saveCounter(counter);
+		counter.save();
 	}
 
 	public void updateCounter(String hash, boolean user){
@@ -83,7 +85,7 @@ public class CounterService implements CounterServiceInterface{
 			counter.setCounter(counter.getCounter()+1);
 		}
 		counter.setLastHash("Infinite uses");
-		saveCounter(counter);
+		counter.save();
 	}
 
 	public void updateInfiniteCounter(boolean user) {
@@ -93,17 +95,22 @@ public class CounterService implements CounterServiceInterface{
 			counter.setCounter(counter.getCounter()+1);
 		}
 		counter.setLastHash("Infinite uses");
-		//saveCounter(counter);
+		counter.save();
 	}
 
-	@Override
+
+
 	public void saveCounter(Counter counter) {
+        counter.save();
 
 	}
 
-	@Override
-	public void initCounter(MCityPass mCityPass, ServiceAgent service) {
 
+	public void initCounter(MCityPass mCityPass, ServiceAgent service) {
+        counter = new Select().from(Counter.class)
+                .where("mCityPass = ? ", mCityPass.getId())
+                .and("service = ?", service.getId())
+                .executeSingle();
 	}
 
 	/* (non-Javadoc)
@@ -127,15 +134,22 @@ public class CounterService implements CounterServiceInterface{
 	@Override
 	public void saveCounters(List<Counter> counters) {
 		for(int i = 0; i < counters.size(); i++){
-            System.out.println(counters.get(i).getPsi());
+            //System.out.println(counters.get(i).getPsi());
             System.out.println("Counter saved at: " + counters.get(i).save());
 		}
 	}
 
 
-    public Counter loadCounters(int i) {
-        Counter c = Counter.load(Counter.class, i);
-        System.out.println("Counter: " + counter.getPsi());
+    public Counter loadCounters(int i ) {
+       // Counter c = new Select().from(Counter.class).where("psi =
+		Counter c = Counter.load(Counter.class, 2);
+        System.out.println("Counter: " + c.getMCityPass() + " " + c.getService());
         return c;
     }
+
+
+
+
+
+
 }

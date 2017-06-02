@@ -37,7 +37,7 @@ public class MCityPassService implements MCityPassServiceInterface{
 
 
 	public void initMCityPass(long sn){
-		mCityPass = getMCityPassBySn(sn);
+		mCityPass = loadMcitypass(sn);
 		System.out.println(mCityPass.toString());
 	}
 

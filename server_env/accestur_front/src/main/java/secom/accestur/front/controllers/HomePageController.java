@@ -34,11 +34,11 @@ public class HomePageController{
 
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model){
-//		Init();
-//		createServices("TIB");
+		Init();
+		createServices("TIB");
 //		generateUser();
 //		passVerification();
-		passPurchase();
+//		passPurchase();
 //		passActivation();
 //		infinitePassVerification();
 //		mpassVerification();

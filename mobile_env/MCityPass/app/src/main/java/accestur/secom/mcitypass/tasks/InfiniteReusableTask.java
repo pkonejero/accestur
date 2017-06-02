@@ -19,6 +19,7 @@ public class InfiniteReusableTask extends AsyncTask<String, Void, Void> {
     @Override
     protected Void doInBackground(String... params) {
         userService = new UserService();
+        userService.loadUser(1);
         //userService.initUser();
         ProviderAPI providerAPI = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -26,7 +27,7 @@ public class InfiniteReusableTask extends AsyncTask<String, Void, Void> {
                 .build()
                 .create(ProviderAPI.class);
 
-        Call<String> stringCall = providerAPI.verifyInfPass(userService.showInfinitePass(1, 1));
+        Call<String> stringCall = providerAPI.verifyInfPass(userService.showInfinitePass(2, 1));
 
         try {
             message = stringCall.execute().body();

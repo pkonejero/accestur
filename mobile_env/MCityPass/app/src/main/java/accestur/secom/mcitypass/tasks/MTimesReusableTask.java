@@ -21,13 +21,13 @@ public class MTimesReusableTask extends AsyncTask<Integer, Void, Void> {
     private String message;
 
     @Override
-    protected Void doInBackground(Integer ... params) {
+    protected Void doInBackground(Integer... params) {
 
-        if(params[0]==0){
-            userService = new UserService();
-            userService.initUser();
-            userService.initValues(1, 4);
-        }
+
+        userService = new UserService();
+        userService.loadUser(1);
+        userService.initValues(2, 3);
+
 
         //userService.initUser();
         ProviderAPI providerAPI = new Retrofit.Builder()

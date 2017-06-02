@@ -4,6 +4,8 @@
 package  accestur.secom.core.service.impl;
 
 
+import com.activeandroid.query.Select;
+
 import  accestur.secom.core.model.MCityPass;
 import  accestur.secom.core.model.SecretValue;
 import  accestur.secom.core.service.SecretValueServiceInterface;
@@ -43,7 +45,9 @@ public class SecretValueService implements SecretValueServiceInterface {
 
 	@Override
 	public SecretValue getByMCityPass(MCityPass mCityPass) {
-		return null;
+		return new Select().from(SecretValue.class)
+				.where("mCityPass = ? ", mCityPass.getId())
+				.executeSingle();
 	}
 
 
