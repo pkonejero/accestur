@@ -75,7 +75,7 @@ public class MCPassAddFragment extends Fragment {
                     public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
                         Log.v("Dat e", "year:" + year + " month:" + month + " dayOfMonth:" + dayOfMonth);
                         //((Button)findViewById(R.id.day1)).setText(year+"-"+month+"-"+dayOfMonth);
-                        ExpDate = dayOfMonth + "/" + month + "/" + year;
+                        ExpDate = dayOfMonth + "/" + (month+1) + "/" + year;
                         setDate.setText(ExpDate);
                         // time.show();
                     }
