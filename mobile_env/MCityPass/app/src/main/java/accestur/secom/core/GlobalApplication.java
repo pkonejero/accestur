@@ -43,8 +43,6 @@ public class GlobalApplication extends Application {
         ServicesTask servicesTask = new ServicesTask();
         servicesTask.execute();
 
-        //     GeneratePseudonymTask generatePseudonymTask = new GeneratePseudonymTask();
-        //     generatePseudonymTask.execute();
 
         //   PurchasePASSTask purchasePASSTask = new PurchasePASSTask();//
         //   purchasePASSTask.execute();
@@ -55,13 +53,13 @@ public class GlobalApplication extends Application {
         //activatePASSTask.execute(sn);
 
 
-          NonReusableTask nonReusableTask = new NonReusableTask();
-         nonReusableTask.execute();
+      //    NonReusableTask nonReusableTask = new NonReusableTask();
+       //  nonReusableTask.execute();
 
-         MTimesReusableTask mTimesReusableTask = new MTimesReusableTask();
-         mTimesReusableTask.execute();
+        // MTimesReusableTask mTimesReusableTask = new MTimesReusableTask();
+        // mTimesReusableTask.execute();
 
-         InfiniteReusableTask infiniteReusableTask = new InfiniteReusableTask();
-         infiniteReusableTask.execute();
+        // InfiniteReusableTask infiniteReusableTask = new InfiniteReusableTask();
+        // infiniteReusableTask.execute();
     }
 }

@@ -16,17 +16,17 @@ import static accestur.secom.mcitypass.activity.MainActivity.userService;
  * Created by Sebastià on 24/4/2017.
  */
 
-public class MTimesReusableTask extends AsyncTask<Integer, Void, Void> {
+public class MTimesReusableTask extends AsyncTask<Long, Void, Void> {
     public static final String BASE_URL = "http://192.168.1.33:8080/";
     private String message;
 
     @Override
-    protected Void doInBackground(Integer... params) {
+    protected Void doInBackground(Long... params) {
 
 
         userService = new UserService();
         userService.loadUser(1);
-        userService.initValues(2, 3);
+        userService.initValues(params[0], params[1]);
 
 
         //userService.initUser();

@@ -2,6 +2,7 @@ package  accestur.secom.core.service.impl;
 
 import com.activeandroid.query.Select;
 
+import java.util.ArrayList;
 import java.util.List;
 
 

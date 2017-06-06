@@ -142,7 +142,7 @@ public class CounterService implements CounterServiceInterface{
 
     public Counter loadCounters(int i ) {
        // Counter c = new Select().from(Counter.class).where("psi =
-		Counter c = Counter.load(Counter.class, 2);
+		Counter c = Counter.load(Counter.class, i);
         System.out.println("Counter: " + c.getMCityPass() + " " + c.getService());
         return c;
     }

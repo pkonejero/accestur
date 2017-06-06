@@ -13,11 +13,11 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import static accestur.secom.mcitypass.activity.MainActivity.userService;
 
-public class NonReusableTask extends AsyncTask<String, Void, Void> {
+public class NonReusableTask extends AsyncTask<Long, Void, Void> {
 
     private String message;
     @Override
-    protected Void doInBackground(String... params) {
+    protected Void doInBackground(Long... params) {
         userService = new UserService();
         userService.loadUser(1);
         //userService.initUser();
@@ -27,7 +27,7 @@ public class NonReusableTask extends AsyncTask<String, Void, Void> {
                 .build()
                 .create(ProviderAPI.class);
 
-        Call<String> stringCall = providerAPI.verifyPass(userService.showTicket(2, 2));
+        Call<String> stringCall = providerAPI.verifyPass(userService.showTicket(params[0], params[1]));
 
         try {
             message = stringCall.execute().body();

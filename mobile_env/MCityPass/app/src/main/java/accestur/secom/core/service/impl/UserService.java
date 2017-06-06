@@ -91,6 +91,9 @@ public class UserService implements UserServiceInterface {
     }
 
 
+    public User getUser(){
+        return user;
+    }
 
 
     @Override
@@ -118,7 +121,7 @@ public class UserService implements UserServiceInterface {
 
     public void loadUser(int id){
         user = User.load(User.class, id);
-        System.out.println("User: " + user.getPseudonym());
+//        System.out.println("User: " + user.getPseudonym());
     }
     ///////////////////////////////////////////////////////////////////////
     /////////////////////// PSEUDONYM///////////////////////////////////////
@@ -176,7 +179,7 @@ public class UserService implements UserServiceInterface {
     /////////////////// PURCHASE PASS///////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
 
-    public String getService() {
+    public String getService(String Category, String ExpDate, String Lifetime) {
         // user = userRepository.findAll().iterator().next();
         user = User.load(User.class, 1);
         crypto.initPublicKey(Constants.PATH_ISSUER_KEY);
@@ -192,9 +195,10 @@ public class UserService implements UserServiceInterface {
         params[3] = Hu.toString();
         params[4] = schnorr.getA_1().toString();
         params[5] = schnorr.getA_2().toString();
-        params[6] = Constants.LIFETIME;
-        params[7] = Constants.CATEGORY;
-        params[8] = Constants.EXPDATE;
+        int ltime = Integer.parseInt(Lifetime)*24*3600*1000;
+        params[6] =  "" + ltime;
+        params[7] = Category;
+        params[8] = ExpDate;
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
         Date date = new Date();
         System.out.println("PURDATE:" + dateFormat.format(date));

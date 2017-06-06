@@ -12,12 +12,12 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import static accestur.secom.mcitypass.activity.MainActivity.userService;
 
-public class InfiniteReusableTask extends AsyncTask<String, Void, Void> {
+public class InfiniteReusableTask extends AsyncTask<Long, Void, Void> {
     public static final String BASE_URL = "http://192.168.1.33:8080/";
     private String message;
 
     @Override
-    protected Void doInBackground(String... params) {
+    protected Void doInBackground(Long... params) {
         userService = new UserService();
         userService.loadUser(1);
         //userService.initUser();
@@ -27,7 +27,7 @@ public class InfiniteReusableTask extends AsyncTask<String, Void, Void> {
                 .build()
                 .create(ProviderAPI.class);
 
-        Call<String> stringCall = providerAPI.verifyInfPass(userService.showInfinitePass(2, 1));
+        Call<String> stringCall = providerAPI.verifyInfPass(userService.showInfinitePass(params[0], params[1]));
 
         try {
             message = stringCall.execute().body();

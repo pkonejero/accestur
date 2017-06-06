@@ -19,7 +19,7 @@ import accestur.secom.mcitypass.fragment.MCPassListFragment;
 import accestur.secom.mcitypass.fragment.SettingsFragment;
 import accestur.secom.core.service.impl.UserService;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, MCPassListFragment.MCPassListener {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, MCPassListFragment.MCPassListener{
 
     public static UserService userService;
 
@@ -64,10 +64,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         fragmentTransaction.commit();
     }
 
+
     private void setInitialFragment() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         MCPassListFragment mcPassListFragment = new MCPassListFragment();
-        mcPassListFragment.setMCPassListListener(this);
         fragmentTransaction.add(R.id.main_fragment_placeholder, mcPassListFragment);
         fragmentTransaction.commit();
     }
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         View view = bottomNavigationView.findViewById(R.id.action_device);
         view.performClick();
         MCPassListFragment mcPassListFragment = new MCPassListFragment();
-        mcPassListFragment.setMCPassListListener(this);
+       // mcPassListFragment.setMCPassListListener(this);
         replaceFragment(mcPassListFragment);
     }
 

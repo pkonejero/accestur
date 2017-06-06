@@ -32,7 +32,7 @@ public class PurchasePASSTask extends AsyncTask<String, Void, Void> {
                 .build()
                 .create(IssuerAPI.class);
 
-        Call<String>  stringCall = issuerAPI.getChallenge(userService.getService());
+        Call<String>  stringCall = issuerAPI.getChallenge(userService.getService(params[0], params[1], params[2]));
 
         String message  = "";
 
