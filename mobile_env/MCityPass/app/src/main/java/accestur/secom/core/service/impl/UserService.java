@@ -366,7 +366,7 @@ public class UserService implements UserServiceInterface {
     }
 
 
-    public void getVerifyTicketConfirmation(String s) {
+    public boolean getVerifyTicketConfirmation(String s) {
         System.out.println(s);
         Activation activation = new Activation();
         try {
@@ -379,8 +379,9 @@ public class UserService implements UserServiceInterface {
             activation.setSignature(json.getString("Signature"));
 
             System.out.println("Activation saved at: " + activation.save());
+            return true;
         } catch (JSONException e) {
-            e.printStackTrace();
+            return false;
         }
     }
     ///////////////////////////////////////////////////////////////////////
@@ -673,7 +674,7 @@ public class UserService implements UserServiceInterface {
         return message.toString();
     }
 
-    public String getVerifyMTicketConfirmation(String params) {
+    public boolean getVerifyMTicketConfirmation(String params) {
         System.out.println("Get Validation Confirmation");
         JSONObject message = null;
         JSONObject json = null;
@@ -686,10 +687,10 @@ public class UserService implements UserServiceInterface {
                 System.out.println("Signature not valid");
                 json = new JSONObject();
                 json.put("PASS", -1);
-                return "false";
+               return false;
             }
             if (json.getInt("PASS") == -1) {
-                return "false";
+                return false;
             }
 
             BigInteger Ap = new BigInteger(json.getString("Ap"));
@@ -698,15 +699,15 @@ public class UserService implements UserServiceInterface {
             if (Cryptography.hash(RI.toString()).equals(mCityPassService.getMCityPass().getHRI())) {
                 System.out.println("true");
                 counterService.updateCounter(hash);
-                return "true";
+                return true;
             } else {
                 System.out.println("false");
-                return "false";
+                return false;
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return "false";
+        return false;
 
     }
 

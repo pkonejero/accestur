@@ -16,10 +16,13 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import accestur.secom.core.model.MCityPass;
+import accestur.secom.core.model.ServiceAgent;
 import accestur.secom.core.service.impl.ActivationService;
+import accestur.secom.core.service.impl.CounterService;
 import accestur.secom.core.service.impl.MCityPassService;
 import accestur.secom.core.service.impl.ServiceAgentService;
 import accestur.secom.mcitypass.R;
+import accestur.secom.mcitypass.content.CounterAdapter;
 import accestur.secom.mcitypass.content.ServicesAdapter;
 import accestur.secom.mcitypass.tasks.ActivatePASSTask;
 import accestur.secom.mcitypass.tasks.InfiniteReusableTask;
@@ -30,11 +33,16 @@ public class MCPassDetailFragment extends Fragment {
 
     private TextView txtDetail;
     private String text;
+    private ActivationService activationService;
+    private ServiceAgentService serviceAgentService;
+    private CounterService counterService;
+    private MCityPassService mCityPassService;
     int currentMPASS;
 
-    public MCPassDetailFragment() {}
+    public MCPassDetailFragment() {
+    }
 
-    public void setCurrentMPASS (int i ){
+    public void setCurrentMPASS(int i) {
         currentMPASS = i;
     }
 
@@ -50,15 +58,15 @@ public class MCPassDetailFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle state) {
         super.onActivityCreated(state);
-       // txtDetail = (TextView)getActivity().findViewById(R.id.textDetail);
-       // txtDetail.setText(text);
+        // txtDetail = (TextView)getActivity().findViewById(R.id.textDetail);
+        // txtDetail.setText(text);
 
-        final MCityPassService mCityPassService = new MCityPassService();
-        mCityPassService.initMCityPass(currentMPASS+1);
+        mCityPassService = new MCityPassService();
+        mCityPassService.initMCityPass(currentMPASS + 1);
 
         TextView lifetimeText = (TextView) getActivity().findViewById(R.id.textLifetime);
-        int lifetime = Integer.parseInt(mCityPassService.getMCityPass().getLifeTime())/(3600*1000*24);
-        lifetimeText.setText("" +lifetime);
+        int lifetime = Integer.parseInt(mCityPassService.getMCityPass().getLifeTime()) / (3600 * 1000 * 24);
+        lifetimeText.setText("" + lifetime);
 
         TextView categoryText = (TextView) getActivity().findViewById(R.id.textCategory);
         categoryText.setText(mCityPassService.getMCityPass().getCategory());
@@ -66,16 +74,17 @@ public class MCPassDetailFragment extends Fragment {
         TextView expDateText = (TextView) getActivity().findViewById(R.id.textExpDate);
         expDateText.setText(mCityPassService.getMCityPass().getExpDate());
 
-        final ActivationService activationService = new ActivationService();
+        activationService = new ActivationService();
         activationService.initActivation(mCityPassService.getMCityPass());
 
         Button activateButton = (Button) getActivity().findViewById(R.id.activatePASSButton);
-        if (activationService.getActivation()==null){
+        if (activationService.getActivation() == null) {
             activateButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ActivatePASSTask activatePASSTask = new ActivatePASSTask();
+                    ActivatePASSTask activatePASSTask = new ActivatePASSTask(getActivity());
                     activatePASSTask.execute(mCityPassService.getMCityPass().getsN());
+
                 }
             });
         } else {
@@ -83,27 +92,42 @@ public class MCPassDetailFragment extends Fragment {
         }
 
         ListView listView = (ListView) getActivity().findViewById(R.id.listServicesUse);
-        final ServiceAgentService serviceAgentService = new ServiceAgentService();
-        ServicesAdapter servicesAdapter = new ServicesAdapter(getActivity(), (ArrayList) serviceAgentService.getServices());
+        serviceAgentService = new ServiceAgentService();
+        counterService = new CounterService();
+
+        CounterAdapter servicesAdapter = new CounterAdapter(getActivity(), counterService.getCountersByMCityPass(mCityPassService.getMCityPass().getId()));
         listView.setAdapter(servicesAdapter);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> list, View view, int pos, long id) {
-                if(activationService.getActivation()==null){
-               if(serviceAgentService.getServices().get(pos).getM()==1){
-                   NonReusableTask nonReusableTask = new NonReusableTask();
-                   nonReusableTask.execute(mCityPassService.getMCityPass().getId() , serviceAgentService.getServiceAgent().getId());
-               } else if(serviceAgentService.getServices().get(pos).getM() == -1){
-                   InfiniteReusableTask infiniteReusableTask = new InfiniteReusableTask();
-                   infiniteReusableTask.execute(mCityPassService.getMCityPass().getId() , serviceAgentService.getServiceAgent().getId());
-               } else {
-                   MTimesReusableTask mTimesReusableTask = new MTimesReusableTask();
-                   mTimesReusableTask.execute(mCityPassService.getMCityPass().getId() , serviceAgentService.getServiceAgent().getId());
-               }
+                if (activationService.getActivation() != null) {
+                    if (counterService.getCounters().get(pos).getService().getM() == 1 ) {
+                        if(counterService.getCounters().get(pos).getCounter() >0){
+                            NonReusableTask nonReusableTask = new NonReusableTask(getActivity());
+                            nonReusableTask.execute(mCityPassService.getMCityPass().getId(),counterService.getCounters().get(pos).getService().getId());
+                        } else {
+                            Toast toast = Toast.makeText(getActivity(), "This ticket can't be reused", Toast.LENGTH_LONG);
+                            toast.show();
+                        }
+
+                    } else if (counterService.getCounters().get(pos).getService().getM() == -1) {
+                        InfiniteReusableTask infiniteReusableTask = new InfiniteReusableTask(getActivity());
+                        infiniteReusableTask.execute(mCityPassService.getMCityPass().getId(), counterService.getCounters().get(pos).getService().getId());
+                    } else {
+                        if(counterService.getCounters().get(pos).getCounter() >0) {
+                            MTimesReusableTask mTimesReusableTask = new MTimesReusableTask(getActivity());
+                            mTimesReusableTask.execute(mCityPassService.getMCityPass().getId(), counterService.getCounters().get(pos).getService().getId());
+                        } else{
+                            Toast toast = Toast.makeText(getActivity(), "You ticket can't be reused anymore", Toast.LENGTH_LONG);
+                            toast.show();
+                        }
+                    }
                 } else {
-                    Toast toast = Toast.makeText(getActivity(),  "Activate the PASS first", Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(getActivity(), "Activate the PASS first", Toast.LENGTH_LONG);
                     toast.show();
                 }
+
 
             }
         });

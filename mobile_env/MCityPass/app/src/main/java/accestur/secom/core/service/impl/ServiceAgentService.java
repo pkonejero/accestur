@@ -16,6 +16,8 @@ public class ServiceAgentService implements ServiceAgentInterface{
 
 	private ServiceAgent serviceAgent;
 
+	private List<ServiceAgent> serviceAgentArrayList;
+
 	public ServiceAgent getServiceAgent(){
 		return serviceAgent;
 	}
@@ -56,12 +58,22 @@ public class ServiceAgentService implements ServiceAgentInterface{
 	}
 
 	public List<ServiceAgent> getServices(){
-        return new Select()
+
+		serviceAgentArrayList = new Select()
                 .from(ServiceAgent.class)
                 .orderBy("Name ASC")
                 .execute();
+
+		return serviceAgentArrayList;
     }
 
+	public List<ServiceAgent> getServiceAgentArrayList() {
+		return serviceAgentArrayList;
+	}
+
+	public void setServiceAgentArrayList(List<ServiceAgent> serviceAgentArrayList) {
+		this.serviceAgentArrayList = serviceAgentArrayList;
+	}
 
 	public List<ServiceAgent> getServicesByMCityPass(MCityPass mCityPass){
 		return null;

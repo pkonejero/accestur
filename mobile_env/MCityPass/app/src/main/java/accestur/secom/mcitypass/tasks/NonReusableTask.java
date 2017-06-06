@@ -1,6 +1,8 @@
 package accestur.secom.mcitypass.tasks;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -13,11 +15,16 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import static accestur.secom.mcitypass.activity.MainActivity.userService;
 
-public class NonReusableTask extends AsyncTask<Long, Void, Void> {
+public class NonReusableTask extends AsyncTask<Long, Void,Boolean> {
 
     private String message;
+    private Context context;
+
+    public NonReusableTask (Context context){
+        this.context = context;
+    }
     @Override
-    protected Void doInBackground(Long... params) {
+    protected Boolean doInBackground(Long... params) {
         userService = new UserService();
         userService.loadUser(1);
         //userService.initUser();
@@ -50,7 +57,20 @@ public class NonReusableTask extends AsyncTask<Long, Void, Void> {
             e.printStackTrace();
         }
 
-        System.out.println(userService.getValidationConfirmation(message));
-        return null;
+        return userService.getValidationConfirmation(message);
+
+    }
+
+    @Override
+    protected void onPostExecute(Boolean aBoolean) {
+        super.onPostExecute(aBoolean);
+        if(aBoolean){
+            Toast toast = Toast.makeText(context, "You can access this service", Toast.LENGTH_LONG);
+            toast.show();
+        } else {
+            Toast toast = Toast.makeText(context, "An error has occurred. You can't access the service",  Toast.LENGTH_LONG);
+            toast.show();
+        }
+
     }
 }

@@ -1,6 +1,8 @@
 package accestur.secom.mcitypass.tasks;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -15,12 +17,17 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  * Created by Sebastià on 2/6/2017.
  */
 
-public class ActivatePASSTask extends AsyncTask<Long, Void, Void> {
+public class ActivatePASSTask extends AsyncTask<Long, Void, Boolean> {
 
+    Context context;
     UserService userService = new UserService();
 
+    public ActivatePASSTask(Context context) {
+        this.context = context;
+    }
+
     @Override
-    protected Void doInBackground(Long... params) {
+    protected Boolean doInBackground(Long... params) {
 
         IssuerAPI issuerAPI = new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
@@ -37,8 +44,22 @@ public class ActivatePASSTask extends AsyncTask<Long, Void, Void> {
             e.printStackTrace();
         }
 
-        userService.getVerifyTicketConfirmation(message);
-
-        return null;
+        return     userService.getVerifyTicketConfirmation(message);
     }
+
+    @Override
+    protected void onPostExecute(Boolean aBoolean) {
+        super.onPostExecute(aBoolean);
+        if(aBoolean){
+            Toast toast = Toast.makeText(context, "The PASS has been activated", Toast.LENGTH_LONG);
+            toast.show();
+
+        } else {
+            Toast toast = Toast.makeText(context, "An error has occurred. The PASS could be activated.",  Toast.LENGTH_LONG);
+            toast.show();
+        }
+
+    }
+
+
 }

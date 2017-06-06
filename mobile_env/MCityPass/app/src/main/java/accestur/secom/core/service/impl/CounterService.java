@@ -35,7 +35,12 @@ public class CounterService implements CounterServiceInterface{
 
 
 	public List<Counter> getCountersByMCityPass(long sn){
-		return null;
+		counters = new Select().from(Counter.class).where("mCityPass = ?", sn).execute();
+		return counters;
+	}
+
+	public List<Counter> getCounters(){
+		return counters;
 	}
 
 	public List<Counter> getCountersByService(long sn){

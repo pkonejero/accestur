@@ -19,7 +19,7 @@ public interface UserServiceInterface{
 	
 	public String showPass(long sn);
 	
-	public void getVerifyTicketConfirmation(String s);
+	public boolean getVerifyTicketConfirmation(String s);
 	
 	public String solveVerifyChallenge(String params);
 	
@@ -37,7 +37,7 @@ public interface UserServiceInterface{
 	
 	public String showMTicket(long CityPassId, long serviceId);
 	
-	public String getVerifyMTicketConfirmation(String params);
+	public boolean getVerifyMTicketConfirmation(String params);
 	
 	public String showMProof(String params);
 	

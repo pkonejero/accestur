@@ -1,6 +1,8 @@
 package accestur.secom.mcitypass.tasks;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -12,12 +14,17 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import static accestur.secom.mcitypass.activity.MainActivity.userService;
 
-public class InfiniteReusableTask extends AsyncTask<Long, Void, Void> {
+public class InfiniteReusableTask extends AsyncTask<Long, Void, Boolean> {
     public static final String BASE_URL = "http://192.168.1.33:8080/";
     private String message;
+    Context context;
+
+    public InfiniteReusableTask(Context context) {
+        this.context = context;
+    }
 
     @Override
-    protected Void doInBackground(Long... params) {
+    protected Boolean doInBackground(Long... params) {
         userService = new UserService();
         userService.loadUser(1);
         //userService.initUser();
@@ -50,7 +57,19 @@ public class InfiniteReusableTask extends AsyncTask<Long, Void, Void> {
             e.printStackTrace();
         }
 
-        System.out.println(userService.getInfiniteValidationConfirmation(message));
-        return null;
+       return userService.getInfiniteValidationConfirmation(message);
+
+    }
+    @Override
+    protected void onPostExecute(Boolean aBoolean) {
+        super.onPostExecute(aBoolean);
+        if(aBoolean){
+            Toast toast = Toast.makeText(context, "You can access this service", Toast.LENGTH_LONG);
+            toast.show();
+        } else {
+            Toast toast = Toast.makeText(context, "An error has occurred. You can't access the service",  Toast.LENGTH_LONG);
+            toast.show();
+        }
+
     }
 }

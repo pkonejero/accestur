@@ -36,7 +36,6 @@ public class MCPassListFragment extends Fragment {
 
 
     private ListView listView;
-    private MCPassListener listener;
     private MCityPassService mCityPassService;
     private ArrayList<MCityPass> mCityPasses;
 
@@ -54,57 +53,25 @@ public class MCPassListFragment extends Fragment {
         mCityPassService = new MCityPassService();
         mCityPasses = (ArrayList) mCityPassService.getAllMCityPass();
 
-        datos = new MCPassItem[mCityPasses.size()];
-        for (int i = 0; i< datos.length; i++){
-            int lifetime = Integer.parseInt(mCityPasses.get(i).getLifeTime())/(3600*1000*24);
-            datos[i] = new MCPassItem("" + lifetime + " days MCityPASS",  mCityPasses.get(i).getCategory(), mCityPasses.get(i).getExpDate());
-
-        }
-
         listView = (ListView)getView().findViewById(R.id.listView);
-        listView.setAdapter(new MCPassAdapter(this));
-
+        listView.setAdapter(new MCityPassAdapter(getActivity(), mCityPasses));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> list, View view, int pos, long id) {
-                if (listener!=null) {
-                    listener.onMCPassItemSeleccionado(
-                            (MCPassItem)listView.getAdapter().getItem(pos));
-                }
+
+                MCPassDetailFragment mcPassDetailFragment = new MCPassDetailFragment();
+                mcPassDetailFragment.setCurrentMPASS(pos);
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = fm.beginTransaction();
+                transaction.replace(R.id.main_fragment_placeholder, mcPassDetailFragment);
+                transaction.commit();
+
             }
         });
+
+
     }
 
-    class MCPassAdapter extends ArrayAdapter<MCPassItem> {
-
-        Activity context;
-
-        MCPassAdapter(Fragment context) {
-            super(context.getActivity(), R.layout.listitem_correo, datos);
-            this.context = context.getActivity();
-        }
-
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = context.getLayoutInflater();
-            View item = inflater.inflate(R.layout.listitem_correo, null);
-
-            TextView lblDe = (TextView)item.findViewById(R.id.LblDe);
-            lblDe.setText(datos[position].getDe());
-
-            //TextView lblAsunto = (TextView)item.findViewById(R.id.LblAsunto);
-            //lblAsunto.setText(datos[position].getAsunto());
-
-            return(item);
-        }
-    }
-
-    public interface MCPassListener {
-        void onMCPassItemSeleccionado(MCPassItem c);
-    }
-
-    public void setMCPassListListener(MCPassListener listener) {
-        this.listener=listener;
-    }
 
 
 }

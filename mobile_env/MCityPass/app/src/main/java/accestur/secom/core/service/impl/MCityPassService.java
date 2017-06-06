@@ -102,7 +102,7 @@ public class MCityPassService implements MCityPassServiceInterface{
 	public MCityPass loadMcitypass(long id){
 		//MCityPass mPass =  new Select().from(MCityPass.class).orderBy("RANDOM()").executeSingle();
 		MCityPass mPass = MCityPass.load(MCityPass.class, id);
-		System.out.println("MCityPass: " + mCityPass);
+		System.out.println("MCityPass: " + mPass);
 		return mPass;
 
 	}

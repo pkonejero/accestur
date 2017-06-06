@@ -1,11 +1,20 @@
 package accestur.secom.mcitypass.tasks;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.widget.Toast;
 
 import java.io.IOException;
 
 import accestur.secom.core.api.ProviderAPI;
+import accestur.secom.core.model.Activation;
 import accestur.secom.core.service.impl.UserService;
+import accestur.secom.mcitypass.R;
+import accestur.secom.mcitypass.activity.MainActivity;
+import accestur.secom.mcitypass.fragment.MCPassListFragment;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -16,12 +25,17 @@ import static accestur.secom.mcitypass.activity.MainActivity.userService;
  * Created by Sebastià on 24/4/2017.
  */
 
-public class MTimesReusableTask extends AsyncTask<Long, Void, Void> {
+public class MTimesReusableTask extends AsyncTask<Long, Void, Boolean> {
     public static final String BASE_URL = "http://192.168.1.33:8080/";
     private String message;
+    Context context;
+
+    public MTimesReusableTask(Context context) {
+        this.context = context;
+    }
 
     @Override
-    protected Void doInBackground(Long... params) {
+    protected Boolean doInBackground(Long... params) {
 
 
         userService = new UserService();
@@ -57,10 +71,26 @@ public class MTimesReusableTask extends AsyncTask<Long, Void, Void> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+         return userService.getVerifyMTicketConfirmation(message);
 
-        System.out.println(userService.getVerifyMTicketConfirmation(message));
-        return null;
     }
+
+    @Override
+    protected void onPostExecute(Boolean aBoolean) {
+        super.onPostExecute(aBoolean);
+        if(aBoolean){
+            Toast toast = Toast.makeText(context, "You can access this service", Toast.LENGTH_LONG);
+            toast.show();
+        } else {
+            Toast toast = Toast.makeText(context, "An error has occurred. You can't access the service",  Toast.LENGTH_LONG);
+            toast.show();
+        }
+
+    }
+
+
+
+
 
 
 }
