@@ -9,6 +9,8 @@ import java.io.IOException;
 import accestur.secom.core.api.ProviderAPI;
 import accestur.secom.core.service.impl.UserService;
 import accestur.secom.core.utils.Constants;
+import accestur.secom.mcitypass.activity.MainActivity;
+import accestur.secom.mcitypass.fragment.MCPassListFragment;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -67,6 +69,8 @@ public class NonReusableTask extends AsyncTask<Long, Void,Boolean> {
         if(aBoolean){
             Toast toast = Toast.makeText(context, "You can access this service", Toast.LENGTH_LONG);
             toast.show();
+            MCPassListFragment mcPassListFragment = new MCPassListFragment();
+            ((MainActivity)context).replaceFragment(mcPassListFragment);
         } else {
             Toast toast = Toast.makeText(context, "An error has occurred. You can't access the service",  Toast.LENGTH_LONG);
             toast.show();

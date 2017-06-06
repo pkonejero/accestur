@@ -1,16 +1,18 @@
 package accestur.secom.mcitypass.tasks;
 
+
+
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+
 import android.widget.Toast;
 
 import java.io.IOException;
 
 import accestur.secom.core.api.ProviderAPI;
-import accestur.secom.core.model.Activation;
 import accestur.secom.core.service.impl.UserService;
 import accestur.secom.mcitypass.R;
 import accestur.secom.mcitypass.activity.MainActivity;
@@ -81,6 +83,10 @@ public class MTimesReusableTask extends AsyncTask<Long, Void, Boolean> {
         if(aBoolean){
             Toast toast = Toast.makeText(context, "You can access this service", Toast.LENGTH_LONG);
             toast.show();
+
+            MCPassListFragment mcPassListFragment = new MCPassListFragment();
+            ((MainActivity)context).replaceFragment(mcPassListFragment);
+
         } else {
             Toast toast = Toast.makeText(context, "An error has occurred. You can't access the service",  Toast.LENGTH_LONG);
             toast.show();

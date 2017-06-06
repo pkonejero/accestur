@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import accestur.secom.core.service.impl.ServiceAgentService;
+import accestur.secom.core.service.impl.UserService;
 import accestur.secom.mcitypass.R;
 import accestur.secom.mcitypass.content.ServicesAdapter;
 import accestur.secom.mcitypass.tasks.PurchasePASSTask;
@@ -48,6 +49,7 @@ public class MCPassAddFragment extends Fragment {
     int mDay = c.get(Calendar.DAY_OF_MONTH);
 
     private ServiceAgentService serviceAgentService;
+    private UserService userService;
 
     public MCPassAddFragment() {
     }
@@ -92,18 +94,26 @@ public class MCPassAddFragment extends Fragment {
         purchasePass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PurchasePASSTask purchasePASSTask = new PurchasePASSTask();
-                Category = setCategory.getSelectedItem().toString();
-                Lifetime = setLifetime.getSelectedItem().toString();
-                System.out.println("Category: " + Category);
-                System.out.println("ExpDate: " + ExpDate);
-                System.out.println("Lifetime: " + Lifetime);
-                if(ExpDate!=null){
-                    purchasePASSTask.execute(Category, ExpDate, Lifetime);
-                } else {
-                    Toast toast = Toast.makeText(getActivity(), "Select an Expiring Date", Toast.LENGTH_LONG);
+                userService = new UserService();
+                userService.loadUser(1);
+                if(userService.getUser()==null){
+                    Toast toast = Toast.makeText(getActivity(), "Generate a Pseudonym first", Toast.LENGTH_LONG);
                     toast.show();
+                } else {
+                    PurchasePASSTask purchasePASSTask = new PurchasePASSTask(getActivity());
+                    Category = setCategory.getSelectedItem().toString();
+                    Lifetime = setLifetime.getSelectedItem().toString();
+                    System.out.println("Category: " + Category);
+                    System.out.println("ExpDate: " + ExpDate);
+                    System.out.println("Lifetime: " + Lifetime);
+                    if(ExpDate!=null){
+                        purchasePASSTask.execute(Category, ExpDate, Lifetime);
+                    } else {
+                        Toast toast = Toast.makeText(getActivity(), "Select an Expiring Date", Toast.LENGTH_LONG);
+                        toast.show();
+                    }
                 }
+
 
             }
         });

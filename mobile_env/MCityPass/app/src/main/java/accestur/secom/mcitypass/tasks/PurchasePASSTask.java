@@ -1,6 +1,8 @@
 package accestur.secom.mcitypass.tasks;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
@@ -10,6 +12,8 @@ import accestur.secom.core.model.ServiceAgent;
 import accestur.secom.core.service.impl.ServiceAgentService;
 import accestur.secom.core.service.impl.UserService;
 import accestur.secom.core.utils.Constants;
+import accestur.secom.mcitypass.activity.MainActivity;
+import accestur.secom.mcitypass.fragment.MCPassListFragment;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -18,13 +22,19 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  * Created by Sebastià on 1/6/2017.
  */
 
-public class PurchasePASSTask extends AsyncTask<String, Void, Void> {
+public class PurchasePASSTask extends AsyncTask<String, Void, Boolean> {
 
     ServiceAgentService serviceAgentService = new ServiceAgentService();
     UserService userService = new UserService();
 
+    Context context;
+
+    public PurchasePASSTask(Context context) {
+        this.context = context;
+    }
+
     @Override
-    protected Void doInBackground(String... params) {
+    protected Boolean doInBackground(String... params) {
 
         IssuerAPI issuerAPI = new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
@@ -57,7 +67,7 @@ public class PurchasePASSTask extends AsyncTask<String, Void, Void> {
             e.printStackTrace();
         }
 
-        userService.receivePass(message);
+
 
         /*
           TTPAPI ttpapi = new Retrofit.Builder()
@@ -80,6 +90,21 @@ public class PurchasePASSTask extends AsyncTask<String, Void, Void> {
 
 
 
-        return null;
+        return userService.receivePass(message);
+    }
+
+    @Override
+    protected void onPostExecute(Boolean aBoolean) {
+        super.onPostExecute(aBoolean);
+        if(aBoolean){
+            Toast toast = Toast.makeText(context, "PASS purchased", Toast.LENGTH_LONG);
+            toast.show();
+            MCPassListFragment mcPassListFragment = new MCPassListFragment();
+            ((MainActivity)context).replaceFragment(mcPassListFragment);
+        } else {
+            Toast toast = Toast.makeText(context, "An error has occurred. You can't buy the PASS",  Toast.LENGTH_LONG);
+            toast.show();
+        }
+
     }
 }

@@ -72,10 +72,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         fragmentTransaction.commit();
     }
 
-    private void replaceFragment(Fragment fragment) {
+    public void replaceFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.main_fragment_placeholder, fragment);
         fragmentTransaction.commit();
+
     }
 
     @Override
@@ -86,5 +87,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
        // mcPassListFragment.setMCPassListListener(this);
         replaceFragment(mcPassListFragment);
     }
+
+
 
 }

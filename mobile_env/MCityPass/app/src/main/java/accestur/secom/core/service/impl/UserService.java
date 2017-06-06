@@ -244,7 +244,7 @@ public class UserService implements UserServiceInterface {
         return solveChallengeMessage(psi, services, ws);
     }
 
-    public String receivePass(String params) {
+    public boolean receivePass(String params) {
         System.out.println(params);
         try{
             JSONObject json = new JSONObject(params);
@@ -292,11 +292,11 @@ public class UserService implements UserServiceInterface {
             */
             ServiceAgent serviceAgent = serviceAgentService.getServiceByName(service);
             secretValueService.saveSecretValue(new SecretValue(mCityPass,serviceAgent.getProvider(), random.toString()));
+            return true;
         } catch (JSONException e) {
-            e.printStackTrace();
+            return false;
         }
 
-        return "Everything OK";
     }
 
     // MESSAGE PROCESSORS

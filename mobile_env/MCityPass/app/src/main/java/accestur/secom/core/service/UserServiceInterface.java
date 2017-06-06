@@ -29,7 +29,7 @@ public interface UserServiceInterface{
 	
 	public String solveChallenge(String c, String[] services);
 	
-	public String receivePass(String params);
+	public boolean receivePass(String params);
 	
 	public String sendPass();
 	
