@@ -12,10 +12,6 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-/**
- * Created by Sebastià on 1/6/2017.
- */
-
 public class GeneratePseudonymTask extends AsyncTask<String, Void, Void> {
 
     UserService userService = new UserService();

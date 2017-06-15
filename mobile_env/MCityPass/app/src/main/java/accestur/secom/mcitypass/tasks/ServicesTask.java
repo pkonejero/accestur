@@ -20,12 +20,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import retrofit2.http.Body;
 
-//import static accestur.secom.mcitypass.UserActivity.userService;
-
-/**
- * Created by Sebastià on 1/6/2017.
- */
-
 public class ServicesTask  extends AsyncTask<Long, Void, Void> {
 
     ServiceAgentService serviceAgentService = new ServiceAgentService();

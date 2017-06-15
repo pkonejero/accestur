@@ -1,20 +1,15 @@
 package accestur.secom.mcitypass.tasks;
 
 
-
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.AsyncTask;
-
 import android.widget.Toast;
 
 import java.io.IOException;
 
 import accestur.secom.core.api.ProviderAPI;
 import accestur.secom.core.service.impl.UserService;
-import accestur.secom.mcitypass.R;
+import accestur.secom.core.utils.Constants;
 import accestur.secom.mcitypass.activity.MainActivity;
 import accestur.secom.mcitypass.fragment.MCPassListFragment;
 import retrofit2.Call;
@@ -23,12 +18,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import static accestur.secom.mcitypass.activity.MainActivity.userService;
 
-/**
- * Created by Sebastià on 24/4/2017.
- */
-
 public class MTimesReusableTask extends AsyncTask<Long, Void, Boolean> {
-    public static final String BASE_URL = "http://192.168.1.33:8080/";
     private String message;
     Context context;
 
@@ -47,7 +37,7 @@ public class MTimesReusableTask extends AsyncTask<Long, Void, Boolean> {
 
         //userService.initUser();
         ProviderAPI providerAPI = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(Constants.BASE_URL)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .build()
                 .create(ProviderAPI.class);

@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import accestur.secom.core.api.ProviderAPI;
 import accestur.secom.core.service.impl.UserService;
+import accestur.secom.core.utils.Constants;
 import accestur.secom.mcitypass.activity.MainActivity;
 import accestur.secom.mcitypass.fragment.MCPassListFragment;
 import retrofit2.Call;
@@ -17,7 +18,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 import static accestur.secom.mcitypass.activity.MainActivity.userService;
 
 public class InfiniteReusableTask extends AsyncTask<Long, Void, Boolean> {
-    public static final String BASE_URL = "http://192.168.1.33:8080/";
     private String message;
     Context context;
 
@@ -31,7 +31,7 @@ public class InfiniteReusableTask extends AsyncTask<Long, Void, Boolean> {
         userService.loadUser(1);
         //userService.initUser();
         ProviderAPI providerAPI = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(Constants.BASE_URL)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .build()
                 .create(ProviderAPI.class);

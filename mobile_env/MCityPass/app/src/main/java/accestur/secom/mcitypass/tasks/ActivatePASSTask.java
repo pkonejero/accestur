@@ -15,10 +15,6 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-/**
- * Created by Sebastià on 2/6/2017.
- */
-
 public class ActivatePASSTask extends AsyncTask<Long, Void, Boolean> {
 
     Context context;
