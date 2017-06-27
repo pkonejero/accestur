@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -190,18 +191,18 @@ public String getMCouponGeneratedByManufacturer(String json) {
 	
 	coupon.setUser(user);
 	
-	//DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-	//try {
-	//java.util.Date date = dateFormat.parse(paramsJson[8]);
-	//} catch (ParseException e) {
+	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	try {
+	Date date = dateFormat.parse(paramsJson[8]);
+	java.sql.Date insert = new java.sql.Date(date.getTime());
+	System.out.println("MERDA DE DATA="+insert);
+	//coupon.setExpDate(insert);
+	//java.sql.Date sqlDate = new java.sql.Date();
+	} catch (ParseException e) {
 		// TODO Auto-generated catch block
-	//	e.printStackTrace();
-	//}
-	//System.out.println("DATE=="+ dateFormat.format(paramsJson[8]));
-	
-	//java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-	
-	//coupon.setExpDate(dateFormat.format(paramsJson[8]));
+		e.printStackTrace();
+	}
+	System.out.println("DATE=="+ dateFormat.format(paramsJson[8]));
 	
 	coupon.setMerchant(merchantmcouponService.getMerchantMCouponByName(paramsJson[7]));
 	
