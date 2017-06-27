@@ -124,7 +124,7 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		
 		return sendIssuerToManufacturerPurchase(params);
 		}else{
-			return "Failed Signature";
+			return "FAILED";
 		}
 	}
 	
@@ -155,6 +155,10 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		json.put("merchant", params[8]);
 		json.put("signatureUser", params[9]);
 		return json.toString();
+	}
+	
+	public void errorIssuing3(){
+		System.out.println("Error Sended By The Manufacturer Validating Digital Signature Of the User or Issuer");
 	}
 	
 	//Purchase 5 Issuer Stores MCoupon
@@ -191,18 +195,20 @@ public String getMCouponGeneratedByManufacturer(String json) {
 	
 	coupon.setUser(user);
 	
-	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-	try {
-	Date date = dateFormat.parse(paramsJson[8]);
-	java.sql.Date insert = new java.sql.Date(date.getTime());
-	System.out.println("MERDA DE DATA="+insert);
+	/////FALTA LA COMPROVACIÓ DE DATES.//////
+	
+	//DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	//try {
+	//Date date = dateFormat.parse(paramsJson[8]);
+	//java.sql.Date insert = new java.sql.Date(date.getTime());
+	//System.out.println("MERDA DE DATA="+insert);
 	//coupon.setExpDate(insert);
 	//java.sql.Date sqlDate = new java.sql.Date();
-	} catch (ParseException e) {
+	//} catch (ParseException e) {
 		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	System.out.println("DATE=="+ dateFormat.format(paramsJson[8]));
+	//	e.printStackTrace();
+	//}
+	//System.out.println("DATE=="+ dateFormat.format(paramsJson[8]));
 	
 	coupon.setMerchant(merchantmcouponService.getMerchantMCouponByName(paramsJson[7]));
 	
@@ -250,6 +256,10 @@ private String sendIssuerToUserPurchase(String[] params) {
 	json.put("signature", params[0]);
 	json.put("sn", params[3]);
 	return json.toString();
+}
+
+public void errorIssuing5(){
+	System.out.println("Error Sended By The User Validating MC and Digital Signature");
 }
 
 ///////////////////////////////////////////////////////////////////////

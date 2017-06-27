@@ -127,7 +127,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		return sendUserToIssuerPurchase(params);
 		}
 		else{
-			return "Failed Signature";
+			return "FAILED";
 		}
 	}
 	

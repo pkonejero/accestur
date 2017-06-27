@@ -38,8 +38,8 @@ public class HomePageControllerMCoupon{
 
 	@RequestMapping("/mcoupon")
 	public String welcome(Map<String, Object> model){
-		//Init();
-		//generateUser();
+		Init();
+		generateUser();
 		issuingMCoupon();
 		//redeemMCoupon();
 		return "mcoupon";
@@ -71,7 +71,31 @@ public class HomePageControllerMCoupon{
 			e.printStackTrace();
 		}
 		System.out.println("DATE=="+ dateFormat.format(date));
-		System.out.println(usermcouponService.recieveMCoupon(issuermcouponService.getMCouponGeneratedByManufacturer(manufacturermcouponService.getCoupon(issuermcouponService.getInitMCouponMessage(usermcouponService.getInitMCouponMessage(manufacturermcouponService.initParamsMCoupon(5, 6, date,merchantmcouponService.getMerchantMCouponByName("AccesturMerchant"))))))));
+		//System.out.println(usermcouponService.recieveMCoupon(issuermcouponService.getMCouponGeneratedByManufacturer(manufacturermcouponService.getCoupon(issuermcouponService.getInitMCouponMessage(usermcouponService.getInitMCouponMessage(manufacturermcouponService.initParamsMCoupon(5, 6, date,merchantmcouponService.getMerchantMCouponByName("AccesturMerchant"))))))));
+		
+		String prooferror = usermcouponService.getInitMCouponMessage(manufacturermcouponService.initParamsMCoupon(5, 6, date,merchantmcouponService.getMerchantMCouponByName("AccesturMerchant")));
+		if (!prooferror.equals("FAILED")){
+			prooferror=issuermcouponService.getInitMCouponMessage(prooferror);
+			if(!prooferror.equals("FAILED")){
+				prooferror= manufacturermcouponService.getCoupon(prooferror);
+				if(!prooferror.equals("FAILED")){
+					prooferror= issuermcouponService.getMCouponGeneratedByManufacturer(prooferror);
+					if(!prooferror.equals("FAILED")){
+						System.out.println(usermcouponService.recieveMCoupon(prooferror));
+					}else{
+						issuermcouponService.errorIssuing5();
+					}
+				}else{
+					manufacturermcouponService.errorIssuing4();
+				}
+			}
+			else{
+				issuermcouponService.errorIssuing3();
+			}
+		}else{
+			manufacturermcouponService.errorIssuing1();
+		}
+		
 	}
 	
 	private void redeemMCoupon(){

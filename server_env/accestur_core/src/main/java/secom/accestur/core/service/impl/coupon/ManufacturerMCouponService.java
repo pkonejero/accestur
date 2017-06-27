@@ -87,7 +87,7 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 	}
 	
 	public String[] generateUsername(String[] params){
-		manufacturer = manufacturermcouponRepository.findAll().iterator().next(); //WE OBTAIN THE ONLY MANUFACTURAR THAT EXISTS
+		manufacturer = manufacturermcouponRepository.findAll().iterator().next(); //WE OBTAIN THE ONLY MANUFACTURER THAT EXISTS
 		crypto.initPrivateKey("cert/issuer/private_ISSUER.der");//IT SHOULD BE MANUFACTURER's PK.
 		String[] message = new String[4];
 		String username = params[1];
@@ -103,7 +103,7 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 			usermcouponRepository.save(user);
 			message[0] = crypto.getSignature(username);
 		} else {
-			message[0] = "Error";
+			message[0] = "Error Registering, incorrect password or username";
 		}
 		return message;
 	}
@@ -137,6 +137,10 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		json.put("signature", params[3]);
 		json.put("merchant", params[4]);
 		return json.toString();
+	}
+	
+	public void errorIssuing1(){
+		System.out.println("Error Sended By The User Validating Digital Signature");
 	}
 	
 	//PURCHASE 4 COUPON Receiving from Issuer all info of the Coupon//
@@ -182,10 +186,10 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		return sendFinishMCouponPurchase(params);
 		
 		}else{
-			return "FAILED SIGNATURE ISSUER";
+			return "FAILED";
 		}
 		}else{
-			return "FAILED SIGNATURE USER";
+			return "FAILED";
 		}
 	}
 
@@ -217,6 +221,10 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		json.put("merchant", params[7]);
 		json.put("EXD",params[8]);
 		return json.toString();
+	}
+	
+	public void errorIssuing4(){
+		System.out.println("Error Sended By The Issuer Validating Digital Signature");
 	}
 	
 ///////////////////////////////////////////////////////////////////////
