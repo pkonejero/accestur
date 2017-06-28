@@ -262,7 +262,7 @@ public String ClearingManufacturer(String json) {
 			
 			
 		}else{
-			return "FAILED SIGNATURE ISSUER";
+			return "FAILED";//return "FAILED SIGNATURE ISSUER";
 		}
 		if (crypto.getValidation(paramsJson[0], paramsJson[1])){
 			
@@ -274,7 +274,7 @@ public String ClearingManufacturer(String json) {
 		
 		return sendClearingToMerchant(params);
 		}else{
-			return "FAILED SIGNATURE MERCHANT";
+			return "FAILED";//return "FAILED SIGNATURE MERCHANT";
 		}
 	}
 	
@@ -296,7 +296,9 @@ public String ClearingManufacturer(String json) {
 		return json.toString();
 		}
 	
-	
+	public void errorClearing2(){
+		System.out.println("Error Sended By The Merchant Validating RID of the Manufacturer");
+	}
 	
 	
 	

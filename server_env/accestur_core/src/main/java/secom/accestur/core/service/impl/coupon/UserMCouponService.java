@@ -239,7 +239,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		
 		return sendUserToMerchantRedeem(params);
 		}else{
-			return "Failed Signature";
+			return "FAILED";
 		}
 	}
 	
@@ -266,6 +266,10 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		return json.toString();
 	}
 	
+	public void errorRedeem2(){
+		System.out.println("Error Sended By The Merchant Validating Digital Signature USER");
+	}
+	
 	//REDEEM 6 USER RECIEVES THE CONFIRMATION OF THE ISSUER AND MERCHANT.
 	
 public String confirmationMCouponRedeem2(String json) {
@@ -280,10 +284,10 @@ public String confirmationMCouponRedeem2(String json) {
 			
 		return "REDEEM COMPLETED";
 		}else{
-			return "Failed Signature of the Merchant";
+			return "FAILED";//return "Failed Signature of the Merchant";
 		}
 		}else{
-			return "Failed Verification of the Issuer";
+			return "FAILED";//return "Failed Verification of the Issuer";
 		}
 	}
 

@@ -357,19 +357,19 @@ public String redeemingMCoupon(String json) {
 	
 	return sendIssuerToMerchantRedeem(params);
 	}else{
-		return "THE HASH IS INCORRECT";
+		return "FAILED";//return "THE HASH IS INCORRECT";
 	}
 	}else{
-		return "NUMBER OF THE COUNTER IS INCORRECT";
+		return "FAILED";//return "NUMBER OF THE COUNTER IS INCORRECT";
 	}
 	}else{
-		return "Failed Rid Verification";
+		return "FAILED";//return "Failed Rid Verification";
 	}
 	}else{
-		return "Failed Signature USER";
+		return "FAILED";//return "Failed Signature USER";
 	}
 	}else{
-		return "Failed Signature MERCHANT";
+		return "FAILED";//return "Failed Signature MERCHANT";
 	}
 
 }
@@ -398,7 +398,13 @@ private String[] solveRedeemMCouponParams (String message){
 	params[8] = json.getString("idmerchant");
 	return params;
 }
-	
+
+//ISSUER REB ERROR DEL MERCHANT
+
+public void errorRedeem4(){
+	System.out.println("Error Sended By The MERCHANT Validating RID,HASH ISSUER");
+}
+
 
 	@Override
 	public String getChallenge(String params) {

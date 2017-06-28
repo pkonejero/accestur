@@ -85,6 +85,10 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		return json.toString();
 	}
 	
+	public void errorRedeem1(){
+		System.out.println("Error Sended By The User Validating Digital Signature Merchant");
+	}
+	
 	//REDEEM 3 MERCHANT RECIEVES INFORMATION OF THE USER.
 	
 	public String sendingMCouponRedeem(String json) {
@@ -126,10 +130,10 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		
 		return sendRedeemMCouponMessageToManufacturer(params);
 		}else{
-			return "Failed Label Confirmation";
+			return "FAILED";//return "Failed Label Confirmation";
 		}
 		}else{
-			return "Failed Signature Customer Validation";
+			return "FAILED";//return "Failed Signature Customer Validation";
 		}
 		
 	}
@@ -163,6 +167,10 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		return params;
 	}
 	
+	public void errorRedeem3(){
+		System.out.println("Error Sended By The Issuer HASH,COUNTER,RID or Validating Digital Signature Merchant and USER");
+	}
+	
 	//REDEEM 5 MERCHANT CONFIRMS THE REDEEM COUPON.
 	public String confirmationMCouponRedeem(String json) {
 		
@@ -184,10 +192,10 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		
 		return sendRedeemMCouponConfirmationToManufacturer(params);
 		}else{
-			return "Failed Verification of Rid";
+			return "FAILED";//return "Failed Verification of Rid";
 		}
 		}else{
-			return "Failed Signature or Hash";
+			return "FAILED";//return "Failed Signature or Hash";
 		}
 	}
 	
@@ -207,6 +215,10 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		params[5] = json.getString("indexhash");
 		params[6] = json.getString("sn");
 		return params;
+	}
+	
+	public void errorRedeem5(){
+		System.out.println("Error Sended By The User Validating Digital Signature Merchant and ISSUER");
 	}
 	
 ///////////////////////////////////////////////////////////////////////
@@ -251,6 +263,10 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 	return json.toString();
 	}
 	
+	public void errorClearing1(){
+		System.out.println("Error Sended By The Manufacturer Validating Digital Signature Merchant and ISSUER");
+	}
+	
 	//CLEARING 3 END OF CLEARING PHASE
 	
 	public String ClearingMCoupon(String json) {
@@ -264,7 +280,7 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		return "CLEARING COMPLETED";
 		
 		}else{
-			return "FAILED SIGNATURE";
+			return "FAILED";//return "FAILED SIGNATURE";
 		}
 		
 	}
