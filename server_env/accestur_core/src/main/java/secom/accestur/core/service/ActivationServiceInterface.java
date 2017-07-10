@@ -10,6 +10,8 @@ public interface ActivationServiceInterface{
 	
 	public void activateCityPass(Activation activation);
 	
+	public void activateCityPass();
+	
 	public void initActivate(Long sn);
 	
 }

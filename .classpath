@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="mobile_env/MCityPass/app/src/main/java"/>
+	<classpathentry kind="src" path="server_env/accestur_core/src/main/java"/>
+	<classpathentry kind="src" path="server_env/accestur_front/src/main/java"/>
+	<classpathentry kind="src" path="server_env/src/main/java"/>
+	<classpathentry kind="lib" path="mobile_env/MCityPass/gradle/wrapper/gradle-wrapper.jar"/>
+	<classpathentry kind="lib" path="server_env/accestur_core/build/libs/accestur_core-1.0.jar"/>
+	<classpathentry kind="lib" path="server_env/accestur_front/build/libs/accestur_front-1.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="server_env/accestur_core/bin"/>
+</classpath>

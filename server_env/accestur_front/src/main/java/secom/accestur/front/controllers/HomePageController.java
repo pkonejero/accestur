@@ -29,16 +29,20 @@ public class HomePageController{
 	@Autowired
 	@Qualifier("trustedThirdPartyService")
 	TrustedThirdPartyService ttpService;
+	
+	int counter = 0;
 
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model){
 		Init();
-		generateUser();
-		passPurchase();
-		passActivation();
-		passVerification();
-		infinitePassVerification();
-		mpassVerification();
+		createServices("TIB");
+//		generateUser();
+//		passVerification();
+//		passPurchase();
+//		passActivation();
+//		infinitePassVerification();
+//		mpassVerification();
+		counter++;
 		
 		return "welcome";
 	}
@@ -93,16 +97,24 @@ public class HomePageController{
 	}
 	
 	private void passVerification(){
+		userService = new UserService();
 		userService.initUser();
 		userService.getValidationConfirmation(providerService.verifyProof(userService.showProof(providerService.verifyPass2(userService.solveVerifyChallenge(providerService.verifyPass(userService.showTicket(1, 2)))))));
 	}
 	
 	private void mpassVerification(){
-		userService.initUser();
-		userService.getVerifyMTicketConfirmation(providerService.verifyMProof(userService.showMProof(providerService.verifyMPass2(userService.solveMVerifyChallenge(providerService.verifyMPass(userService.showMTicket(1, 3)))))));
+		
+		if(counter==0){
+			userService = new UserService();
+			userService.initUser();
+			userService.initValues(1, 4);
+		}
+		
+		userService.getVerifyMTicketConfirmation(providerService.verifyMProof(userService.showMProof(providerService.verifyMPass2(userService.solveMVerifyChallenge(providerService.verifyMPass(userService.showMTicket()))))));
 	}
 	
 	private void infinitePassVerification(){
+		userService = new UserService();
 		userService.initUser();
 		userService.getInfiniteValidationConfirmation(providerService.verifyInfiniteProof(userService.showInfiniteProof(providerService.verifyInfinitePass2(userService.solveInfiniteVerifyChallenge(providerService.verifyInfinitePass(userService.showInfinitePass(1, 1)))))));
 	}

@@ -9,4 +9,6 @@ import secom.accestur.core.model.User;
 public interface UserRepository extends PagingAndSortingRepository<User, Long>{
 	
 	User findByPseudonym(String pseudonym);
+	
+	User findById(long id);
 }

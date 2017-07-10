@@ -27,7 +27,7 @@ public class SecretValue extends DomainObjectModel {
 	private String secret;
 	
 	public SecretValue(){}
-	
+
 	
 	public SecretValue(MCityPass mCityPass, Provider provider, String secret){
 		this.mCityPass = mCityPass;

@@ -69,8 +69,13 @@ public class MCityPass extends DomainObjectModel{
 		return id;
 	}
 
+	
 
 
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 
 	public User getUser(){
@@ -193,9 +198,10 @@ public class MCityPass extends DomainObjectModel{
 
 	@Override
 	public String toString(){
+		//UserService userService = new UserService();
 		JSONObject json = new JSONObject();
 		json.put("Sn", id);
-		json.put("User", user.getPseudonym());
+		json.put("User", user);
 		json.put("hRI", hRI);
 		json.put("hRU", hRU);
 		json.put("Hu", Hu);

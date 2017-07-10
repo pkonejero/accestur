@@ -39,6 +39,14 @@ public class Counter extends DomainObjectModel{
 		this.lastHash = Constants.NOTUSED;
 	}
 	
+	public Counter(int counter, String psi, String lastHash,  MCityPass mCityPass, ServiceAgent service){
+		super();
+		this.counter = counter;
+		this.mCityPass = mCityPass;
+		this.service = service;
+		this.lastHash = lastHash;
+	}
+	
 	public Counter(int counter, MCityPass mCityPass, ServiceAgent service, String psi){
 		this.counter = counter;
 		this.mCityPass = mCityPass;
