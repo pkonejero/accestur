@@ -167,7 +167,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		return "ISSUING PHASE FINISHED CORRECTLY";
 		
 		}else{
-			return "FAILED SIGNATURE";
+			return "FAILED";
 		}
 	}
 	
