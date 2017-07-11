@@ -7,7 +7,7 @@ public interface UserMCouponServiceInterface{
 	
 	public UserMCoupon getUserMCouponByUsername(String username);
 
-	public String[] authenticateUsername(String username, String password);
+	public String authenticateUsername(String username, String password);
 	
 	public String verifyUsername(String[] params);
 	

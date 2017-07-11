@@ -86,26 +86,30 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		return manufacturermcouponRepository.findByNameIgnoreCase(name);
 	}
 	
-	public String[] generateUsername(String[] params){
+	public String generateUsername(String input){
 		manufacturer = manufacturermcouponRepository.findAll().iterator().next(); //WE OBTAIN THE ONLY MANUFACTURER THAT EXISTS
 		crypto.initPrivateKey("cert/issuer/private_ISSUER.der");//IT SHOULD BE MANUFACTURER's PK.
+		JSONObject json = new JSONObject(input);
 		String[] message = new String[4];
-		String username = params[1];
-		String password = crypto.decryptWithPrivateKey(params[2]);
-		if (crypto.getValidation(username+password, params[0])){
+		//message[0] = json.getString("signature");
+		message[1] = json.getString("username");
+		message[2] = json.getString("password");
+		String username = message[1];
+		String password = message[2];//crypto.decryptWithPrivateKey(message[2]);
+		//if (crypto.getValidation(username+password, message[0])){
 			
 			UserMCoupon user = new UserMCoupon();
 			
 			user.setUsername(username);
 			user.setPassword(password);
 			user.setManufacturerMCoupon(manufacturer);
-			
 			usermcouponRepository.save(user);
+			
 			message[0] = crypto.getSignature(username);
-		} else {
-			message[0] = "Error Registering, incorrect password or username";
-		}
-		return message;
+		//} else {
+		//	message[0] = "Error Registering, incorrect password or username";
+		//}
+		return message.toString();
 	}
 	///////////////////////////////////////////////////////////////////////
 	/////////////////// PURCHASE COUPON///////////////////////////////////////

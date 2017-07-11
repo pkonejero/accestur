@@ -41,6 +41,12 @@ public class UserMCoupon extends DomainObjectModelCoupon{
 	
 	public UserMCoupon(){}
 	
+	public UserMCoupon(long id, String username, String password){
+		this.id = id;
+		this.username = username;
+		this.password = password;
+	}
+	
 
 	public List<MCoupon> getmCoupon(){
 		return mCoupon;

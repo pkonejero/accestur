@@ -13,6 +13,12 @@ import secom.accestur.core.dao.coupon.UserMCouponRepository;
 import secom.accestur.core.model.coupon.MCoupon;
 import secom.accestur.core.model.coupon.UserMCoupon;
 import secom.accestur.core.service.coupon.UserMCouponServiceInterface;
+import secom.accestur.core.service.impl.ActivationService;
+import secom.accestur.core.service.impl.CounterService;
+import secom.accestur.core.service.impl.MCityPassService;
+import secom.accestur.core.service.impl.RightOfUseService;
+import secom.accestur.core.service.impl.SecretValueService;
+import secom.accestur.core.service.impl.ServiceAgentService;
 
 @Service("usermcouponService")
 public class UserMCouponService implements UserMCouponServiceInterface{
@@ -20,20 +26,20 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 	@Qualifier("usermcouponRepository")
 	private UserMCouponRepository usermcouponRepository;
 	
-	@Autowired
-	@Qualifier("cryptography")
+	//@Autowired
+	//@Qualifier("cryptography")
 	private Cryptography crypto;
 	
-	@Autowired
-	@Qualifier("schnorr")
+	//@Autowired
+	//@Qualifier("schnorr")
 	private Schnorr schnorr;
 	
-	@Autowired
-	@Qualifier("mcouponService")
+	//@Autowired
+	//@Qualifier("mcouponService")
 	private MCouponService mcouponService;
 	
-	@Autowired
-	@Qualifier("manufacturermcouponService")
+	//@Autowired
+	//@Qualifier("manufacturermcouponService")
 	private ManufacturerMCouponService manufacturermcouponService;
 	
 	private UserMCoupon user;
@@ -42,6 +48,13 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 	private BigInteger X;
 	private BigInteger Y;
 	private String Rid;
+	
+	public UserMCouponService() {
+		mcouponService = new MCouponService();
+		manufacturermcouponService = new ManufacturerMCouponService();
+		schnorr = new Schnorr();
+		crypto = new Cryptography();
+	}
 
 	public String getUserMCouponByUsername1(String username){
 		UserMCoupon user = usermcouponRepository.findAll().iterator().next();
@@ -53,13 +66,21 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		return username;
 	}
 	
-	public String[] authenticateUsername(String username, String password){
+	public String authenticateUsername(String username, String password){
 		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
 		String params[] = new String[3];
 		params[0] = crypto.getSignature(username+password);//Firma la faig damunt les dades que vull autenticar.
 		params[1] = username; //username
 		params[2] = crypto.encryptWithPublicKey(password);
-		return params;
+		return sendUserToManufacturerRegister(params);
+	}
+	
+	private String sendUserToManufacturerRegister(String[] params) {
+		JSONObject json = new JSONObject();
+		json.put("signature", params[0]);
+		json.put("username", params[1]);
+		json.put("password", params[2]);
+		return json.toString();
 	}
 	
 	public String verifyUsername(String[] params){

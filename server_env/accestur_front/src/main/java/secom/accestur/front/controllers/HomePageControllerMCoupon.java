@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import secom.accestur.core.model.coupon.UserMCoupon;
 import secom.accestur.core.service.impl.coupon.IssuerMCouponService;
 import secom.accestur.core.service.impl.coupon.ManufacturerMCouponService;
 import secom.accestur.core.service.impl.coupon.MerchantMCouponService;
@@ -39,8 +38,8 @@ public class HomePageControllerMCoupon{
 	@RequestMapping("/mcoupon")
 	public String welcome(Map<String, Object> model){
 		Init();
-		generateUser();
-		issuingMCoupon();
+		//generateUser();
+		//issuingMCoupon();
 		//redeemMCoupon();
 		return "mcoupon";
 	}
@@ -51,11 +50,11 @@ public class HomePageControllerMCoupon{
 		merchantmcouponService.newMerchantMCoupon("AccesturMerchant", issuermcouponService.getIssuerMCouponByName("AccesturIssuer"));
 	}
 	
-	private void generateUser(){
-		usermcouponService.createCertificate();
-		manufacturermcouponService.createCertificate();
-		System.out.println(usermcouponService.verifyUsername(manufacturermcouponService.generateUsername(usermcouponService.authenticateUsername("Toni","toni1992"))));
-	}
+	//private void generateUser(){
+	//	usermcouponService.createCertificate();
+	//	manufacturermcouponService.createCertificate();
+	//	System.out.println(usermcouponService.verifyUsername(manufacturermcouponService.generateUsername(usermcouponService.authenticateUsername("Toni","toni1992"))));
+	//}
 	
 	private void issuingMCoupon(){
 		usermcouponService.createCertificate();

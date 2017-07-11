@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import secom.accestur.core.model.Issuer;
 import secom.accestur.core.model.Provider;
 import secom.accestur.core.service.impl.ProviderService;
-import secom.accestur.core.dao.IssuerRepository;
-import secom.accestur.core.dao.ProviderRepository;
 import secom.accestur.core.facade.impl.ProviderFacade;
 
 @Controller

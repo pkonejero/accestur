@@ -7,5 +7,6 @@ import secom.accestur.core.model.coupon.IssuerMCoupon;
 
 @Repository("issuermcouponRepository")
 public interface IssuerMCouponRepository extends PagingAndSortingRepository<IssuerMCoupon, Long>{
-	IssuerMCoupon findByNameIgnoreCase(String name);	
+	IssuerMCoupon findByNameIgnoreCase(String name);
+
 }
