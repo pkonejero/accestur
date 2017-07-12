@@ -113,6 +113,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		params[0] = user.getUsername();
 
 		X = schnorr.getRandom();
+		System.out.println("AQUEST ES X PER PROVAR==="+X);
 		user.setX(X.toString()); //SAVING PRIVATE NUMBER OF THE USER
 		Xo[0]=X.toString();
 		for (int i = 1; i <= p; i++){
@@ -120,13 +121,18 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		}
 		params[1] = Xo[p];
 		
+		System.out.println("AQUEST ES XO PER PROVAR==="+Xo[p]);
+		
 		Y = schnorr.getRandom();
+		System.out.println("AQUEST ES Y PER PROVAR==="+Y);
 		user.setY(Y.toString()); //SAVING PRIVATE NUMBER OF THE USER
 		Yo[0]=Y.toString();
 		for (int i = 1; i <= q; i++){
 			Yo[i] = Cryptography.hash(Yo[i-1].toString());
 		}
 		params[2] = Yo[q];
+		
+		System.out.println("AQUEST ES YO PER PROVAR==="+Yo[p]);
 		
 		params[3] = p.toString();
 		
@@ -138,6 +144,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		createCertificate(); //Init Private Key User
 		params[6]=crypto.getSignature(params[0]+params[1]+params[2]+params[3]+params[4]+params[5]);
 		
+		System.out.println("FIRMA USUARI=="+params[6]);
 		//Merchant
 		params[7]=paramsMCoupon[4];
 		
@@ -145,7 +152,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		
 		usermcouponRepository.save(user);
 		
-		return sendUserToIssuerPurchase(params);
+		return "OKAY";//sendUserToIssuerPurchase(params);
 		}
 		else{
 			return "FAILED";

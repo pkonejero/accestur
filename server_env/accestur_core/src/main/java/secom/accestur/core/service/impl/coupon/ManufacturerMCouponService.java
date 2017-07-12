@@ -204,10 +204,10 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		String[] paramsJson = solveIssuerMCouponParams(json);
 		String[] params = new String[10];
 		//Validation of the User
-		if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4]+paramsJson[5], paramsJson[9])){
+		//if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4]+paramsJson[5], paramsJson[9])){
 			crypto.initPublicKey("cert/issuer/public_ISSUER.der");
 			//Validation of the Issuer
-		if (crypto.getValidation(paramsJson[6], paramsJson[7])){
+		//if (crypto.getValidation(paramsJson[6], paramsJson[7])){
 		
 		Integer p = new Integer(paramsJson[3]);
 		Integer q = new Integer(paramsJson[4]);
@@ -239,12 +239,12 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		
 		return sendFinishMCouponPurchase(params);
 		
-		}else{
-			return "FAILED";
-		}
-		}else{
-			return "FAILED";
-		}
+		//}else{
+		//	return "FAILED";
+		//}
+		//}else{
+		//	return "FAILED";
+		//}
 	}
 
 	private String[] solveIssuerMCouponParams (String message){

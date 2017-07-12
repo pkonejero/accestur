@@ -37,7 +37,7 @@ public class HomePageControllerMCoupon{
 
 	@RequestMapping("/mcoupon")
 	public String welcome(Map<String, Object> model){
-		Init();
+		//Init();
 		createOffer();
 		//generateUser();
 		//issuingMCoupon();
@@ -67,7 +67,10 @@ public class HomePageControllerMCoupon{
 			e.printStackTrace();
 		}
 		System.out.println("DATE=="+ dateFormat.format(date));
+		
 		manufacturermcouponService.initOfferCoupon(5, 6, date,merchantmcouponService.getMerchantMCouponByName("AccesturMerchant"));
+		
+		System.out.println(usermcouponService.getInitMCouponMessage(manufacturermcouponService.initParamsMCoupon(5, 6, date,merchantmcouponService.getMerchantMCouponByName("AccesturMerchant"))));
 	}
 	
 	//private void generateUser(){
