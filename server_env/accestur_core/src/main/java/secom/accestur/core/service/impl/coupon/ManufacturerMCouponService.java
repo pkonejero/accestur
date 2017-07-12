@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import secom.accestur.core.crypto.Crypto.Cryptography;
 import secom.accestur.core.crypto.schnorr.Schnorr;
+import secom.accestur.core.dao.coupon.MCouponRepository;
 import secom.accestur.core.dao.coupon.ManufacturerMCouponRepository;
 import secom.accestur.core.dao.coupon.UserMCouponRepository;
 import secom.accestur.core.model.coupon.CounterMCoupon;
@@ -112,6 +114,53 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		return message.toString();
 	}
 	///////////////////////////////////////////////////////////////////////
+	/////////////////// CREATE OFFER COUPON///////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////
+	
+	public String initOfferCoupon(Integer p, Integer q, Date EXD,MerchantMCoupon merchant){
+		crypto.initPrivateKey("cert/issuer/private_ISSUER.der");
+		MCoupon coupon = new MCoupon();
+		String[] params= new String [5];
+		params[0]=p.toString();
+		params[1]=q.toString();
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = EXD;
+		System.out.println("EXD:" + dateFormat.format(date));
+		params[2] = dateFormat.format(date);
+		//Signature
+		params[3]=crypto.getSignature(p.toString()+q.toString());
+		//Merchant
+		params[4]=merchant.getName();
+		//coupon.setExpDate((java.sql.Date) date);
+		coupon.setP(p);
+		coupon.setQ(q);
+		coupon.setMerchant(merchant);
+		mcouponService.saveMCoupon(coupon);
+		return sendInitMCouponMessage(params);
+	}
+	
+	public String getOfferCoupon(){
+		MCoupon coupon=mcouponService.getMCouponBySn(1);
+		String[] params= new String [5];
+		params[0]=coupon.getP().toString();
+		params[1]=coupon.getQ().toString();
+		params[2]=coupon.getMerchant().toString();
+		return sendOfferCoupon(params);
+	}
+	
+	private String sendOfferCoupon(String[] params) {
+		JSONObject json = new JSONObject();
+		json.put("p", params[0]);
+		json.put("q", params[1]);
+		//json.put("EXPDATE", params[2]);
+		//json.put("signature", params[3]);
+		json.put("merchant", params[2]);
+		JSONArray message = new JSONArray();
+		message.put(json);
+		return message.toString();
+	}
+	
+	///////////////////////////////////////////////////////////////////////
 	/////////////////// PURCHASE COUPON///////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////
 	
@@ -119,6 +168,7 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 	
 	public String initParamsMCoupon(Integer p, Integer q, Date EXD,MerchantMCoupon merchant){
 		crypto.initPrivateKey("cert/issuer/private_ISSUER.der");
+		MCoupon coupon = new MCoupon();
 		String[] params= new String [5];
 		params[0]=p.toString();
 		params[1]=q.toString();

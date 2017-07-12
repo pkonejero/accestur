@@ -38,6 +38,7 @@ public class HomePageControllerMCoupon{
 	@RequestMapping("/mcoupon")
 	public String welcome(Map<String, Object> model){
 		Init();
+		createOffer();
 		//generateUser();
 		//issuingMCoupon();
 		//redeemMCoupon();
@@ -48,6 +49,25 @@ public class HomePageControllerMCoupon{
 		manufacturermcouponService.newManufacturerMCoupon("AccesturManufacturer");
 		issuermcouponService.newIssuerMCoupon("AccesturIssuer",manufacturermcouponService.getManufacturerMCouponByName("AccesturManufacturer"));
 		merchantmcouponService.newMerchantMCoupon("AccesturMerchant", issuermcouponService.getIssuerMCouponByName("AccesturIssuer"));
+	}
+	
+	private void createOffer(){
+		
+		usermcouponService.createCertificate();
+		manufacturermcouponService.createCertificate();
+		issuermcouponService.createCertificate();
+		
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		String data= "26/07/1992";
+		Date date = new Date();
+		try {
+			date = dateFormat.parse(data);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("DATE=="+ dateFormat.format(date));
+		manufacturermcouponService.initOfferCoupon(5, 6, date,merchantmcouponService.getMerchantMCouponByName("AccesturMerchant"));
 	}
 	
 	//private void generateUser(){

@@ -75,6 +75,10 @@ public class MCoupon extends DomainObjectModelCoupon{
 		this.user = user;
 	}
 	
+	public MerchantMCoupon getMerchant(){
+		return merchant;
+	}
+	
 	public void setMerchant(MerchantMCoupon merchant) {
 		this.merchant = merchant;
 	}
@@ -106,6 +110,7 @@ public class MCoupon extends DomainObjectModelCoupon{
 	public Date getGenDate() {
 		return genDate;
 	}
+	
 
 	public void setGenDate(Date genDate) {
 		this.genDate = genDate;

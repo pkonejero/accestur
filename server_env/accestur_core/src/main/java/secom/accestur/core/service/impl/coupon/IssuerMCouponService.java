@@ -82,7 +82,6 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		return jsonObject.getString("y");
 	}
 
-
 	
 	///////////////////////////////////////////////////////////////////////
 	/////////////////// PURCHASE COUPON///////////////////////////////////////
@@ -170,7 +169,7 @@ public String getMCouponGeneratedByManufacturer(String json) {
 	
 	String[] params = new String[10];
 	
-	MCoupon coupon = new MCoupon();
+	MCoupon coupon = mcouponService.getMCouponBySn(1) ; //HARDCODEEED!!!!!!!!!!!!!!!
 	
 	CounterMCoupon counter = new CounterMCoupon(0,coupon);
 	
@@ -184,8 +183,8 @@ public String getMCouponGeneratedByManufacturer(String json) {
 	Integer p = new Integer(paramsJson[3]);
 	Integer q = new Integer(paramsJson[4]);
 	
-	coupon.setP(p);
-	coupon.setQ(q);
+	//coupon.setP(p);
+	//coupon.setQ(q);
 	
 	Integer sn = new Integer(paramsJson[2]);
 	
@@ -210,7 +209,7 @@ public String getMCouponGeneratedByManufacturer(String json) {
 	//}
 	//System.out.println("DATE=="+ dateFormat.format(paramsJson[8]));
 	
-	coupon.setMerchant(merchantmcouponService.getMerchantMCouponByName(paramsJson[7]));
+	//coupon.setMerchant(merchantmcouponService.getMerchantMCouponByName(paramsJson[7]));
 	
 	params[0] = crypto.getSignature(MC+sn.toString());
 	
