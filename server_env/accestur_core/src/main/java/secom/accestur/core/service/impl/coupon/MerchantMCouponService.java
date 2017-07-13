@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -59,12 +60,13 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 	
 	//REDEEM 1 MERCHANT INICIALIZES THE COMMUNICATION.
 	
-	public String initRedeemParamsMCoupon(String nameMerchant){
+	public String initRedeemParamsMCoupon(){
 		crypto.initPrivateKey("cert/issuer/private_ISSUER.der");
 		String[] params= new String [4];
-		params[0]=nameMerchant;
 		
-		idMerchant=nameMerchant;
+		params[0]="AccesturMerchant"; //HARCODEEED
+		
+		idMerchant="AccesturMerchant"; //HARDCODEEEED
 		
 		Random rand = new Random();
 		namec = rand.nextInt(50) + 1;
@@ -82,7 +84,9 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		json.put("name", params[0]);
 		json.put("namec", params[1]);
 		json.put("signature", params[2]);
-		return json.toString();
+		JSONArray message = new JSONArray();
+		message.put(json);
+		return message.toString();
 	}
 	
 	public void errorRedeem1(){

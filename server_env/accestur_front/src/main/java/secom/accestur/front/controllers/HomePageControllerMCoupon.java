@@ -121,69 +121,69 @@ public class HomePageControllerMCoupon{
 		
 	}
 	
-	private void redeemMCoupon(){
-		usermcouponService.createCertificate();
-		manufacturermcouponService.createCertificate();
-		issuermcouponService.createCertificate();
-		
-		usermcouponService.initUserMCoupon();
-		//String clear = issuermcouponService.redeemingMCoupon(merchantmcouponService.sendingMCouponRedeem(usermcouponService.initRedeemMCoupon(1,usermcouponService.getUserMCouponByUsername("Toni"),1,merchantmcouponService.initRedeemParamsMCoupon("AccesturMerchant"))));
-		//System.out.println(usermcouponService.confirmationMCouponRedeem2( merchantmcouponService.confirmationMCouponRedeem(clear)));
-		
-		String prooferror = usermcouponService.initRedeemMCoupon(1,usermcouponService.getUserMCouponByUsername("Toni"),1,merchantmcouponService.initRedeemParamsMCoupon("AccesturMerchant"));
-		String clear;
-		
-		if(!prooferror.equals("FAILED")){
-			prooferror= merchantmcouponService.sendingMCouponRedeem(prooferror);
-			if(!prooferror.equals("FAILED")){
-				prooferror= issuermcouponService.redeemingMCoupon(prooferror);
-				clear = prooferror;
-				if(!prooferror.equals("FAILED")){
-					prooferror= merchantmcouponService.confirmationMCouponRedeem(prooferror);
-					if(!prooferror.equals("FAILED")){
-						prooferror=usermcouponService.confirmationMCouponRedeem2(prooferror);
-						if(!prooferror.equals("FAILED")){
-							System.out.println("REDEEM FINISH CORRECTLY");
-							//Starting CLEARING PHASE IF THE REDEEM WAS CORRECT
-							
-							prooferror=merchantmcouponService.initClearingMerchant(clear);
-							
-							if(!prooferror.equals("FAILED")){							
-								prooferror=manufacturermcouponService.ClearingManufacturer(prooferror);
-								if(!prooferror.equals("FAILED")){
-									prooferror=merchantmcouponService.ClearingMCoupon(prooferror);
-									if(!prooferror.equals("FAILED")){
-										System.out.println("CLEARING PHASE FINISHED CORRECTLY");
-									}else{
-										manufacturermcouponService.errorClearing2();
-									}
-								}else{
-									merchantmcouponService.errorClearing1();
-								}
-							}else{
-								//Inicialitzam Clearing per tant ,no error.
-							}
-							
-						
-						}else{
-							merchantmcouponService.errorRedeem5();
-						}
-					}else{
-						issuermcouponService.errorRedeem4();
-					}
-				}else{
-					merchantmcouponService.errorRedeem3();
-				}
-			}else{
-				usermcouponService.errorRedeem2();
-			}
-		}else{
-			merchantmcouponService.errorRedeem1();
-			
-		}
+//	private void redeemMCoupon(){
+//		usermcouponService.createCertificate();
+//		manufacturermcouponService.createCertificate();
+//		issuermcouponService.createCertificate();
+//		
+//		usermcouponService.initUserMCoupon();
+//		//String clear = issuermcouponService.redeemingMCoupon(merchantmcouponService.sendingMCouponRedeem(usermcouponService.initRedeemMCoupon(1,usermcouponService.getUserMCouponByUsername("Toni"),1,merchantmcouponService.initRedeemParamsMCoupon("AccesturMerchant"))));
+//		//System.out.println(usermcouponService.confirmationMCouponRedeem2( merchantmcouponService.confirmationMCouponRedeem(clear)));
+//		
+//		String prooferror = usermcouponService.initRedeemMCoupon(1,usermcouponService.getUserMCouponByUsername("Toni"),1,merchantmcouponService.initRedeemParamsMCoupon("AccesturMerchant"));
+//		String clear;
+//		
+//		if(!prooferror.equals("FAILED")){
+//			prooferror= merchantmcouponService.sendingMCouponRedeem(prooferror);
+//			if(!prooferror.equals("FAILED")){
+//				prooferror= issuermcouponService.redeemingMCoupon(prooferror);
+//				clear = prooferror;
+//				if(!prooferror.equals("FAILED")){
+//					prooferror= merchantmcouponService.confirmationMCouponRedeem(prooferror);
+//					if(!prooferror.equals("FAILED")){
+//						prooferror=usermcouponService.confirmationMCouponRedeem2(prooferror);
+//						if(!prooferror.equals("FAILED")){
+//							System.out.println("REDEEM FINISH CORRECTLY");
+//							//Starting CLEARING PHASE IF THE REDEEM WAS CORRECT
+//							
+//							prooferror=merchantmcouponService.initClearingMerchant(clear);
+//							
+//							if(!prooferror.equals("FAILED")){							
+//								prooferror=manufacturermcouponService.ClearingManufacturer(prooferror);
+//								if(!prooferror.equals("FAILED")){
+//									prooferror=merchantmcouponService.ClearingMCoupon(prooferror);
+//									if(!prooferror.equals("FAILED")){
+//										System.out.println("CLEARING PHASE FINISHED CORRECTLY");
+//									}else{
+//										manufacturermcouponService.errorClearing2();
+//									}
+//								}else{
+//									merchantmcouponService.errorClearing1();
+//								}
+//							}else{
+//								//Inicialitzam Clearing per tant ,no error.
+//							}
+//							
+//						
+//						}else{
+//							merchantmcouponService.errorRedeem5();
+//						}
+//					}else{
+//						issuermcouponService.errorRedeem4();
+//					}
+//				}else{
+//					merchantmcouponService.errorRedeem3();
+//				}
+//			}else{
+//				usermcouponService.errorRedeem2();
+//			}
+//		}else{
+//			merchantmcouponService.errorRedeem1();
+//			
+//		}
 		
 		//START CLEARING
 		//System.out.println(merchantmcouponService.ClearingMCoupon(manufacturermcouponService.ClearingManufacturer(merchantmcouponService.initClearingMerchant(clear))));
-	}
+//	}
 	
 }

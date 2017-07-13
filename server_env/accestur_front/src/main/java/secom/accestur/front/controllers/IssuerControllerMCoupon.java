@@ -29,7 +29,7 @@ public class IssuerControllerMCoupon {
 	
 	@RequestMapping(value = "/issuer/setUserCoupon", method=RequestMethod.POST)
 	@ResponseBody
-	public String getChallenge(@RequestBody String json){
+	public String setUserCoupon(@RequestBody String json){
 		return issuerService.getMCouponGeneratedByManufacturer(manufacturerService.getCoupon(issuerService.getInitMCouponMessage(json)));
 	}
 

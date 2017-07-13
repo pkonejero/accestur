@@ -23,10 +23,6 @@ import secom.accestur.core.service.impl.coupon.ManufacturerMCouponService;
 public class ManufacturerControllerMCoupon {
 	
 
-	ManufacturerMCoupon manufacturer;
-	
-	
-	IssuerMCoupon issuer;
 	
 	MerchantMCoupon merchant;
 
