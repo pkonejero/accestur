@@ -1,3 +1,23 @@
 <resources>
-	<string name="app_name">MCoupon</string>
+	<string name="app_name">MCityPass</string>
+	<string name="bottom_navigation_menu_device_text">Wallet</string>
+	<string name="bottom_navigation_menu_cloud_text">Add</string>
+	<string name="bottom_navigation_menu_settings_text">Settings</string>
+	<string name="button_generate_pseudonym">Generate Pseudonym</string>
+	<string name="pseudonym_text">You have a pseudonym and are ready to use the system</string>
+
+	<string-array name="lifetimeOptions">
+		<item>2</item>
+		<item>3</item>
+		<item>5</item>
+		<item>7</item>
+		<item>10</item>
+	</string-array>
+
+	<string-array name="categoryOptions">
+		<item>Child (3 - 16)</item>
+		<item>Young (16 - 25)</item>
+		<item>Adult</item>
+		<item>Senior (>65)</item>
+	</string-array>
 </resources>

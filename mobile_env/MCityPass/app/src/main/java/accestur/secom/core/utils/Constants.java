@@ -15,6 +15,6 @@ public abstract class Constants{
 	public static final String EXPDATE = "08/06/2017";
 	public static final String NOTUSED = "NOT USED";
 	public static final String TERMS_AND_CONDITIONS = "Lorem ipsum dolor sit amet.";
-	public static final String BASE_URL = "http://192.168.1.34:8080/";
+	public static final String BASE_URL = "http://localhost:8080/";
 
 }
