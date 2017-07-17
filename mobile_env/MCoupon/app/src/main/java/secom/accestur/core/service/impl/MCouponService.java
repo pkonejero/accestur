@@ -1,9 +1,14 @@
 package secom.accestur.core.service.impl;
 
+import android.provider.ContactsContract;
+
+import com.activeandroid.query.Select;
+
 import java.util.List;
 
 
 import secom.accestur.core.model.MCoupon;
+import secom.accestur.core.model.MerchantMCoupon;
 import secom.accestur.core.service.MCouponServiceInterface;
 
 public class MCouponService implements MCouponServiceInterface{	
@@ -35,6 +40,15 @@ public class MCouponService implements MCouponServiceInterface{
 	
 	public MCoupon getMCoupon() {
 		return mCoupon;
+	}
+
+	public List<MCoupon> getAllMCoupon(){
+		MCoupon mCoupon = new MCoupon();
+		mCoupon.setP(5);
+		mCoupon.setId(Long.parseLong("1"));
+		mCoupon.save();
+
+		return new Select().from(MCoupon.class).execute();
 	}
 }
 
