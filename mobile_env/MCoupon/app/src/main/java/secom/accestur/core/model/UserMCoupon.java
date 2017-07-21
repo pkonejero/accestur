@@ -7,11 +7,11 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 
-@Table(name="usermcouponEntity")
+@Table(name="usermCoupon")
 public class UserMCoupon extends Model{
 
-	@Column
-	private Long id;
+//	@Column
+//	private Long id;
 	
 	@Column(length = 20)
 	private String username;
@@ -20,33 +20,44 @@ public class UserMCoupon extends Model{
 	private String password;
 	
 	//MCoupons of the user
-	@Column
-	private List<MCoupon> mCoupon;
+	private List<MCoupon> mCoupon(){
+		return getMany(MCoupon.class, "usermCoupon");
+	}
 	
 	//User registered to a manufacturer
 	@Column
 	private ManufacturerMCoupon manufacturer;
-	
+
+	@Column
 	private String X;
-	
+	@Column
 	private String Y;
-	
+
+	@Column
+	private String Xo;
+	@Column
+	private String Yo;
+
+	@Column
+	private String signature;
+
+
 	public UserMCoupon(){}
 	
-	public UserMCoupon(long id, String username, String password){
-		this.id = id;
+	public UserMCoupon( String username, String password){
+		//this.id = id;
 		this.username = username;
 		this.password = password;
 	}
 	
 
-	public List<MCoupon> getmCoupon(){
-		return mCoupon;
-	}
-
-	public void setmCoupon(List<MCoupon> mCoupon){
-		this.mCoupon = mCoupon;
-	}
+//	public List<MCoupon> getmCoupon(){
+//		return mCoupon;
+//	}
+//
+//	public void setmCoupon(List<MCoupon> mCoupon){
+//		this.mCoupon = mCoupon;
+//	}
 
 	public String getUsername(){
 		return username;
@@ -87,7 +98,29 @@ public class UserMCoupon extends Model{
 	public void setY(String y) {
 		Y = y;
 	}
-	
+
+	public String getXo() {
+		return Xo;
+	}
+
+	public void setXo(String xo) {
+		Xo = xo;
+	}
+
+	public String getYo() {
+		return Yo;
+	}
+
+	public void setYo(String yo) {
+		Yo = yo;
+	}
+
+	public void setSignature(String signature){
+		this.signature=signature;
+	}
+	public String getSignature(){
+		return signature;
+	}
 	@Override
 	public boolean equals(Object obj){
 		if (this == obj)

@@ -11,9 +11,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import secom.accestur.core.model.MCoupon;
+import secom.accestur.core.model.UserMCoupon;
 import secom.accestur.core.service.impl.CounterMCouponService;
 import secom.accestur.core.service.impl.MCouponService;
-import secom.accestur.mcoupon.activity.activity.R;
+import secom.accestur.core.service.impl.UserMCouponService;
+import secom.accestur.mcoupon.activity.R;
+import secom.accestur.mcoupon.activity.tasks.BuyCouponTask;
 
 //import accestur.secom.core.service.impl.ActivationService;
 //import accestur.secom.core.service.impl.CounterService;
@@ -34,6 +38,8 @@ public class MCouponDetailFragment extends Fragment {
     private CounterMCouponService counterService;
     private MCouponService mCouponService;
     int currentMCoupon;
+    private MCoupon mCoupon;
+    private UserMCouponService userMCouponService;
 
     public MCouponDetailFragment() {
     }
@@ -51,42 +57,41 @@ public class MCouponDetailFragment extends Fragment {
     //    text = texto;
     // }
 
-//    @Override
-//    public void onActivityCreated(Bundle state) {
-//        super.onActivityCreated(state);
-//        // txtDetail = (TextView)getActivity().findViewById(R.id.textDetail);
-//        // txtDetail.setText(text);
-//
-//        mCityPassService = new MCityPassService();
-//        mCityPassService.initMCityPass(currentMPASS + 1);
-//
+    @Override
+    public void onActivityCreated(Bundle state) {
+        super.onActivityCreated(state);
+        // txtDetail = (TextView)getActivity().findViewById(R.id.textDetail);
+        // txtDetail.setText(text);
+
+        mCouponService = new MCouponService();
+        mCoupon = mCouponService.initMCoupon(currentMCoupon + 1);
+
 //        TextView lifetimeText = (TextView) getActivity().findViewById(R.id.textLifetime);
 //        int lifetime = Integer.parseInt(mCityPassService.getMCityPass().getLifeTime()) / (3600 * 1000 * 24);
 //        lifetimeText.setText("" + lifetime);
-//
+
 //        TextView categoryText = (TextView) getActivity().findViewById(R.id.textCategory);
 //        categoryText.setText(mCityPassService.getMCityPass().getCategory());
-//
+
 //        TextView expDateText = (TextView) getActivity().findViewById(R.id.textExpDate);
 //        expDateText.setText(mCityPassService.getMCityPass().getExpDate());
-//
+
 //        activationService = new ActivationService();
 //        activationService.initActivation(mCityPassService.getMCityPass());
-//
-//        Button activateButton = (Button) getActivity().findViewById(R.id.activatePASSButton);
-//        if (activationService.getActivation() == null) {
-//            activateButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    ActivatePASSTask activatePASSTask = new ActivatePASSTask(getActivity());
-//                    activatePASSTask.execute(mCityPassService.getMCityPass().getsN());
-//
-//                }
-//            });
-//        } else {
-//            activateButton.setVisibility(View.INVISIBLE);
-//        }
-//
+
+        Button buyButton = (Button) getActivity().findViewById(R.id.buyButton);
+        if (mCouponService.getMCoupon().getUser() == null) {
+            buyButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    BuyCouponTask buyCouponTask = new BuyCouponTask(getActivity());
+                    buyCouponTask.execute(mCouponService.getMCoupon().getId());
+                }
+            });
+        } else {
+            buyButton.setVisibility(View.INVISIBLE);
+        }
+
 //        ListView listView = (ListView) getActivity().findViewById(R.id.listServicesUse);
 //        serviceAgentService = new ServiceAgentService();
 //        counterService = new CounterService();
@@ -129,7 +134,7 @@ public class MCouponDetailFragment extends Fragment {
 //        });
 //
 //    }
-//}
+}
 
 //    @Override
 //    public void onViewCreated(View view, Bundle savedInstanceState) {

@@ -9,16 +9,12 @@ import retrofit2.http.POST;
  * Created by gornals on 13/07/2017.
  */
 
-public class MerchantAPI {
+public interface MerchantAPI {
 
     @POST("/merchant/getChallengeRedeem")
-    Call<String> getChallengeRedeem(@Body String json) {
-        return null;
-    }
+    Call<String> getChallengeRedeem(@Body String json);
 
     @GET("/merchant/getParamsRedeem")
-    Call<String> getParamsRedeem() {
-        return null;
-    }
+    Call<String> getParamsRedeem();
 
 }

@@ -8,11 +8,9 @@ import retrofit2.http.POST;
  * Created by gornals on 13/07/2017.
  */
 
-public class IssuerAPI {
+public interface IssuerAPI {
 
     @POST("issuer/setUserCoupon")
-    Call<String> setUserCoupon(@Body String json) {
-        return null;
-    }
+    Call<String> setUserCoupon(@Body String json);
 
 }

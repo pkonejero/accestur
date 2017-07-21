@@ -1,11 +1,13 @@
 package secom.accestur.core.model;
 
+import com.activeandroid.Model;
+
 import java.util.List;
 
 
 
 
-public class ManufacturerMCoupon extends DomainObjectModelCoupon{
+public class ManufacturerMCoupon extends Model{
 
 	private Long id;
 

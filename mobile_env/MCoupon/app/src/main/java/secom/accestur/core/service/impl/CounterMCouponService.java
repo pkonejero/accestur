@@ -35,7 +35,10 @@ public class CounterMCouponService implements CounterMCouponServiceInterface{
 	//	countermcouponRepository.save(counters);
 	//}
 
-	
+	public void init (int counter){
+			this.counter = new CounterMCoupon(counter);
+	}
+
 	public void updateCounterMCoupon() {
 		counter.setCounterMCoupon(counter.getCounterMCoupon()-1);
 		//saveCounterMCoupon(counter);

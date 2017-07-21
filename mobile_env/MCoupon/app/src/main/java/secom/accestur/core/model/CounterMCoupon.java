@@ -8,11 +8,12 @@ import com.activeandroid.annotation.Table;
 import secom.accestur.core.utils.Constants;
 
 
-@Table(name="countermcouponEntity")
-public class CounterMCoupon extends DomainObjectModelCoupon{
+@Table(name="countermCoupon")
+public class CounterMCoupon extends Model{
 	//@Id
 	//@GeneratedValue(strategy=GenerationType.AUTO)
-	//private Long id;
+//	@Column
+//	private Long id;
 
 	//Foreign Key
 	@Column(name = "mCoupon")
@@ -30,7 +31,10 @@ public class CounterMCoupon extends DomainObjectModelCoupon{
 		this.mCoupon = mCoupon;
 		//this.lastHash = Constants.NOTUSED;
 	}
-	
+	public CounterMCoupon(int counter){
+		super();
+		this.counter=counter;
+	}
 	public MCoupon getmCoupon(){
 		return mCoupon;
 	}

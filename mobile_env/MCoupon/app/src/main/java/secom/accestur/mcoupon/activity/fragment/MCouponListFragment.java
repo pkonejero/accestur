@@ -11,7 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import secom.accestur.mcoupon.activity.activity.R;
+import secom.accestur.mcoupon.activity.R;
 
 import secom.accestur.core.model.MCoupon;
 import secom.accestur.core.service.impl.MCouponService;
@@ -37,6 +37,15 @@ public class MCouponListFragment extends Fragment {
         super.onActivityCreated(state);
 
         mCouponService = new MCouponService();
+//
+//        MCoupon mCoupon = new MCoupon();
+////        mCoupon.setId((long) 1);
+//        mCoupon.setP(2);
+//        mCoupon.setQ(4);
+//        mCoupon.setMerchant("AccesturMerchant");
+//        mCouponService.storeMCoupon(mCoupon);
+
+
         mCoupons = (ArrayList) mCouponService.getAllMCoupon();
 
         listView = (ListView)getView().findViewById(R.id.listView);

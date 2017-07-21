@@ -1,7 +1,11 @@
 package secom.accestur.core.service.impl;
 
-import java.math.BigInteger;
+import com.activeandroid.query.Select;
 
+import java.math.BigInteger;
+import java.util.Date;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -11,7 +15,7 @@ import secom.accestur.core.dao.UserMCouponRepository;
 import secom.accestur.core.model.MCoupon;
 import secom.accestur.core.model.UserMCoupon;
 import secom.accestur.core.service.UserMCouponServiceInterface;
-
+import secom.accestur.core.utils.Constants;
 
 
 public class UserMCouponService implements UserMCouponServiceInterface{
@@ -52,7 +56,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		//UserMCoupon user = usermcouponRepository.findAll().iterator().next();
 		if (user != null) {
 			user.setUsername(username);
-			//usermcouponRepository.save(user);
+			storeUserMCoupon(user);
 		}
 
 		return username;
@@ -74,6 +78,24 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		//json.put("password", params[2]);
 		return json.toString();
 	}
+
+	public void setUserCoupon(Long id,UserMCoupon user) {
+			JSONObject json = new JSONObject();
+			MCoupon mCoupon = new Select().from(MCoupon.class).where("id = ? ", id).executeSingle();
+
+			mCoupon.setUser(user);
+			storeUserMCoupon(user);
+
+//			activation.setActDate(json.getString("ACTDate"));
+//			activation.setState(json.getString("State"));
+//			activation.setSignature(json.getString("Signature"));
+
+//			System.out.println("Activation saved at: " + activation.save());
+//			return true;
+//		} catch (JSONException e) {
+//			return false;
+//		}
+	}
 	
 	//public String verifyUsername(String[] params){
 		//boolean verified = crypto.getValidation(getUserMCoupon().getUsername(), params[0]);
@@ -90,13 +112,12 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 	
 	//PURCHASE 2 COUPON Sending to Issuer Info-Coupon,Signature//
 	
-	public String getInitMCouponMessage(String json) {
+	public void generateUserParamsCoupon(int p, int q, UserMCoupon user,Date EXPDATE) {
 		crypto.initPublicKey("cert/issuer/public_ISSUER.der"); //Haure de posar la del Manufacturer
-		String[] paramsMCoupon = solveMCouponParams(json);
-		Integer p = new Integer(paramsMCoupon[0]);
-		Integer q = new Integer(paramsMCoupon[1]);
-		if (crypto.getValidation(paramsMCoupon[0]+paramsMCoupon[1], paramsMCoupon[3])){
-			
+		//String[] paramsMCoupon = solveMCouponParams(json);
+		//if (crypto.getValidation(paramsMCoupon[0]+paramsMCoupon[1], paramsMCoupon[3])){
+		Integer pN=p;
+		Integer qN=q;
 		String[] Xo = new String[p+1];
 		String[] Yo = new String[q+1];
 		
@@ -112,6 +133,8 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 			Xo[i] = Cryptography.hash(Xo[i-1].toString());
 		}
 		params[1] = Xo[p];
+
+		user.setXo(Xo[p]);
 		
 		System.out.println("AQUEST ES XO PER PROVAR==="+Xo[p]);
 		
@@ -123,32 +146,35 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 			Yo[i] = Cryptography.hash(Yo[i-1].toString());
 		}
 		params[2] = Yo[q];
+
+		user.setYo(Yo[p]);
 		
 		System.out.println("AQUEST ES YO PER PROVAR==="+Yo[p]);
 		
-		params[3] = p.toString();
+		params[3] = pN.toString();
 		
-		params[4] = q.toString();
+		params[4] = qN.toString();
 		
-		params[5]=paramsMCoupon[2];
+		params[5]=EXPDATE.toString();
 		
 		//Signature of the User
 		createCertificate(); //Init Private Key User
 		params[6]=crypto.getSignature(params[0]+params[1]+params[2]+params[3]+params[4]+params[5]);
+		user.setSignature(params[6]);
 		
-		System.out.println("FIRMA USUARI=="+params[6]);
+		//System.out.println("FIRMA USUARI=="+params[6]);
 		//Merchant
-		params[7]=paramsMCoupon[4];
+		//params[7]=paramsMCoupon[4];
 		
-		MC=params[1]+params[2]+params[3]+params[4]+params[5];
+		//MC=params[1]+params[2]+params[3]+params[4];//+params[5] HEM LLEVAT EXPIRATION DATE.
 		
-		//usermcouponRepository.save(user);
+		storeUserMCoupon(user); //GUARDAM ELS PARAMETRES X, Y I ENVIAM XO I YO
 		
-		return "OKAY";//sendUserToIssuerPurchase(params);
-		}
-		else{
-			return "FAILED";
-		}
+		//return sendUserToIssuerPurchase(params);
+		//}
+		//else{
+		//	return "FAILED";
+		//}
 	}
 	
 	private String[] solveMCouponParams (String message){
@@ -163,18 +189,16 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		return params;
 	}
 	
-	private String sendUserToIssuerPurchase(String[] params) {
-		JSONObject json = new JSONObject();
-		//json.put("username", params[0]);
-		//json.put("Xo", params[1]);
-		//json.put("Yo", params[2]);
-		//json.put("p", params[3]);
-		//json.put("q", params[4]);
-		//json.put("EXPDATE", params[5]);
-		//json.put("signature", params[6]);
-		//json.put("merchant", params[7]);
-		return json.toString();
-	}
+//	private String sendUserToIssuerPurchase(String[] params) {
+////		JSONObject json = new JSONObject();
+////		json.put("username", params[0]);
+////		json.put("Xo", params[1]);
+////		json.put("Yo", params[2]);
+//		//json.put("EXPDATE", params[5]);
+//		//json.put("signature", params[6]);
+//		//json.put("merchant", params[7]);
+//		//return json.toString();
+//	}
 	//PURCHASE 6 COUPON Receiving Coupon from Issuer//
 	public String recieveMCoupon(String params) {
 		
@@ -328,12 +352,21 @@ public String confirmationMCouponRedeem2(String json) {
 	//	user = getUserMCoupon();
 	//}
 
-	public void createCertificate(){
-		crypto.initPrivateKey("cert/user/private_USER.der");
+	public void createCertificate() {
+		crypto.initPrivateKey(Constants.PATH_PRIVATE_KEY);
+		//crypto.initPublicKey(Constants.PATH_PROVIDER_KEY);
 	}
 
+	public void storeUserMCoupon(UserMCoupon userMCoupon) {
+		this.user = userMCoupon;
+		saveUserMCoupon();
+	}
+
+	public void saveUserMCoupon(){
+		user.save();
+	}
 	
-	//public UserMCoupon getUserMCouponByUsername(String username){
-	//	return usermcouponRepository.findAll().iterator().next();
-	//}
+	public UserMCoupon getUserMCouponByUsername(String username){
+		return new Select().from(UserMCoupon.class).where("username = ? ", username).executeSingle();
+	}
 }

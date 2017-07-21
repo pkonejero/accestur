@@ -4,51 +4,66 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import java.sql.Date;
 import java.util.List;
+import java.util.jar.Attributes;
 
 
-@Table(name="mcouponEntity")
+@Table(name="mCoupon")
 public class MCoupon extends Model{
 	
-	@Column
-	private Long id;
+	@Column( name = "sN")
+	private Integer sN;
 	
 	//Foreign Key User
-	@Column
+	@Column(name="user")
 	private UserMCoupon user;
 	
 	//Merchant
-	@Column
-	private MerchantMCoupon merchant;
+	@Column(name = "merchant")
+	private String merchant;
 	
 	//COUNTER
-	@Column
-	private CounterMCoupon counter;
+	//@Column
+	public List<CounterMCoupon> counters (){return getMany(CounterMCoupon.class, "MCoupon");}
 	
 	//Share Hash
+	//@Column
 	private String Yo;
+	@Column(name = "q")
 	private Integer q; //Number of times to hash.
-	
+	//@Column
 	//Own Hash
 	private String Xo;
+	@Column(name="p")
 	private Integer p;//Number of times to hash.
+
+
 	
-	//Serial Number
-	private Integer sn;  //Hauria de ser molt gran.
+//	//Serial Number
+//	private Integer sn;  //Hauria de ser molt gran.
 
 	
 	//Dates
 	private Date expDate;
 	private Date genDate;
 	
-	public MCoupon(){}
+	public MCoupon(){
+		super();
+	}
+
+	public MCoupon(Integer sn, int p, int q) {
+		super();
+		this.sN = sn;
+		this.p = p;
+		this.q = q;
+	}
 
 //	public Long getId() {
 //		return id;
 //	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+//	public void setId(Long id) {
+//		this.id = id;
+//	}
 
 	public UserMCoupon getUser() {
 		return user;
@@ -58,11 +73,11 @@ public class MCoupon extends Model{
 		this.user = user;
 	}
 	
-	public MerchantMCoupon getMerchant(){
+	public String getMerchant(){
 		return merchant;
 	}
 	
-	public void setMerchant(MerchantMCoupon merchant) {
+	public void setMerchant(String merchant) {
 		this.merchant = merchant;
 	}
 
@@ -100,11 +115,11 @@ public class MCoupon extends Model{
 	}
 	
 	public Integer getSn() {
-		return sn;
+		return sN;
 	}
 
 	public void setSn(Integer sN) {
-		this.sn = sN;
+		this.sN = sN;
 	}
 	
 	public Integer getP() {
@@ -123,12 +138,12 @@ public class MCoupon extends Model{
 		this.q = Q;
 	}
 	
-	public CounterMCoupon getCounter() {
-		return counter;
-	}
-
-	public void setCounter(CounterMCoupon counter) {
-		this.counter = counter;
-	}
+//	public CounterMCoupon getCounter() {
+//		return counter;
+//	}
+//
+//	public void setCounter(CounterMCoupon counter) {
+//		this.counter = counter;
+//	}
 	
 } 

@@ -1,16 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-		  package="secom.accestur.mcoupon.activity.activity">
+		  package="secom.accestur.mcoupon.activity">
+
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+
+	<meta-data android:name="AA_DB_NAME" android:value="MCoupon.db" />
+	<meta-data android:name="AA_DB_VERSION" android:value="7" />
+	<!--<meta-data-->
+		<!--android:name="AA_MODELS"-->
+		<!--android:value="secom.accestur.core.model.MCoupon, secom.accestur.core.model.UserMCoupon,secom.accestur.core.model.CounterMCoupon"-->
+		<!--/>-->
 
 	<application
 		android:name="secom.accestur.core.GlobalApplication"
 		android:allowBackup="true"
 		android:icon="@mipmap/ic_launcher"
-		android:label="@string/app_name"
+		android:label="MCoupon"
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme">
-		<activity android:name=".MainActivity"
-				  android:label="@string/app_name">
+
+		<activity android:name=".activity.MainActivity"
+				  android:label="MCoupon">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 				<category android:name="android.intent.category.LAUNCHER"/>

@@ -6,19 +6,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="accestur.secom.mcitypass.fragment.MCPassDetailFragment" >
+    tools:context="secom.accestur.mcoupon.activity.fragment.MCouponDetailFragment" >
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical">
+
     <TextView
-        android:id="@+id/viewPASStext"
+        android:id="@+id/Merchant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
         android:layout_weight="1"
-        android:text="View PASS" />
+        android:text="Merchant"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,7 +31,7 @@
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_weight="1"
+          android:layout_weight="0.97"
           android:text="Lifetime" />
 
       <TextView
@@ -77,21 +78,14 @@
           android:layout_weight="1"
           android:text="Expiration Date" />
 
-      <TextView
-          android:id="@+id/textExpDate"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="2"
-          android:text="Set Expitation Date"/>
-
     </LinearLayout>
 
     <Button
+        android:id="@+id/buyButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/activatePASSButton"
         android:layout_weight="5"
-        android:text="Activate PASS"/>
+        android:text="BUY COUPON"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

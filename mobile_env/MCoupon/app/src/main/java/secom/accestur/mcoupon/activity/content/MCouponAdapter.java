@@ -12,9 +12,8 @@ import java.util.ArrayList;
 
 //import accestur.secom.core.model.MCityPass;
 //import accestur.secom.mcitypass.R;
+import secom.accestur.mcoupon.activity.R;
 import secom.accestur.core.model.MCoupon;
-import secom.accestur.mcoupon.activity.activity.R;
-
 /**
  * Created by gornals on 13/07/2017.
  */

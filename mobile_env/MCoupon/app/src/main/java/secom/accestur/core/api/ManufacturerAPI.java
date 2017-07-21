@@ -8,16 +8,12 @@ import retrofit2.http.POST;
  * Created by gornals on 13/07/2017.
  */
 
-public class ManufacturerAPI {
+public interface ManufacturerAPI {
 
     @POST("manufacturer/getChallengeRegister")
-    Call<String> getChallengeRegister(@Body String json) {
-        return null;
-    }
+    Call<String> getChallengeRegister(@Body String json);
 
     @GET("manufacturer/getParamsCoupon")
-    Call<String> getChallengeRegister() {
-        return null;
-    }
+    Call<String> getParamsCoupon();
 
 }

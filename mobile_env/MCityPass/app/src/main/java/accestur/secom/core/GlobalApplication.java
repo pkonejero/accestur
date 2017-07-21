@@ -28,7 +28,7 @@ public class GlobalApplication extends Application {
         super.onCreate();
         ActiveAndroid.initialize(this);
 
-        /*
+
         ServiceAgentService serviceAgentService = new ServiceAgentService();
         serviceAgentService.initService(1, true);
 
