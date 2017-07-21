@@ -9,7 +9,7 @@ public interface UserMCouponServiceInterface{
 
 	public String authenticateUsername(String username, String password);
 	
-	public String verifyUsername(String[] params);
+	public void verifyUsername(String[] params); //STRING
 	
 	public void createCertificate();
 }

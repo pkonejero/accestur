@@ -71,7 +71,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		String params[] = new String[3];
 		params[0] = crypto.getSignature(username+password);//Firma la faig damunt les dades que vull autenticar.
 		params[1] = username; //username
-		params[2] = crypto.encryptWithPublicKey(password);
+		params[2] = password;// crypto.encryptWithPublicKey(password)
 		return sendUserToManufacturerRegister(params);
 	}
 	
@@ -83,13 +83,13 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		return json.toString();
 	}
 	
-	public String verifyUsername(String[] params){
-		boolean verified = crypto.getValidation(getUserMCoupon().getUsername(), params[0]);
-		if (verified){
-			return "REGISTERED USER COMPLETED";
-		}else{
-			return "REGISTERED USER FAILED";
-		}
+	public void verifyUsername(String params){ //String
+		//boolean verified = crypto.getValidation(getUserMCoupon().getUsername(), params[0]);
+		//if (verified){
+		//	return "REGISTERED USER COMPLETED";
+		//}else{
+		//	return "REGISTERED USER FAILED";
+		//}
 	}
 	
 ///////////////////////////////////////////////////////////////////////
@@ -343,5 +343,11 @@ public String confirmationMCouponRedeem2(String json) {
 	
 	public UserMCoupon getUserMCouponByUsername(String username){
 		return usermcouponRepository.findAll().iterator().next();
+	}
+
+	@Override
+	public void verifyUsername(String[] params) {
+		// TODO Auto-generated method stub
+		
 	}
 }
