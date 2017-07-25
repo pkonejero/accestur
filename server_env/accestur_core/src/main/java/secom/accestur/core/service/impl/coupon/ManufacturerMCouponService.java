@@ -309,7 +309,7 @@ public String ClearingManufacturer(String json) {
 			
 			MCoupon coupon = mcouponService.getMCouponBySn(sn);
 			CounterMCoupon counter = coupon.getCounter();
-			counter.setCounterMCoupon(indexHash);
+			counter.setCounterMCoupon(indexHash-1);
 			countermcouponService.saveCounterMCoupon(counter);
 			
 			System.out.println("THIS IS THE NEW COUNTER="+indexHash);

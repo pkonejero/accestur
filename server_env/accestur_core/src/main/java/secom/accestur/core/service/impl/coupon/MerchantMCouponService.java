@@ -81,7 +81,7 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 	
 	private String sendInitRedeemMCouponMessage(String[] params) {
 		JSONObject json = new JSONObject();
-		json.put("name", params[0]);
+		json.put("merchant", params[0]);
 		json.put("namec", params[1]);
 		json.put("signature", params[2]);
 		JSONArray message = new JSONArray();
@@ -105,7 +105,7 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		System.out.println("LABEL BEFORE:"+paramsJson[1]);
 		//Validate Signature of the user
 		
-		if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4], paramsJson[5])){ //PRIMER VERIFIACIó DE LA FIRMA i DESPRES EL LABEL
+		//if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4], paramsJson[5])){ //PRIMER VERIFIACIó DE LA FIRMA i DESPRES EL LABEL
 			if(paramsJson[1].equals(label)){
 				
 		crypto.initPrivateKey("cert/issuer/private_ISSUER.der"); // SHOULD BE MERCHANT PRIVATE KEY.
@@ -124,11 +124,11 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		
 		params[4] = paramsJson[4]; //sn Encrypted
 		
-		params[5] = paramsJson[5]; //Signature Customer
+		//params[5] = paramsJson[5]; //Signature Customer
 		
 		params[6] = paramsJson[6]; //Username(Validation Signature)
 			
-		params[7]=crypto.getSignature(params[0]+params[1]+params[2]+params[3]+params[4]+params[5]); //Signature of merchant
+		params[7]=crypto.getSignature(params[0]+params[1]+params[2]+params[3]+params[4]); //Signature of merchant +params[5]
 		
 		params[8]=idMerchant;//Id Merchant.
 		
@@ -136,9 +136,9 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		}else{
 			return "FAILED";//return "Failed Label Confirmation";
 		}
-		}else{
-			return "FAILED";//return "Failed Signature Customer Validation";
-		}
+		//}//else{
+			//return "FAILED";//return "Failed Signature Customer Validation";
+		//}
 		
 	}
 	
@@ -164,7 +164,7 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		params[2] = json.getString("xi");
 		params[3] = json.getString("indexhash");
 		params[4] = json.getString("sn");
-		params[5] = json.getString("signature");
+		//params[5] = json.getString("signature");
 		params[6] = json.getString("username");
 		//params[7] = json.getString("idmerchant");
 		//System.out.println("AQUETS ES EL RESULTAT DEL JSON ARRIBAT"+" "+params[0]+params[1]+params[2]+params[3]);

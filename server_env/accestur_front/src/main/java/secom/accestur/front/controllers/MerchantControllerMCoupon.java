@@ -46,7 +46,10 @@ public class MerchantControllerMCoupon {
 	@RequestMapping(value = "/merchant/getChallengeRedeem", method=RequestMethod.POST)
 	@ResponseBody
 	public String getChallengeRedeem(@RequestBody String json){
-		return issuerService.redeemingMCoupon(merchantService.sendingMCouponRedeem(json));
+		
+		String clear = merchantService.confirmationMCouponRedeem(issuerService.redeemingMCoupon(merchantService.sendingMCouponRedeem(json)));
+		
+		return manufacturerService.ClearingManufacturer(merchantService.initClearingMerchant(clear));
 	}
 
 }

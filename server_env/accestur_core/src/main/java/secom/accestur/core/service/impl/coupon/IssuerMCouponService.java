@@ -177,7 +177,7 @@ public String getMCouponGeneratedByManufacturer(String json) {
 	
 	MCoupon coupon = mcouponService.getMCouponBySn(1) ; //HARDCODEEED!!!!!!!!!!!!!!!
 	
-	CounterMCoupon counter = new CounterMCoupon(0,coupon);
+	CounterMCoupon counter = new CounterMCoupon(coupon.getP(),coupon);
 	
 	//if (crypto.getValidation(MC, paramsJson[6])){
 		
@@ -280,7 +280,7 @@ public String redeemingMCoupon(String json) {
 	String[] paramsJson = solveRedeemMCouponParams(json);
 	//Validate Signature of the merchant
 	
-	if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4]+paramsJson[5], paramsJson[7])){
+	if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4], paramsJson[7])){//+paramsJson[5]
 		
 	System.out.println("NO ES SA PRIMERA CONDICIO");
 	createCertificate();
@@ -290,7 +290,7 @@ public String redeemingMCoupon(String json) {
 	params[0] = paramsJson[8];//Id Merchant
 	
 	//Validate Signature of the User
-	if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4], paramsJson[5])){
+	//if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4], paramsJson[5])){
 	
 	System.out.println("NO ES SA SEGONA CONDICIO");
 		
@@ -298,11 +298,11 @@ public String redeemingMCoupon(String json) {
 	
 	params[2] = paramsJson[1];//Label
 	
-	params[3] = crypto.decryptWithPrivateKey(paramsJson[2]); //Xi Decrypted //NEEDED FOR THE PHASE OF CLEARING,ENCRYPT WITH PUBLIC KEY OF THE MANUFACTURER
+	params[3] = paramsJson[2];//crypto.decryptWithPrivateKey(paramsJson[2]); //Xi Decrypted //NEEDED FOR THE PHASE OF CLEARING,ENCRYPT WITH PUBLIC KEY OF THE MANUFACTURER
 	
-	params[4] = crypto.decryptWithPrivateKey(paramsJson[3]); //IndexHash Decrypted //NEEDED FOR THE PHASE OF CLEARING,ENCRYPT WITH PUBLIC KEY OF THE MANUFACTURER
+	params[4] = paramsJson[3];//crypto.decryptWithPrivateKey(paramsJson[3]); //IndexHash Decrypted //NEEDED FOR THE PHASE OF CLEARING,ENCRYPT WITH PUBLIC KEY OF THE MANUFACTURER
 	
-	params[5] = crypto.decryptWithPrivateKey(paramsJson[4]); //Sn Decrypted //NEEDED FOR THE PHASE OF CLEARING,ENCRYPT WITH PUBLIC KEY OF THE MANUFACTURER
+	params[5] = paramsJson[4];//crypto.decryptWithPrivateKey(paramsJson[4]); //Sn Decrypted //NEEDED FOR THE PHASE OF CLEARING,ENCRYPT WITH PUBLIC KEY OF THE MANUFACTURER
 	
 	Integer sn = new Integer(params[5]);
 	
@@ -321,7 +321,7 @@ public String redeemingMCoupon(String json) {
 	
 	Integer indexHash = new Integer(params[4]);
 	
-	Integer number_hash = coupon.getP()-indexHash;
+	Integer number_hash = indexHash;
 	
 	for (int i =1; i <=number_hash;i++){
 		xVerification[i]=Cryptography.hash(xVerification[i-1]);
@@ -331,7 +331,7 @@ public String redeemingMCoupon(String json) {
 	
 	Integer ncounter = counter.getCounterMCoupon();
 	
-	if (indexHash>ncounter&&indexHash<=coupon.getP()){
+	if (indexHash==ncounter&&indexHash<=coupon.getP()){
 	System.out.println("NUMBER OF THE COUNTER IS CORRECT");
 	
 	System.out.println("XVERIFICATION="+xVerification[number_hash]);
@@ -373,9 +373,9 @@ public String redeemingMCoupon(String json) {
 	}else{
 		return "FAILED";//return "Failed Signature USER";
 	}
-	}else{
-		return "FAILED";//return "Failed Signature MERCHANT";
-	}
+	//}else{
+	//	return "FAILED";//return "Failed Signature MERCHANT";
+	//}
 
 }
 
@@ -397,7 +397,7 @@ private String[] solveRedeemMCouponParams (String message){
 	params[2] = json.getString("xi");
 	params[3] = json.getString("indexhash");
 	params[4] = json.getString("sn");
-	params[5] = json.getString("signaturecustomer");
+	//params[5] = json.getString("signaturecustomer");
 	params[6] = json.getString("username");
 	params[7] = json.getString("signaturemerchant");
 	params[8] = json.getString("idmerchant");
