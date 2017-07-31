@@ -303,35 +303,55 @@ public String redeemingMCoupon(String json) {
 	params[4] = paramsJson[3];//crypto.decryptWithPrivateKey(paramsJson[3]); //IndexHash Decrypted //NEEDED FOR THE PHASE OF CLEARING,ENCRYPT WITH PUBLIC KEY OF THE MANUFACTURER
 	
 	params[5] = paramsJson[4];//crypto.decryptWithPrivateKey(paramsJson[4]); //Sn Decrypted //NEEDED FOR THE PHASE OF CLEARING,ENCRYPT WITH PUBLIC KEY OF THE MANUFACTURER
-	
+
 	Integer sn = new Integer(params[5]);
 	
+	System.out.println("AQUEST ES SN:"+sn);
+	
 	coupon = mcouponService.getMCouponBySn(sn);
+	
+	System.out.println("AQUESTA ES EL COUPON"+coupon.toString());
+	
+	System.out.println("AQUEST ES LA P DEL COUPON:"+coupon.getP());
 	
 	//Verification of Rid
 	
 	String nXo = coupon.getXo();
 	
+	System.out.println("AQUESTA ES LA XO DEL COUPON:"+nXo);
+	
 	String nRid = Cryptography.hash(params[0]+paramsJson[6]+nXo+params[3]);
 	
 	
-	String[] xVerification = new String[coupon.getP()+1];
+	String[] xVerification = new String[coupon.getP()+2];
 	
-	xVerification[0]=params[3];
 	
 	Integer indexHash = new Integer(params[4]);
 	
-	Integer number_hash = indexHash;
+	xVerification[indexHash]=params[3];
 	
-	for (int i =1; i <=number_hash;i++){
+	Integer number_hash = coupon.getP()+1;
+	
+	for (int i =indexHash+1; i <=number_hash;i++){
 		xVerification[i]=Cryptography.hash(xVerification[i-1]);
 	}
 	
+	System.out.println("AQUESTA ES LA XVERIFICATION:"+xVerification[number_hash]);
+	
 	CounterMCoupon counter = coupon.getCounter();
+	
+	System.out.println("AQUEST ES EL COUNTER:"+counter.toString());
 	
 	Integer ncounter = counter.getCounterMCoupon();
 	
-	if (indexHash==ncounter&&indexHash<=coupon.getP()){
+	System.out.println("AQUEST ES INDEX HASH:"+indexHash);
+	
+	System.out.println("AQUEST ES NCOUNTER:"+ncounter);
+	
+	System.out.println("AQUEST ES EL COMPTADOR:"+ncounter.toString());
+	
+	if (indexHash.equals(ncounter)&&indexHash<=coupon.getP()){
+		
 	System.out.println("NUMBER OF THE COUNTER IS CORRECT");
 	
 	System.out.println("XVERIFICATION="+xVerification[number_hash]);
@@ -342,14 +362,19 @@ public String redeemingMCoupon(String json) {
 	if(xVerification[number_hash].equals(nXo)){
 		System.out.println("THE HASH IS CORRECT");
 	
-	
+		System.out.println("AQUEST ES EL RID NOU:"+nRid);
+		System.out.println("AQUEST ES EL RID ANTIC"+params[1]);
 	if (nRid.equals(params[1])){
-
+	
+		
+		System.out.println("AQUEST ES EL RID NOU:"+nRid);
 	//Missing verification EXD.
 		
 	params[6] = nRid; //New Rid (Validation Signature)
 		
 	params[7]=crypto.getSignature(nRid); //Signature of issuer
+	
+	System.out.println("FIRMA ENVIADA:"+params[7]);
 	
 	//PARAMETERS NEEDED FOR THE CLEARING PHASE
 	crypto.initPublicKey("cert/issuer/public_ISSUER.der"); //IT SHOULD BE MANUFACTURER PUK

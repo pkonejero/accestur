@@ -312,7 +312,8 @@ public String ClearingManufacturer(String json) {
 			counter.setCounterMCoupon(indexHash-1);
 			countermcouponService.saveCounterMCoupon(counter);
 			
-			System.out.println("THIS IS THE NEW COUNTER="+indexHash);
+			Integer newCounter = indexHash-1;
+			System.out.println("THIS IS THE NEW COUNTER="+newCounter);
 			
 			
 		}else{

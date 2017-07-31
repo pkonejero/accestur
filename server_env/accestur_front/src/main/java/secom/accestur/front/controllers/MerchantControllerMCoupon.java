@@ -47,9 +47,12 @@ public class MerchantControllerMCoupon {
 	@ResponseBody
 	public String getChallengeRedeem(@RequestBody String json){
 		
-		String clear = merchantService.confirmationMCouponRedeem(issuerService.redeemingMCoupon(merchantService.sendingMCouponRedeem(json)));
+		String clear = issuerService.redeemingMCoupon(merchantService.sendingMCouponRedeem(json));
 		
-		return manufacturerService.ClearingManufacturer(merchantService.initClearingMerchant(clear));
+		merchantService.confirmationMCouponRedeem(clear);//FINALITZACIO DE REDEEM
+		
+		return manufacturerService.ClearingManufacturer(merchantService.initClearingMerchant(clear)); //FINALITZACIO DE CLEARING
+		
 	}
 
 }
