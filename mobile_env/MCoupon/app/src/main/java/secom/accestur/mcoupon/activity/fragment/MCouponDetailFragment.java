@@ -11,6 +11,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.SQLOutput;
+
 import secom.accestur.core.model.MCoupon;
 import secom.accestur.core.model.UserMCoupon;
 import secom.accestur.core.service.impl.CounterMCouponService;
@@ -18,6 +20,7 @@ import secom.accestur.core.service.impl.MCouponService;
 import secom.accestur.core.service.impl.UserMCouponService;
 import secom.accestur.mcoupon.activity.R;
 import secom.accestur.mcoupon.activity.tasks.BuyCouponTask;
+import secom.accestur.mcoupon.activity.tasks.RedeemCouponTask;
 
 //import accestur.secom.core.service.impl.ActivationService;
 //import accestur.secom.core.service.impl.CounterService;
@@ -66,20 +69,34 @@ public class MCouponDetailFragment extends Fragment {
         mCouponService = new MCouponService();
         mCoupon = mCouponService.initMCoupon(currentMCoupon + 1);
 
-//        TextView lifetimeText = (TextView) getActivity().findViewById(R.id.textLifetime);
-//        int lifetime = Integer.parseInt(mCityPassService.getMCityPass().getLifeTime()) / (3600 * 1000 * 24);
-//        lifetimeText.setText("" + lifetime);
+        TextView userText = (TextView) getActivity().findViewById(R.id.textUser);
+//        //int lifetime = Integer.parseInt(mCityPassService.getMCityPass().getLifeTime()) / (3600 * 1000 * 24);
+        if(mCoupon.getUser()==null){
+            userText.setText("Cap");
+        }else {
+            userText.setText("" + mCoupon.getUser().getUsername().toString());
+        }
 
-//        TextView categoryText = (TextView) getActivity().findViewById(R.id.textCategory);
-//        categoryText.setText(mCityPassService.getMCityPass().getCategory());
+        TextView counterText = (TextView) getActivity().findViewById(R.id.textCounter);
+        counterText.setText(Integer.toString(mCoupon.getCounterMCoupon().getCounterMCoupon()));
 
-//        TextView expDateText = (TextView) getActivity().findViewById(R.id.textExpDate);
-//        expDateText.setText(mCityPassService.getMCityPass().getExpDate());
+        TextView expDateText = (TextView) getActivity().findViewById(R.id.textExpDate);
+        if(mCoupon.getExpDate()==null){
+            System.out.println("NO EXPDATE");
+        }else {
+            expDateText.setText("" + mCoupon.getExpDate().toString());
+        }
 
-//        activationService = new ActivationService();
-//        activationService.initActivation(mCityPassService.getMCityPass());
+
+        TextView merchantText = (TextView) getActivity().findViewById(R.id.Merchant);
+        String merchant = mCoupon.getMerchant();
+        merchantText.setText(merchant);
+
+
 
         Button buyButton = (Button) getActivity().findViewById(R.id.buyButton);
+        Button redeemButton = (Button) getActivity().findViewById(R.id.redeemButton);
+        redeemButton.setVisibility(View.INVISIBLE);
         if (mCouponService.getMCoupon().getUser() == null) {
             buyButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -90,6 +107,20 @@ public class MCouponDetailFragment extends Fragment {
             });
         } else {
             buyButton.setVisibility(View.INVISIBLE);
+            if(mCoupon.getCounterMCoupon().getCounterMCoupon()!=0) {
+                redeemButton.setVisibility(View.VISIBLE);
+                redeemButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RedeemCouponTask redeemCouponTask = new RedeemCouponTask(getActivity());
+                        redeemCouponTask.execute(mCouponService.getMCoupon().getId());
+                    }
+                });
+            }else{
+                redeemButton.setVisibility(View.INVISIBLE);
+                Toast toast = Toast.makeText(getActivity(), "This Coupon Can't Be Redeemed Again", Toast.LENGTH_LONG);
+                toast.show();
+            }
         }
 
 //        ListView listView = (ListView) getActivity().findViewById(R.id.listServicesUse);

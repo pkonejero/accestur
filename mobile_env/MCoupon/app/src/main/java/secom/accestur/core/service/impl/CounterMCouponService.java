@@ -48,5 +48,16 @@ public class CounterMCouponService implements CounterMCouponServiceInterface{
 		counter.setCounterMCoupon(counter.getCounterMCoupon()-1);
 		//saveCounterMCoupon(counter);
 	}
-	
+
+	public void storeCounterMCoupon(CounterMCoupon counterMCoupon) {
+		this.counter = counterMCoupon;
+		saveCounterMCoupon();
+	}
+	public void saveCounterMCoupon(){
+		counter.save();
+	}
+
+	public CounterMCoupon getCounterMCouponbyMCouponId (Long id){
+		return new Select().from(CounterMCoupon.class).where("id = ? ", id).executeSingle();
+	}
 }

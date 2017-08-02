@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -94,43 +95,63 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		//String[] paramsJson = solveUserMCouponParams(json);
 		
 		JSONObject json = new JSONObject(input);
+
 		
 		String[] params = new String[10];
 	
 		params[0] = json.getString("username"); //Username
-
+		
+		System.out.println("USERNAME ARRIBAT:"+params[0]);
+		
 		params[1] = json.getString("Xo"); //Xo
+		
+		System.out.println("Xo ARRIBAT:"+params[1]);
 		
 		params[2] = json.getString("Yo"); //Yo
 		
+		System.out.println("Yo ARRIBAT:"+params[2]);
+		
 		params[3] = json.getString("p"); //P
+		
+		System.out.println("p ARRIBAT:"+params[3]);
 		
 		params[4] = json.getString("q"); //Q
 		
-		params[5]=json.getString("EXPDATE"); //EXD
+		System.out.println("q ARRIBAT:"+params[4]);
+		
+		//params[5]=json.getString("EXPDATE"); //EXD
+		
+		System.out.println("EXPDATE ARRIBAT:"+params[5]);
 		
 		params[6]= json.getString("merchant");
 		
+		System.out.println("MERCHANT ARRIBAT:"+params[6]);
+		
+		params[8]=params[6]; //ID Merchant
+		
 		params[7]=json.getString("signature");
 		
-		MC=params[1]+params[2]+params[3]+params[4]+params[5];
+		System.out.println("Siganture ARRIBAT:"+params[7]);
+		
+		if (crypto.getValidation(params[0]+params[1]+params[2]+params[3]+params[4], params[7])){//+params[5]
+			
+			System.out.println("S'HA VALIDAD LA FIRMA DE USUARI AL ISSUER");
+		
+		MC=params[1]+params[2]+params[3]+params[4];//+params[5]
 		
 		//Creating SN
 		Integer sn = 123456789;
 		params[6]=sn.toString();
 		
-		//if (crypto.getValidation(params[0]+params[1]+params[2]+params[3]+params[4]+params[5], params[6])){
 			
-			params[7]=crypto.getSignature(params[6]);
+			params[9]=crypto.getSignature(params[6]);
 			
-			params[8]=params[7]; //ID Merchant
-			
-			params[9] = params[6]; //Signature of the User
 		
 		return sendIssuerToManufacturerPurchase(params);
-		//}else{
-		//	return "FAILED";
-		//}
+		}else{
+			System.out.println("HA FALLAT LA VERIFICACIO!!!!");
+			return "FAILED";
+		}
 	}
 	
 	private String[] solveUserMCouponParams (String message){
@@ -154,11 +175,11 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		json.put("Yo", params[2]);
 		json.put("p", params[3]);
 		json.put("q", params[4]);
-		json.put("EXPDATE", params[5]);
+		//json.put("EXPDATE", params[5]);
 		json.put("sn", params[6]);
-		json.put("signatureIssuer", params[7]);
+		json.put("signatureIssuer", params[9]);
 		json.put("merchant", params[8]);
-		json.put("signatureUser", params[9]);
+		json.put("signatureUser", params[7]);
 		return json.toString();
 	}
 	
@@ -175,11 +196,11 @@ public String getMCouponGeneratedByManufacturer(String json) {
 	
 	String[] params = new String[10];
 	
-	MCoupon coupon = mcouponService.getMCouponBySn(1) ; //HARDCODEEED!!!!!!!!!!!!!!!
+	MCoupon coupon = mcouponService.getMCouponBySn(1) ; 
 	
 	CounterMCoupon counter = new CounterMCoupon(coupon.getP(),coupon);
 	
-	//if (crypto.getValidation(MC, paramsJson[6])){
+	if (crypto.getValidation(MC, paramsJson[6])){
 		
 	crypto.initPrivateKey("cert/issuer/private_ISSUER.der");
 		
@@ -236,9 +257,9 @@ public String getMCouponGeneratedByManufacturer(String json) {
 	
 		//Missing Issuer Signature.
 		return sendIssuerToUserPurchase(params);
-	//}else{
-	//	return "FAILED SIGNATURE";
-	//}
+	}else{
+		return "FAILED SIGNATURE";
+	}
 	}
 
 private String[] solveFinishPurchaseManufacturer (String message){
@@ -252,7 +273,7 @@ private String[] solveFinishPurchaseManufacturer (String message){
 	params[5] = json.getString("username");
 	params[6] = json.getString("signature");
 	params[7] = json.getString("merchant");
-	params[8] = json.getString("EXD");
+	//params[8] = json.getString("EXD");
 	return params;
 }
 
@@ -280,7 +301,7 @@ public String redeemingMCoupon(String json) {
 	String[] paramsJson = solveRedeemMCouponParams(json);
 	//Validate Signature of the merchant
 	
-	if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4], paramsJson[7])){//+paramsJson[5]
+	if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4]+paramsJson[5], paramsJson[7])){//+paramsJson[5]
 		
 	System.out.println("NO ES SA PRIMERA CONDICIO");
 	createCertificate();
@@ -290,7 +311,7 @@ public String redeemingMCoupon(String json) {
 	params[0] = paramsJson[8];//Id Merchant
 	
 	//Validate Signature of the User
-	//if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4], paramsJson[5])){
+	if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4], paramsJson[5])){
 	
 	System.out.println("NO ES SA SEGONA CONDICIO");
 		
@@ -298,11 +319,11 @@ public String redeemingMCoupon(String json) {
 	
 	params[2] = paramsJson[1];//Label
 	
-	params[3] = paramsJson[2];//crypto.decryptWithPrivateKey(paramsJson[2]); //Xi Decrypted //NEEDED FOR THE PHASE OF CLEARING,ENCRYPT WITH PUBLIC KEY OF THE MANUFACTURER
+	params[3] = crypto.decryptWithPrivateKey(paramsJson[2]); //Xi Decrypted //NEEDED FOR THE PHASE OF CLEARING,ENCRYPT WITH PUBLIC KEY OF THE MANUFACTURER
 	
-	params[4] = paramsJson[3];//crypto.decryptWithPrivateKey(paramsJson[3]); //IndexHash Decrypted //NEEDED FOR THE PHASE OF CLEARING,ENCRYPT WITH PUBLIC KEY OF THE MANUFACTURER
+	params[4] = crypto.decryptWithPrivateKey(paramsJson[3]); //IndexHash Decrypted //NEEDED FOR THE PHASE OF CLEARING,ENCRYPT WITH PUBLIC KEY OF THE MANUFACTURER
 	
-	params[5] = paramsJson[4];//crypto.decryptWithPrivateKey(paramsJson[4]); //Sn Decrypted //NEEDED FOR THE PHASE OF CLEARING,ENCRYPT WITH PUBLIC KEY OF THE MANUFACTURER
+	params[5] = crypto.decryptWithPrivateKey(paramsJson[4]); //Sn Decrypted //NEEDED FOR THE PHASE OF CLEARING,ENCRYPT WITH PUBLIC KEY OF THE MANUFACTURER
 
 	Integer sn = new Integer(params[5]);
 	
@@ -398,9 +419,9 @@ public String redeemingMCoupon(String json) {
 	}else{
 		return "FAILED";//return "Failed Signature USER";
 	}
-	//}else{
-	//	return "FAILED";//return "Failed Signature MERCHANT";
-	//}
+	}else{
+		return "FAILED";//return "Failed Signature MERCHANT";
+	}
 
 }
 
@@ -422,7 +443,7 @@ private String[] solveRedeemMCouponParams (String message){
 	params[2] = json.getString("xi");
 	params[3] = json.getString("indexhash");
 	params[4] = json.getString("sn");
-	//params[5] = json.getString("signaturecustomer");
+	params[5] = json.getString("signaturecustomer");
 	params[6] = json.getString("username");
 	params[7] = json.getString("signaturemerchant");
 	params[8] = json.getString("idmerchant");

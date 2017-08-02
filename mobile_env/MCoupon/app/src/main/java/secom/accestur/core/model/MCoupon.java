@@ -36,6 +36,9 @@ public class MCoupon extends Model{
 	@Column(name="p")
 	private Integer p;//Number of times to hash.
 
+	@Column(name="counter")
+	private CounterMCoupon counterMCoupon;
+
 
 	
 //	//Serial Number
@@ -137,7 +140,14 @@ public class MCoupon extends Model{
 	public void setQ(Integer Q) {
 		this.q = Q;
 	}
-	
+
+	public void setCounterMCoupon(CounterMCoupon counterMCoupon){
+		this.counterMCoupon=counterMCoupon;
+	}
+
+	public CounterMCoupon getCounterMCoupon(){
+		return counterMCoupon;
+	}
 //	public CounterMCoupon getCounter() {
 //		return counter;
 //	}

@@ -47,6 +47,7 @@ public class CounterMCoupon extends Model{
 		return counter;
 	}
 
+
 	public void setCounterMCoupon(int counter){
 		this.counter = counter;
 	}

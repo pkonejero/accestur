@@ -34,10 +34,10 @@ public class MCouponAdapter extends ArrayAdapter<MCoupon> {
         MCoupon mCoupon = getItem(position);
 
         TextView textView = (TextView)  listItemView.findViewById(R.id.service_item_name);
-        textView.setText("P="+mCoupon.getP().toString());
+        textView.setText("DESCOMPTE 10%");
 
         TextView textView1 = (TextView) listItemView.findViewById(R.id.service_item_times);
-        textView1.setText("Merchant="+mCoupon.getMerchant().toString());
+        textView1.setText(mCoupon.getMerchant().toString());
 
         return listItemView;
     }

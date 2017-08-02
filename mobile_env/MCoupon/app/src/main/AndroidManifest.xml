@@ -9,7 +9,7 @@
 	<uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
 
 	<meta-data android:name="AA_DB_NAME" android:value="MCoupon.db" />
-	<meta-data android:name="AA_DB_VERSION" android:value="7" />
+	<meta-data android:name="AA_DB_VERSION" android:value="8" />
 	<!--<meta-data-->
 		<!--android:name="AA_MODELS"-->
 		<!--android:value="secom.accestur.core.model.MCoupon, secom.accestur.core.model.UserMCoupon,secom.accestur.core.model.CounterMCoupon"-->
