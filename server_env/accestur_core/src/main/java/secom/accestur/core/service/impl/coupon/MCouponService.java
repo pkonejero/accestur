@@ -21,7 +21,7 @@ public class MCouponService implements MCouponServiceInterface{
 	private MCoupon mCoupon;
 	
 	public MCoupon getMCouponSn(long sn) {
-		return null;
+		return mCoupon;
 	}
 	
 	public List<MCoupon> getMCouponByUserMCoupon(String user){

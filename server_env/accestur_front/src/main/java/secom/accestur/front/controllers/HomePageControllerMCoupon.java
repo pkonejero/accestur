@@ -53,7 +53,7 @@ public class HomePageControllerMCoupon{
 	
 	private void createOffer(){
 		
-		usermcouponService.createCertificate();
+		//usermcouponService.createCertificate();
 		manufacturermcouponService.createCertificate();
 		issuermcouponService.createCertificate();
 		
@@ -69,8 +69,9 @@ public class HomePageControllerMCoupon{
 		System.out.println("DATE=="+ dateFormat.format(date));
 		
 		manufacturermcouponService.initOfferCoupon(5, 6, date,merchantmcouponService.getMerchantMCouponByName("AccesturMerchant"));
+		manufacturermcouponService.initOfferCoupon(10, 15, date,merchantmcouponService.getMerchantMCouponByName("AccesturMerchant"));
 		
-		System.out.println(usermcouponService.getInitMCouponMessage(manufacturermcouponService.initParamsMCoupon(5, 6, date,merchantmcouponService.getMerchantMCouponByName("AccesturMerchant"))));
+		//System.out.println(manufacturermcouponService.initParamsMCoupon(5, 6, date,merchantmcouponService.getMerchantMCouponByName("AccesturMerchant")));
 	}
 	
 	private void generateUser(){

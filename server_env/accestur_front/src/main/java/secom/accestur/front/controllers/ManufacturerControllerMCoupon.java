@@ -32,8 +32,14 @@ public class ManufacturerControllerMCoupon {
 	
 	@RequestMapping(value = "/manufacturer/getChallengeRegister", method=RequestMethod.POST)
 	@ResponseBody
-	public String getChallenge(@RequestBody String json){
+	public String getChallengeRegister(@RequestBody String json){
 		return manufacturerService.generateUsername(json);
+	}
+	
+	@RequestMapping(value = "/manufacturer/login", method=RequestMethod.POST)
+	@ResponseBody
+	public String logIn(@RequestBody String json){
+		return manufacturerService.logIn(json);
 	}
 	
 	@RequestMapping(value = "/manufacturer/getParamsCoupon", method=RequestMethod.GET)

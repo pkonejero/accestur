@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -97,7 +98,9 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		JSONObject json = new JSONObject(input);
 
 		
-		String[] params = new String[10];
+		String[] params = new String[15];
+		
+		params[10] = json.getString("id");
 	
 		params[0] = json.getString("username"); //Username
 		
@@ -140,8 +143,10 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		MC=params[1]+params[2]+params[3]+params[4];//+params[5]
 		
 		//Creating SN
-		Integer sn = 123456789;
+		Random rand = new Random();
+		Integer sn = rand.nextInt(500) + rand.nextInt();
 		params[6]=sn.toString();
+		
 		
 			
 			params[9]=crypto.getSignature(params[6]);
@@ -156,7 +161,7 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 	
 	private String[] solveUserMCouponParams (String message){
 		JSONObject json = new JSONObject(message);
-		String[] params = new String[8];
+		String[] params = new String[10];
 		params[0] = json.getString("username");
 		params[1] = json.getString("Xo");
 		params[2] = json.getString("Yo");
@@ -180,6 +185,7 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		json.put("signatureIssuer", params[9]);
 		json.put("merchant", params[8]);
 		json.put("signatureUser", params[7]);
+		json.put("id", params[10]);
 		return json.toString();
 	}
 	
@@ -194,9 +200,15 @@ public String getMCouponGeneratedByManufacturer(String json) {
 	
 	String[] paramsJson = solveFinishPurchaseManufacturer(json);
 	
-	String[] params = new String[10];
+	String[] params = new String[15];
+	Integer id = new Integer(paramsJson[10]);
+	Integer sn = new Integer(paramsJson[2]);
 	
-	MCoupon coupon = mcouponService.getMCouponBySn(1) ; 
+	System.out.println("AQUEST SN ES NULL="+sn);
+	
+	MCoupon coupon = mcouponService.getMCouponBySn(id) ;
+	
+	System.out.println("AQUEST CUPON ES NULL="+coupon.toString());
 	
 	CounterMCoupon counter = new CounterMCoupon(coupon.getP(),coupon);
 	
@@ -213,7 +225,6 @@ public String getMCouponGeneratedByManufacturer(String json) {
 	//coupon.setP(p);
 	//coupon.setQ(q);
 	
-	Integer sn = new Integer(paramsJson[2]);
 	
 	coupon.setSn(sn);
 	
@@ -264,7 +275,7 @@ public String getMCouponGeneratedByManufacturer(String json) {
 
 private String[] solveFinishPurchaseManufacturer (String message){
 	JSONObject json = new JSONObject(message);
-	String[] params = new String[10];
+	String[] params = new String[15];
 	params[0] = json.getString("xo");
 	params[1] = json.getString("yo");
 	params[2] = json.getString("sn");
@@ -274,6 +285,7 @@ private String[] solveFinishPurchaseManufacturer (String message){
 	params[6] = json.getString("signature");
 	params[7] = json.getString("merchant");
 	//params[8] = json.getString("EXD");
+	params[10] = json.getString("id");
 	return params;
 }
 
