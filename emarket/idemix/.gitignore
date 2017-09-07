@@ -1,0 +1,10 @@
+bin
+.classpath
+.project
+lib/*.jar
+credentials_idemix.*jar
+.gradle/
+.settings/
+build/
+.idea/
+*.iml

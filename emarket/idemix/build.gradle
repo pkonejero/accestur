@@ -1,0 +1,37 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+
+version = '0.17.3'
+group = 'org.irmacard.credentials'
+
+repositories {
+    mavenLocal()
+    maven {
+        url "https://credentials.github.io/repos/maven2/"
+    }
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.bouncycastle:bcprov-jdk15on:1.52"
+    compile "org.irmacard.credentials:credentials_api:0.17.2"
+    compile "de.henku.jpaillier:jpaillier:0.1.2"
+
+    testCompile "junit:junit:4.11"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+if ( project.hasProperty("mavenRepositoryIRMA") ) {
+    uploadArchives.repositories.mavenDeployer {
+        repository(url: mavenRepositoryIRMA)
+    }
+}
