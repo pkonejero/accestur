@@ -122,7 +122,7 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		
 		System.out.println("q ARRIBAT:"+params[4]);
 		
-		//params[5]=json.getString("EXPDATE"); //EXD
+		params[5]=json.getString("EXD"); //EXD
 		
 		System.out.println("EXPDATE ARRIBAT:"+params[5]);
 		
@@ -136,11 +136,37 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		
 		System.out.println("Siganture ARRIBAT:"+params[7]);
 		
-		if (crypto.getValidation(params[0]+params[1]+params[2]+params[3]+params[4], params[7])){//+params[5]
+		//Comparacio de Dates
+		Date today = new Date();
+		
+		
+		/*DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		String today2 = dateFormat.format(today);
+		boolean expired = false;
+		try {
+			Date date1 = dateFormat.parse(params[5]);
+			Date today1 = dateFormat.parse(today2);
+			System.out.println("DATE1 IS:"+date1.toString()+" TODAY'S DATE:"+today.toString());
+			if (date1.compareTo(today1) < 0) {
+					expired = true;
+		            System.out.println("Date1 is before Today, so it's expired");
+		      }
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+        
+  
+        //if(expired == false){
+       
+        
+		
+        //Validació de Firmes
+		if (crypto.getValidation(params[0]+params[1]+params[2]+params[3]+params[4]+params[5], params[7])){//+params[5]
 			
 			System.out.println("S'HA VALIDAD LA FIRMA DE USUARI AL ISSUER");
 		
-		MC=params[1]+params[2]+params[3]+params[4];//+params[5]
+		MC=params[1]+params[2]+params[3]+params[4]+params[5];//+params[5]
 		
 		//Creating SN
 		Random rand = new Random();
@@ -157,6 +183,10 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 			System.out.println("HA FALLAT LA VERIFICACIO!!!!");
 			return "FAILED";
 		}
+        /*}else{
+        	System.out.println("DATEEXPIRED");
+        	return "DATEEXPIRED";
+        }*/
 	}
 	
 	private String[] solveUserMCouponParams (String message){
@@ -180,7 +210,7 @@ public class IssuerMCouponService implements IssuerMCouponServiceInterface{
 		json.put("Yo", params[2]);
 		json.put("p", params[3]);
 		json.put("q", params[4]);
-		//json.put("EXPDATE", params[5]);
+		json.put("EXD", params[5]);
 		json.put("sn", params[6]);
 		json.put("signatureIssuer", params[9]);
 		json.put("merchant", params[8]);

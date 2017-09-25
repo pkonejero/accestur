@@ -344,6 +344,21 @@ public String confirmationMCouponRedeem2(String json) {
 	public UserMCoupon getUserMCouponByUsername(String username){
 		return usermcouponRepository.findAll().iterator().next();
 	}
+	
+	public UserMCoupon getUserMCouponByUsername2(String username){
+		UserMCoupon user = null;
+		long length = usermcouponRepository.count();
+		int length_i = (int) length;
+		System.out.println("Llargaria d'usuaris: "+length);
+		for (long l=1;l<=length;l++){
+			user = usermcouponRepository.findOne(l);
+			if (user.getUsername().equals(username)){
+				break;
+			}
+		}
+		
+		return user;
+	}
 
 	@Override
 	public void verifyUsername(String[] params) {

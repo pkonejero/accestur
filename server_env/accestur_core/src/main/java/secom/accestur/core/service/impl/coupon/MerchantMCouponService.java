@@ -1,6 +1,7 @@
 package secom.accestur.core.service.impl.coupon;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -103,6 +104,31 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		String label = Cryptography.hash(idMerchant+namec);
 		System.out.println("LABEL NOW:"+label);
 		System.out.println("LABEL BEFORE:"+paramsJson[1]);
+		
+		//Date Validation
+		
+				Date today = new Date();
+				
+				
+				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+				String today2 = dateFormat.format(today);
+				boolean expired = false;
+				try {
+					Date date1 = dateFormat.parse(paramsJson[7]);
+					Date today1 = dateFormat.parse(today2);
+					System.out.println("DATE1 IS:"+date1.toString()+" TODAY'S DATE:"+today.toString());
+					if (date1.compareTo(today1) < 0) {
+							expired = true;
+				            System.out.println("Date1 is before Today, so it's expired");
+				      }
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		
+		if(expired == false){
+					
+				
 		//Validate Signature of the user
 		
 		if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4], paramsJson[5])){ //PRIMER VERIFIACIó DE LA FIRMA i DESPRES EL LABEL
@@ -139,6 +165,10 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		}else{
 			return "FAILED";//return "Failed Signature Customer Validation";
 		}
+		}else{
+			System.out.println("DATE HA EXPIRAT!!!!!");
+			return "FAILED";
+		}
 		
 	}
 	
@@ -166,6 +196,7 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		params[4] = json.getString("sn");
 		params[5] = json.getString("signature");
 		params[6] = json.getString("username");
+		params[7] = json.getString("EXD");
 		//params[7] = json.getString("idmerchant");
 		//System.out.println("AQUETS ES EL RESULTAT DEL JSON ARRIBAT"+" "+params[0]+params[1]+params[2]+params[3]);
 		return params;
@@ -201,6 +232,7 @@ public class MerchantMCouponService implements MerchantMCouponServiceInterface{
 		}else{
 			return "FAILED";//return "Failed Signature or Hash";
 		}
+		
 	}
 	
 	private String sendRedeemMCouponConfirmationToManufacturer(String[] params) {

@@ -38,7 +38,7 @@ public class HomePageControllerMCoupon{
 	@RequestMapping("/mcoupon")
 	public String welcome(Map<String, Object> model){
 		Init();
-		generateUser();
+		//generateUser();
 		createOffer();
 		//issuingMCoupon();
 		//redeemMCoupon();
@@ -58,7 +58,7 @@ public class HomePageControllerMCoupon{
 		issuermcouponService.createCertificate();
 		
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		String data= "26/07/1992";
+		String data= "26/07/2018";
 		Date date = new Date();
 		try {
 			date = dateFormat.parse(data);

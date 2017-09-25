@@ -135,7 +135,7 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		
 		if(crypto.getValidation(username+password, signature)){
 			
-			UserMCoupon compUser = usermcouponService.getUserMCouponByUsername(username);
+			UserMCoupon compUser = usermcouponService.getUserMCouponByUsername2(username);
 
 			if(compUser!=null){
 				String compPassword = compUser.getPassword();
@@ -165,12 +165,13 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = EXD;
 		System.out.println("EXD:" + dateFormat.format(date));
-		params[2] = dateFormat.format(date);
+		params[2] = dateFormat.format(date).toString();
 		//Signature
 		params[3]=crypto.getSignature(p.toString()+q.toString());
 		//Merchant
 		params[4]=merchant.getName();
-		//coupon.setExpDate((java.sql.Date) date);
+		coupon.setEXD(params[2]);
+		//coupon.setExpDate((java.sql.Date) params[2]);
 		coupon.setP(p);
 		coupon.setQ(q);
 		coupon.setMerchant(merchant);
@@ -188,6 +189,7 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 			json.put("q", MCoupons.get(i).getQ());
 			json.put("merchant", MCoupons.get(i).getMerchant().toString());
 			json.put("id", MCoupons.get(i).getId());
+			json.put("EXD", MCoupons.get(i).getEXD());
 			message.put(json);
 		}
 		//MCoupon coupon=mcouponService.getMCouponBySn(i);
@@ -259,7 +261,7 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		String[] paramsJson = solveIssuerMCouponParams(json);
 		String[] params = new String[15];
 		//Validation of the User
-		if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4], paramsJson[9])){ //+paramsJson[5]
+		if (crypto.getValidation(paramsJson[0]+paramsJson[1]+paramsJson[2]+paramsJson[3]+paramsJson[4]+paramsJson[5], paramsJson[9])){ //+paramsJson[5]
 			System.out.println("S'HA VALIDAD LA FIRMA DE USUARI AL MANUFACTURER");
 			crypto.initPublicKey("cert/issuer/public_ISSUER.der");
 			//Validation of the Issuer
@@ -288,7 +290,7 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		
 		crypto.initPrivateKey("cert/issuer/private_ISSUER.der");
 		
-		params[6]=crypto.getSignature(params[0]+params[1]+params[3]+params[4]);//+paramsJson[5]
+		params[6]=crypto.getSignature(params[0]+params[1]+params[3]+params[4]+paramsJson[5]);//+paramsJson[5]
 		
 		params[7] = paramsJson[8];
 		
@@ -313,7 +315,7 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		params[2] = json.getString("Yo");
 		params[3] = json.getString("p");
 		params[4] = json.getString("q");
-		//params[5] = json.getString("EXPDATE");
+		params[5] = json.getString("EXD");
 		params[6] = json.getString("sn");
 		params[7] = json.getString("signatureIssuer");
 		params[8] = json.getString("merchant");

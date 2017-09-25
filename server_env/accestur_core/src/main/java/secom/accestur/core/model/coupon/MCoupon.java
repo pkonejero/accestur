@@ -57,6 +57,8 @@ public class MCoupon extends DomainObjectModelCoupon{
 	private Date expDate;
 	private Date genDate;
 	
+	private String EXD;
+	
 	public MCoupon(){}
 
 	public Long getId() {
@@ -106,7 +108,14 @@ public class MCoupon extends DomainObjectModelCoupon{
 	public void setExpDate(Date date) {
 		this.expDate = date;
 	}
-
+	
+	public String getEXD(){
+		return EXD;
+	}
+	
+	public void setEXD(String exd){
+		this.EXD=exd;
+	}
 	public Date getGenDate() {
 		return genDate;
 	}
