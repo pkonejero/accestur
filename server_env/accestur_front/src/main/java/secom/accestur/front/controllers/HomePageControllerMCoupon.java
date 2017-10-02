@@ -69,7 +69,7 @@ public class HomePageControllerMCoupon{
 		System.out.println("DATE=="+ dateFormat.format(date));
 		
 		manufacturermcouponService.initOfferCoupon(5, 6, date,merchantmcouponService.getMerchantMCouponByName("AccesturMerchant"));
-		manufacturermcouponService.initOfferCoupon(10, 15, date,merchantmcouponService.getMerchantMCouponByName("AccesturMerchant"));
+		//manufacturermcouponService.initOfferCoupon(10, 15, date,merchantmcouponService.getMerchantMCouponByName("AccesturMerchant"));
 		
 		//System.out.println(manufacturermcouponService.initParamsMCoupon(5, 6, date,merchantmcouponService.getMerchantMCouponByName("AccesturMerchant")));
 	}
