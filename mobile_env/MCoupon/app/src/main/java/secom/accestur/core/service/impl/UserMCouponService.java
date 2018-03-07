@@ -48,6 +48,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 	private BigInteger X;
 	private BigInteger Y;
 	private String Rid;
+    private static String usernameConnected;
 	
 	public UserMCouponService() {
 		mcouponService = new MCouponService();
@@ -65,9 +66,18 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 
 		return username;
 	}
-	
-	public String authenticateUsername(String username, String password){
-		crypto.initPublicKey("cert/issuer/public_ISSUER.der");
+
+	public static void setUserConnected(String username){
+        usernameConnected=username;
+    }
+
+    public static String getUserConnected(){
+        return usernameConnected;
+    }
+	public String authenticateUsername(String username, String password) throws JSONException {
+		crypto.initPrivateKey(Constants.PATH_PRIVATE_KEY);
+		crypto.initPublicKey(Constants.PATH_ISSUER_KEY);
+
 		String params[] = new String[3];
 		params[0] = crypto.getSignature(username+password);//Firma la faig damunt les dades que vull autenticar.
 		params[1] = username; //username
@@ -75,11 +85,11 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		return sendUserToManufacturerRegister(params);
 	}
 	
-	private String sendUserToManufacturerRegister(String[] params) {
+	private String sendUserToManufacturerRegister(String[] params) throws JSONException {
 		JSONObject json = new JSONObject();
-		//json.put("signature", params[0]);
-		//json.put("username", params[1]);
-		//json.put("password", params[2]);
+		json.put("signature", params[0]);
+		json.put("username", params[1]);
+		json.put("password", params[2]);
 		return json.toString();
 	}
 
@@ -89,26 +99,9 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 
 			mCoupon.setUser(user);
 			storeUserMCoupon(user);
-
-//			activation.setActDate(json.getString("ACTDate"));
-//			activation.setState(json.getString("State"));
-//			activation.setSignature(json.getString("Signature"));
-
-//			System.out.println("Activation saved at: " + activation.save());
-//			return true;
-//		} catch (JSONException e) {
-//			return false;
-//		}
 	}
-	
-	//public String verifyUsername(String[] params){
-		//boolean verified = crypto.getValidation(getUserMCoupon().getUsername(), params[0]);
-		//if (verified){
-		//	return "REGISTERED USER COMPLETED";
-		//}else{
-		//	return "REGISTERED USER FAILED";
-		//}
-	//}
+
+
 	
 ///////////////////////////////////////////////////////////////////////
 /////////////////// PURCHASE COUPON///////////////////////////////////////
@@ -116,7 +109,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 	
 	//PURCHASE 2 COUPON Sending to Issuer Info-Coupon,Signature//
 	
-	public void generateUserParamsCoupon(int p, int q, UserMCoupon user,Date EXPDATE) {
+	public void generateUserParamsCoupon(int p, int q, UserMCoupon user,String EXPDATE) {
 		//crypto.initPublicKey(PATH_ISSUER_KEY); //Haure de posar la del Manufacturer
 		//String[] paramsMCoupon = solveMCouponParams(json);
 		//if (crypto.getValidation(paramsMCoupon[0]+paramsMCoupon[1], paramsMCoupon[3])){
@@ -159,12 +152,12 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		
 		params[4] = qN.toString();
 		
-		params[5]=EXPDATE.toString();
+		params[5]=EXPDATE;
 		
 		//Signature of the User
 		crypto.initPrivateKey(Constants.PATH_PRIVATE_KEY);//Init Private Key User
 
-		params[6]=crypto.getSignature(params[0]+params[1]+params[2]+params[3]+params[4]);//+params[5]
+		params[6]=crypto.getSignature(params[0]+params[1]+params[2]+params[3]+params[4]+params[5]);
 
 		System.out.println("FIRMA DE USUARI="+params[6]);
 
@@ -299,6 +292,8 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		crypto.initPrivateKey(Constants.PATH_PRIVATE_KEY);
 		//Signature
 		params[9]=crypto.getSignature(params[4]+params[5]+params[6]+params[7]+params[8]);//Signing all the message 2.
+
+		params[10]=coupon.getEXD();
 		
 		return sendUserToMerchantRedeem(params);
 
@@ -327,6 +322,7 @@ public class UserMCouponService implements UserMCouponServiceInterface{
 		json.put("indexhash", params[7]);
 		json.put("sn", params[8]);
 		json.put("signature", params[9]);
+		json.put("EXD",params[10]);
 		return json.toString();
 	}
 	

@@ -16,4 +16,6 @@ public interface ManufacturerAPI {
     @GET("manufacturer/getParamsCoupon")
     Call<String> getParamsCoupon();
 
+    @POST("manufacturer/login")
+    Call<String> logIn(@Body String json);
 }

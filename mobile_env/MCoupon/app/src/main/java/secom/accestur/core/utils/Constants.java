@@ -11,6 +11,7 @@ public abstract class Constants {
 	public static final String LIFETIME = "" + 24*7*60*60*1000;
 	public static final String CATEGORY = "Adult";
 	public static final String EXPDATE = "26/07/2018";
-	public static final String BASE_URL = "http://192.168.1.34:8080/";
+	public static final String BASE_URL = "http://192.168.1.177:8080/";
+    public static final String SHARE_URL = "http://";
 
 }

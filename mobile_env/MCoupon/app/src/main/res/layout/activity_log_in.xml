@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:weightSum="1"
+    android:orientation="vertical"
+    android:baselineAligned="false">
+
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="222dp">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:ems="10"
+                android:id="@+id/log_in_user"
+                android:layout_alignBaseline="@+id/log_in_name"
+                android:layout_alignBottom="@+id/log_in_name"
+                android:layout_toRightOf="@+id/log_in_name"
+                android:layout_toEndOf="@+id/log_in_name"
+                android:hint="Username"
+                android:layout_row="0"
+                android:layout_column="0" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:layout_below="@+id/log_in_user"
+                android:layout_alignRight="@+id/log_in_user"
+                android:layout_alignEnd="@+id/log_in_user"
+                android:id="@+id/log_in_password_in"
+                android:hint="Password"
+                android:layout_row="1"
+                android:layout_column="0" />
+
+            <Button
+                android:text="SIGN IN"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_sign_in" />
+
+            <Button
+            android:text="SING UP"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_go_to_sign_up" />
+        </LinearLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

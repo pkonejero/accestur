@@ -45,9 +45,8 @@ public class GlobalApplication extends Application {
 
 
 
-
-        OffersTask offersTask = new OffersTask();
-        offersTask.execute();
+      //  OffersTask offersTask = new OffersTask();
+      //  offersTask.execute();
 
 
         //   PurchasePASSTask purchasePASSTask = new PurchasePASSTask();//

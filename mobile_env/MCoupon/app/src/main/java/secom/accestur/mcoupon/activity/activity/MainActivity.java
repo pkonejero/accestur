@@ -20,6 +20,7 @@ import secom.accestur.mcoupon.activity.R;
 
 
 import secom.accestur.core.service.impl.UserMCouponService;
+import secom.accestur.mcoupon.activity.fragment.MCouponListFragmentOffer;
 import secom.accestur.mcoupon.activity.tasks.OffersTask;
 
 
@@ -45,46 +46,31 @@ public static UserMCouponService userService;
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//        Fragment fragment = null;
-//        switch (item.getItemId()) {
-//            case R.id.action_device:
-//                MCouponListFragment mcPassListFragment = new MCouponListFragment();
-//                //mcPassListFragment.setMCPassListListener(this);
-//                replaceFragment(mcPassListFragment);
-//                break;
-//            case R.id.action_cloud:
-//                fragment = new MCPassAddFragment();
-//                replaceFragment(fragment);
-//                break;
-//            case R.id.action_settings:
-//                fragment = new SettingsFragment();
-//                replaceFragment(fragment);
-//                break;
-//        }
+        Fragment fragment = null;
+        switch (item.getItemId()) {
+            case R.id.action_device:
+                MCouponListFragment mcPassListFragment = new MCouponListFragment();
+                //mcPassListFragment.setMCPassListListener(this);
+                replaceFragment(mcPassListFragment);
+                break;
+            case R.id.action_offer:
+                MCouponListFragmentOffer mcPassListFragmentOffer = new MCouponListFragmentOffer();
+                replaceFragment(mcPassListFragmentOffer);
+                break;
+        }
         return false;
     }
 
     public void setInitialFragment() {
-//        MCouponService mCouponService = new MCouponService();
-//
-//        MCoupon mCoupon = new MCoupon();
-//        mCoupon.setId((long) 1);
-//        mCoupon.setP(2);
-//        mCoupon.setQ(4);
-//        mCouponService.storeMCoupon(mCoupon);
-//        OffersTask offersTask = new OffersTask();
-//        offersTask.execute();
 
-        UserMCouponService userMCouponService = new UserMCouponService();
-
-        UserMCoupon userRegistered= new UserMCoupon();
-        userRegistered.setUsername("Toni");
-        userMCouponService.storeUserMCoupon(userRegistered);
+        OffersTask offersTask = new OffersTask();
+        offersTask.execute();
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         MCouponListFragment mCouponListFragment = new MCouponListFragment();
         fragmentTransaction.add(R.id.main_fragment_placeholder, mCouponListFragment);
         fragmentTransaction.commit();
+
     }
 
     public void replaceFragment(Fragment fragment) {

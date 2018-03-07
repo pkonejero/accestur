@@ -81,10 +81,10 @@ public class MCouponDetailFragment extends Fragment {
         counterText.setText(Integer.toString(mCoupon.getCounterMCoupon().getCounterMCoupon()));
 
         TextView expDateText = (TextView) getActivity().findViewById(R.id.textExpDate);
-        if(mCoupon.getExpDate()==null){
+        if(mCoupon.getEXD()==null){
             System.out.println("NO EXPDATE");
         }else {
-            expDateText.setText("" + mCoupon.getExpDate().toString());
+            expDateText.setText("" + mCoupon.getEXD().toString());
         }
 
 
@@ -96,7 +96,9 @@ public class MCouponDetailFragment extends Fragment {
 
         Button buyButton = (Button) getActivity().findViewById(R.id.buyButton);
         Button redeemButton = (Button) getActivity().findViewById(R.id.redeemButton);
+        Button shareButton = (Button) getActivity().findViewById(R.id.shareButton);
         redeemButton.setVisibility(View.INVISIBLE);
+        shareButton.setVisibility(View.INVISIBLE);
         if (mCouponService.getMCoupon().getUser() == null) {
             buyButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -109,6 +111,7 @@ public class MCouponDetailFragment extends Fragment {
             buyButton.setVisibility(View.INVISIBLE);
             if(mCoupon.getCounterMCoupon().getCounterMCoupon()!=0) {
                 redeemButton.setVisibility(View.VISIBLE);
+                shareButton.setVisibility(View.VISIBLE);
                 redeemButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

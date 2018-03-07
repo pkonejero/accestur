@@ -51,30 +51,32 @@ public class BuyCouponTask extends AsyncTask<Long, Void, Boolean> {
                 .build()
                 .create(IssuerAPI.class);
 
+
         //AGAFAM L'USUARI QUE HA DE COMPRAR EL COUPON(AGAFAR AMB UNA SELECT)
-        user = userMCouponService.getUserMCouponByUsername("Toni");
+        user = userMCouponService.getUserMCouponByUsername(UserMCouponService.getUserConnected());
         MCoupon coupon = mCouponService.getmCouponbyId(params[0]);
 
         userMCouponService.setUserCoupon(params[0],user);
         //GENERAM ELS PARAMETRES X,Y, YO, XO i els guardam a l'usuari per ara.
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        String data= "26/07/1992";
-        Date date = new Date();
-        try {
-            date = dateFormat.parse(data);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        userMCouponService.generateUserParamsCoupon(coupon.getP(),coupon.getQ(),user,date);
+//        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+//        String data= "26/07/1992";
+//        Date date = new Date();
+//        try {
+//            date = dateFormat.parse(data);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+        userMCouponService.generateUserParamsCoupon(coupon.getP(),coupon.getQ(),user,coupon.getEXD());
         JSONObject json = new JSONObject();
         try {
             json.put("username",user.getUsername());
+            json.put("id",params[0].toString());
             json.put("Xo",user.getXo());
             json.put("Yo",user.getYo());
             json.put("p",coupon.getP().toString());
             json.put("q",coupon.getQ().toString());
             json.put("merchant",coupon.getMerchant());
-            json.put("EXPDATE",date.toString());
+            json.put("EXD",coupon.getEXD());
             json.put("signature", user.getSignature());
             Call<String> stringCall = issuerAPI.setUserCoupon(json.toString());
             String message = "";

@@ -68,7 +68,7 @@ public class RedeemCouponTask extends AsyncTask<Long, Void, Boolean> {
                 .create(MerchantAPI.class);
 
         //AGAFAM L'USUARI QUE HA DE COMPRAR EL COUPON(AGAFAR AMB UNA SELECT)
-        user = userMCouponService.getUserMCouponByUsername("Toni");
+        user = userMCouponService.getUserMCouponByUsername(UserMCouponService.getUserConnected());
         mCoupon = mCouponService.getmCouponbyId(params[0]);
 
         Call<String> stringCall = merchantAPI.getParamsRedeem();
@@ -99,18 +99,25 @@ public class RedeemCouponTask extends AsyncTask<Long, Void, Boolean> {
 
             stringCall = merchantAPI.getChallengeRedeem(request);
 
-            message = "";
-
+            message = null;
             message = stringCall.execute().body();
 
-            return true;
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return false;
+        boolean aBoolean = false;
+        if(message==null){
+            return aBoolean;
+        }else{
+            if(message.equals("FAILED")){
+                return aBoolean;
+            }
+            aBoolean= true;
+            return aBoolean;
+        }
 
     }
 

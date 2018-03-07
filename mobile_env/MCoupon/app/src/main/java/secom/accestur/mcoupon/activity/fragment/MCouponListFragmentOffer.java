@@ -12,27 +12,24 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import secom.accestur.core.service.impl.UserMCouponService;
-import secom.accestur.mcoupon.activity.R;
-
 import secom.accestur.core.model.MCoupon;
 import secom.accestur.core.service.impl.MCouponService;
-
-import secom.accestur.mcoupon.activity.content.MCouponItem;
+import secom.accestur.core.service.impl.UserMCouponService;
+import secom.accestur.mcoupon.activity.R;
 import secom.accestur.mcoupon.activity.content.MCouponAdapter;
 
-public class MCouponListFragment extends Fragment {
+public class MCouponListFragmentOffer extends Fragment {
 
     private ListView listView;
     private MCouponService mCouponService;
     private ArrayList<MCoupon> mCoupons;
     private UserMCouponService userMCouponService;
-
-    public MCouponListFragment() {}
+    private ArrayList<MCoupon> mCoupons1 = new ArrayList<MCoupon>();
+    public MCouponListFragmentOffer() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_mcpasslist, container, false);
+        return inflater.inflate(R.layout.fragment_mcouponofferlist, container, false);
     }
 
     @Override
@@ -44,25 +41,20 @@ public class MCouponListFragment extends Fragment {
 
         mCoupons = (ArrayList) mCouponService.getAllMCoupon();
 
-        ArrayList<MCoupon> mCoupons1 = new ArrayList<MCoupon>();
+        //mCoupons1 = new ArrayList<MCoupon>();
+        mCoupons1.clear();
 
         int i = 0;
         int j = 0;
         for(i=0;i<=mCoupons.size()-1;i++){
-
-            if (mCoupons.get(i).getUser()!=null){
-
-                if (mCoupons.get(i).getUser().getUsername().equals(UserMCouponService.getUserConnected())){
-                    mCoupons1.add(j,mCoupons.get(i));
-                    j++;
-                }
-
+            if (mCoupons.get(i).getUser()==null){
+                mCoupons1.add(j,mCoupons.get(i));
+                j++;
             }
-
         }
 
 
-        listView = (ListView)getView().findViewById(R.id.listView);
+        listView = (ListView)getView().findViewById(R.id.listView1);
         listView.setAdapter(new MCouponAdapter(getActivity(), mCoupons1));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -64,7 +64,7 @@ public class OffersTask extends AsyncTask<Long, Void, Void> {
             CounterMCoupon counterMCoupon = null;
             for(int i = 0; i < jsonArray.length(); i++){
                 json = jsonArray.getJSONObject(i);
-                mCoupon = new Select().from(MCoupon.class).where("merchant = ? ", json.getString("merchant")).executeSingle();
+                mCoupon = new Select().from(MCoupon.class).where("sN = ? ", json.getLong("id")).executeSingle();
                 if(mCoupon == null) {
                     mCoupon = new MCoupon();
                     int p = json.getInt("p");
@@ -72,9 +72,11 @@ public class OffersTask extends AsyncTask<Long, Void, Void> {
                     counterMCoupon.setCounterMCoupon(p);
                     counterMCouponService.storeCounterMCoupon(counterMCoupon);
 
+                    mCoupon.setSn(json.getLong("id"));
                     mCoupon.setMerchant(json.getString("merchant"));
                     mCoupon.setP(p);
                     mCoupon.setQ(json.getInt("q"));
+                    mCoupon.setEXD(json.getString("EXD"));
 
 
                    mCoupon.setCounterMCoupon(counterMCoupon);

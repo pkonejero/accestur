@@ -11,7 +11,7 @@ import java.util.jar.Attributes;
 public class MCoupon extends Model{
 	
 	@Column( name = "sN")
-	private Integer sN;
+	private Long sN;
 	
 	//Foreign Key User
 	@Column(name="user")
@@ -48,12 +48,15 @@ public class MCoupon extends Model{
 	//Dates
 	private Date expDate;
 	private Date genDate;
+
+	@Column(name="EXD")
+	private String EXD;
 	
 	public MCoupon(){
 		super();
 	}
 
-	public MCoupon(Integer sn, int p, int q) {
+	public MCoupon(Long sn, int p, int q) {
 		super();
 		this.sN = sn;
 		this.p = p;
@@ -100,6 +103,14 @@ public class MCoupon extends Model{
 		this.Xo = X0;
 	}
 
+	public String getEXD(){
+		return EXD;
+	};
+
+	public void setEXD(String exd){
+		this.EXD=exd;
+	}
+
 	public Date getExpDate() {
 		return expDate;
 	}
@@ -117,11 +128,11 @@ public class MCoupon extends Model{
 		this.genDate = genDate;
 	}
 	
-	public Integer getSn() {
+	public Long getSn() {
 		return sN;
 	}
 
-	public void setSn(Integer sN) {
+	public void setSn(Long sN) {
 		this.sN = sN;
 	}
 	

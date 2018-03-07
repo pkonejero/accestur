@@ -80,6 +80,13 @@
           android:layout_weight="1"
           android:text="Expiration Date" />
 
+      <TextView
+          android:id="@+id/textExpDate"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="30dp"
+          android:layout_weight="1.08"/>
+
     </LinearLayout>
 
     <Button
@@ -95,6 +102,13 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="REDEEm COUPON"/>
+
+    <Button
+        android:id="@+id/shareButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="SHARE COUPON"/>
 
 
   </LinearLayout>

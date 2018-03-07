@@ -51,6 +51,10 @@ public class MCouponService implements MCouponServiceInterface{
 		return new Select().from(MCoupon.class).execute();
 	}
 
+	public List<MCoupon> getAllMCouponUser(){
+		return new Select().from(MCoupon.class).where("user=?",null).execute();
+	}
+
 	public void storeMCoupon(MCoupon mCoupon) {
 		this.mCoupon = mCoupon;
 		saveMCoupon();
