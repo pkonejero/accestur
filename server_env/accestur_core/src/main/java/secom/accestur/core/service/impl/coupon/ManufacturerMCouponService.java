@@ -184,6 +184,7 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 		JSONArray message = new JSONArray();
 		JSONObject json;
 		for (int i  = 0; i < MCoupons.size(); i++){
+			if(MCoupons.get(i).getUser()==null){
 			json = new JSONObject();
 			json.put("p", MCoupons.get(i).getP());
 			json.put("q", MCoupons.get(i).getQ());
@@ -191,6 +192,7 @@ public class ManufacturerMCouponService implements ManufacturerMCouponServiceInt
 			json.put("id", MCoupons.get(i).getId());
 			json.put("EXD", MCoupons.get(i).getEXD());
 			message.put(json);
+			}
 		}
 		//MCoupon coupon=mcouponService.getMCouponBySn(i);
 		//String[] params= new String [5];

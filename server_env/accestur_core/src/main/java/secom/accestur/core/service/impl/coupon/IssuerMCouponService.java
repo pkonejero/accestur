@@ -373,33 +373,53 @@ public String redeemingMCoupon(String json) {
 	
 	coupon = mcouponService.getMCouponBySn(sn);
 	
-	System.out.println("AQUESTA ES EL COUPON"+coupon.toString());
+	System.out.println("AQUEST ES EL COUPON"+coupon.toString());
 	
 	System.out.println("AQUEST ES LA P DEL COUPON:"+coupon.getP());
+	
+	System.out.println("AQUEST ES LA Q DEL COUPON:"+coupon.getQ());
 	
 	//Verification of Rid
 	
 	String nXo = coupon.getXo();
 	
+	String nYo = coupon.getYo();
+	
 	System.out.println("AQUESTA ES LA XO DEL COUPON:"+nXo);
+	
+	System.out.println("AQUESTA ES LA XO DEL COUPON:"+nYo);
 	
 	String nRid = Cryptography.hash(params[0]+paramsJson[6]+nXo+params[3]);
 	
+	String nRid2 = Cryptography.hash(params[0]+paramsJson[6]+nYo+params[3]);
+	
 	
 	String[] xVerification = new String[coupon.getP()+2];
+	
+	String[] xVerification2 = new String[coupon.getQ()+2];
 	
 	
 	Integer indexHash = new Integer(params[4]);
 	
 	xVerification[indexHash]=params[3];
 	
+	xVerification2[indexHash]=params[3];
+	
 	Integer number_hash = coupon.getP()+1;
+	
+	Integer number_hash2 = coupon.getQ()+1;
 	
 	for (int i =indexHash+1; i <=number_hash;i++){
 		xVerification[i]=Cryptography.hash(xVerification[i-1]);
 	}
 	
+	for (int i =indexHash+1; i <=number_hash2;i++){
+		xVerification2[i]=Cryptography.hash(xVerification2[i-1]);
+	}
+	
 	System.out.println("AQUESTA ES LA XVERIFICATION:"+xVerification[number_hash]);
+	
+	System.out.println("AQUESTA ES LA XVERIFICATION2:"+xVerification[number_hash]);
 	
 	CounterMCoupon counter = coupon.getCounter();
 	
@@ -413,7 +433,7 @@ public String redeemingMCoupon(String json) {
 	
 	System.out.println("AQUEST ES EL COMPTADOR:"+ncounter.toString());
 	
-	if (indexHash.equals(ncounter)&&indexHash<=coupon.getP()){
+	if (indexHash.equals(ncounter)&&(indexHash<=coupon.getP()||indexHash<=coupon.getQ())){
 		
 	System.out.println("NUMBER OF THE COUNTER IS CORRECT");
 	
@@ -422,7 +442,7 @@ public String redeemingMCoupon(String json) {
 	System.out.println("NXO="+nXo);
 	
 	
-	if(xVerification[number_hash].equals(nXo)){
+	if(xVerification[number_hash].equals(nXo)||xVerification2[number_hash2].equals(nYo)){
 		System.out.println("THE HASH IS CORRECT");
 	
 		System.out.println("AQUEST ES EL RID NOU:"+nRid);
@@ -430,8 +450,7 @@ public String redeemingMCoupon(String json) {
 	if (nRid.equals(params[1])){
 	
 		
-		System.out.println("AQUEST ES EL RID NOU:"+nRid);
-	//Missing verification EXD.
+	System.out.println("AQUEST ES EL RID NOU:"+nRid);
 		
 	params[6] = nRid; //New Rid (Validation Signature)
 		
